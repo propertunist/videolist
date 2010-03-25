@@ -8,7 +8,6 @@
 	 * @author Prateek Choudhary <synapticfield@gmail.com>
 	 * @copyright Prateek Choudhary
 	 */
-
 		function videolist_init() {
 			
 			// Load system configuration
