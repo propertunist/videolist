@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * Elgg Video Plugin
 	 * This plugin allows users to create a library of videos
