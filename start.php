@@ -18,7 +18,8 @@
 			}
 					
 			// Extend system CSS with our own styles
-			extend_view('css','videolist/css');			
+			extend_view('css','videolist/css');
+			
 			// Load the language file - default is english
 		  register_translations($CONFIG->pluginspath . "videolist/languages/");
 			

@@ -8,7 +8,8 @@
 	 * @author Prateek Choudhary <synapticfield@gmail.com>
 	 * @copyright Prateek Choudhary
 	 */
-	$english = array(
+	$english = array(
+
 		"videolist" => "My Videos",
 		
 		"videolist:home" => '%s \'s Videos',
