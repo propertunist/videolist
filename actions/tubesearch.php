@@ -48,7 +48,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 		$startOffset = $counts->startIndex;
 		$endOffset = ($startOffset-1) + $counts->itemsPerPage;
 
-		$body = '<div id="paginateSearch">';
+		$body = '<div id="pagination">';
 		$rem = floor($total/10);
 		$rem*=10;
 		if($rem<$total)

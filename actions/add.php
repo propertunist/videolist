@@ -186,7 +186,7 @@ else if($pageContainer == "vimeo"){
 	$videolist->videotype = "vimeo";
 }
 
-// Before we can set metadata, we need to save the blog post
+// Before we can set metadata, we need to save the video
 if (!$videolist->save()) {
 	register_error(elgg_echo("videolist:error"));
 	forward("pg/videolist/new");

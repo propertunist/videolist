@@ -116,8 +116,7 @@ if(isset($confirm_action) && ($confirm_action == 'add_video')) {
 			$_SESSION['videolisttags'] = $tags;
 			$_SESSION['Pagecontainer'] = $Pagecontainer;
 			$_SESSION['container_guid'] = $container_guid;
-			//echo $_SESSION['candidate_profile_video'];
-			$url = "action/videolist/addvideo?__elgg_ts={$timestamp}&__elgg_token={$token}";
+			$url = "action/videolist/add?__elgg_ts={$timestamp}&__elgg_token={$token}";
 			forward($url);
 		}
 		else
@@ -128,9 +127,7 @@ if(isset($confirm_action) && ($confirm_action == 'add_video')) {
 	}
 }
 
-$body = '<div class="videolist-content">';
-
-$body .= '<form action="'.$_SERVER['php_self'].'" method="post">';
+$body = '<form action="'.$_SERVER['php_self'].'" method="post" class="margin_top">';
 $body .= elgg_view('input/hidden',array('internalname'=>'video_action', 'value'=>'add_video'));
 $body .= elgg_view('input/hidden',array('internalname'=>'guid', 'value'=>$vars['guid']));
 
@@ -151,6 +148,5 @@ $body .= elgg_view('input/access',array('internalname'=>'access_id', 'value' => 
 $body .= '</label></p>';
 $body .= elgg_view('input/submit', array('internalname'=>'submit','value'=>elgg_echo('videolist:submit')));
 $body .= '</form>';
-$body .= '</div>';
 
-print $body."<br /><br />";
+print $body;

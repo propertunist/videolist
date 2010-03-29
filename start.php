@@ -12,7 +12,7 @@ function videolist_init() {
 	global $CONFIG;
 
 	if (isloggedin()) {
-		add_menu(elgg_echo('videolist'), $CONFIG->wwwroot . "pg/videolist/owned/" . $_SESSION['user']->username);
+		add_menu(elgg_echo('videolist'), $CONFIG->wwwroot . "mod/videolist/all.php");
 	}
 
 	// Extend system CSS with our own styles
@@ -26,9 +26,6 @@ function videolist_init() {
 
 	//extend this plugin for groups
 	elgg_extend_view('groups/left_column','videolist/groupprofile_videolist');
-
-	// Add a new videolist widget
-	add_widget_type('videolist_view',elgg_echo("videolist:widget"),elgg_echo("videolist:widget:description"), 'profile');
 
 	if (is_callable('register_notification_object')) {
 		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));
@@ -57,11 +54,13 @@ function videolist_page_handler($page) {
 	if (isset($page[0])) {
 		switch($page[0]) {
 			case "owned": if (isset($page[1])) set_input('username',$page[1]);
-										@include(dirname(__FILE__) . "/index.php");
-							break;
-			case "search":		  @include(dirname(__FILE__) . "/world.php");
+								@include(dirname(__FILE__) . "/index.php");
 								break;
-			case "video":		  @include(dirname(__FILE__) . "/video.php");
+			case "friends":     @include(dirname(__FILE__) . "/friends.php");
+								break;
+			case "search":		@include(dirname(__FILE__) . "/all.php");
+								break;
+			case "video":		@include(dirname(__FILE__) . "/video.php");
 								break;
 			case "new": if (isset($page[3])) set_input('add_videourl',$page[3]);
 									if (isset($page[5])) set_input('page',$page[5]);
@@ -69,14 +68,14 @@ function videolist_page_handler($page) {
 								@include(dirname(__FILE__) . "/new.php");
 								break;
 			case "watch":	set_input('video_id',$page[1]);
-										@include(dirname(__FILE__) . "/watch.php");
+								@include(dirname(__FILE__) . "/watch.php");
 								break;
 			case "browse":	if (isset($page[1])) set_input('container',$page[1]);
-										@include(dirname(__FILE__) . "/browse.php");
+								@include(dirname(__FILE__) . "/browse.php");
 								break;
 		default : if (isset($page[1])) set_input('username',$page[1]);
-							@include(dirname(__FILE__) . "/index.php");
-							break;
+								@include(dirname(__FILE__) . "/index.php");
+								break;
 		}
 	// If the URL is just 'videolist/username', or just 'videolist/', load the standard index file
 	} else {
@@ -110,10 +109,10 @@ function videolist_pagesetup() {
 		add_submenu_item(elgg_echo('videolist:find'),$CONFIG->wwwroot."pg/videolist/search/");
 		*/
 		if ((page_owner() == $_SESSION['guid'] || !page_owner()) && isloggedin()) {
-			add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
+			//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
 			add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
 			add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
-			add_submenu_item(sprintf(elgg_echo('videolist:find'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/search/");
+			//add_submenu_item(sprintf(elgg_echo('videolist:find'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/search/");
 		} else if (page_owner() && $page_owner instanceof ElggUser) {
 			add_submenu_item(sprintf(elgg_echo("videolist:home"),$page_owner->name), $CONFIG->wwwroot . "pg/videolist/owned/". $page_owner->username);
 		}
@@ -200,7 +199,7 @@ register_elgg_event_handler('annotate','all','videolist_object_notifications');
 // Register actions
 global $CONFIG;
 
-register_action("videolist/addvideo", false, $CONFIG->pluginspath . "videolist/actions/addvideo.php");
+register_action("videolist/add", false, $CONFIG->pluginspath . "videolist/actions/add.php");
 register_action("videolist/tubesearch", false, $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
 //register_action("videolist/addcomment", false, $CONFIG->pluginspath . "videolist/actions/comments/add.php");
 register_action("videolist/remove", false, $CONFIG->pluginspath . "videolist/actions/delete.php");

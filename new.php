@@ -9,7 +9,7 @@
  * @copyright Prateek Choudhary
  */
 
-
+global $CONFIG;
 // Render the video upload page
 // Load Elgg engine
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
@@ -36,10 +36,15 @@ if(isset($container_guid) && !empty($container_guid)){
 	}
 }
 
-$title = sprintf(elgg_echo("videolist:new"), $page_owner->name);
+$title = sprintf(elgg_echo("videolist:add"));
 
-$area2 = elgg_view_title($title);
+//set up breadcrumbs
+elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(elgg_echo("videolist:add"));
+
+$area1 = elgg_view('navigation/breadcrumbs');
+$area1 .= elgg_view('page_elements/content_header', array('context' => "action", 'type' => 'videolist'));
 $area2 .= elgg_view("forms/add");
-$body = elgg_view_layout('one_column_with_sidebar', $area1 . $area2);
+$body = elgg_view_layout('one_column_with_sidebar', $area1 . $area2, $area3);
 
 page_draw($title, $body);

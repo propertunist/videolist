@@ -243,7 +243,7 @@ function InsertVideoUrl(param, param2){
 	var elggToken = "<?php echo generate_action_token(time()); ?>";
 	$.ajax({
 		type: "GET",
-		url: "<?php echo $vars['url']; ?>"+"action/videolist/addvideo",
+		url: "<?php echo $vars['url']; ?>"+"action/videolist/add",
 		data: "bustcache="+new Date().getTime()+"&__elgg_ts="+elggTS+"&__elgg_token="+elggToken+"&video_action="+actionAction+"&title_videourl="+param+"&videolisttags="+param2+"&access_id="+access_id,
 		success: function(html){
 			$("#loadingSearch").html("");

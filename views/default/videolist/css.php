@@ -13,17 +13,37 @@
 .videolist_error{
 	color:red;
 	font-weight:bold;
-	font-size:11px;
 }
+
+/* video listing */
+.video_entity .entity_listing:first-child {
+	border-top:0;
+}
+.entity_listing_icon .video_icon {
+	width:150px;
+	height:95px;
+	display:table-cell;
+	text-align:center;
+	vertical-align: middle;
+	background-color: black;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+.video_entity .entity_listing_info {
+	width:560px;
+	margin-left:15px;
+}
+
+
+
+
+/* /////////////////////////////////////////// @todo clean up / update rules below */
 #video-list-main{
 	padding:10px;
 }
 #videocontainer{
 	width:100%;
 	margin-bottom:10px;
-}
-.search_gallery_item{
-	border:0px solid #CCCCCC;
 }
 #videobox{
 	width:98%;
@@ -38,69 +58,6 @@
 	width:90%;
 	margin:0px 5px 0px 8px;
 	float:left;
-}
-#videothumbnail-box{
-	float:left;
-	width:35%;
-	background: #333333;
-	text-align:center;
-	padding:3px 1px 3px 0px;
-}
-#videotitle-box{
-	width:60%;
-	float:left;
-	font-size:12px;
-	font-weight:bold;
-	text-align:left;
-	padding-left:5px;
-	color:#474B9F;
-}
-.title{
-	font-weight:bold;
-}
-#profile_video_widget_container{
-	margin:0px 10px 10px 10px;
-	padding:8px;
-	-moz-border-radius-topleft:8px;
-	-moz-border-radius-topright:8px;
-	-moz-border-radius-bottomleft:8px;
-	-moz-border-radius-bottomright:8px;
-	border:0px solid #C3C3C3;
-	background: #FFFFFF;
-	max-height:250px;
-	overflow-y:auto;
-}
-#profile_video_image_container{
-	float:left;
-	width:95%;
-	margin:6px 2px 0px 6px;
-	border-bottom:1px solid #CCC;
-	padding-bottom:3px;
-}
-
-#widget_container_header{
-	color:#474B9F;
-	margin:0px 0px 5px 0px;
-	font-weight:bold;
-	font-size:13px;
-}
-#loadingSearch{
-	width:100%;
-}
-#SearchContainer{
-	width:100%;
-}
-#responseSearch{
-	padding:15px;
-}
-#paginateSearch{
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	padding:2px 5px 2px 0px;
-	text-align:right;
-	background:#FFF;
-	border:0px solid #CCC;
-	color:#666;
 }
 th{
 	text-align:center;
@@ -141,37 +98,12 @@ th{
 	background:#FFFFFF;
 	z-index:300000;
 }
-.videolist-content{
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #C3C3C3;
-	width:675px;
-	margin:10px 0px 10px 10px;
-	padding:10px;
-	background:#FFFFFF;
-}
 .tubesearch{
 	-moz-border-radius-topleft:5px;
 	-moz-border-radius-topright:5px;
 	-moz-border-radius-bottomleft:5px;
 	-moz-border-radius-bottomright:5px;
 	border:1px solid #666666;
-}
-#comment_area_video_title{
-	padding:10px;
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #CCCCCC;
-	border:1px solid #CCCCCC;
-	background:#FFFFFF;
-}
-.vid-comment-widget{
-	font-size:11px;
-	font-weight:normal;
 }
 .searchvideorow{
 	padding:10px;

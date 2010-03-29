@@ -56,5 +56,4 @@ if ($videos) {
 }
 
 ?>
-<div class="clearfloat" /></div>
 </div>

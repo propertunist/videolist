@@ -10,12 +10,15 @@
  */
 $english = array(
 
-	"videolist" => "My Videos",
+	"videolist" => "Videos",
 
 	"videolist:home" => '%s \'s Videos',
 	"videolist:new" => 'Add a Video',
 	"videolist:find" => 'All Site videos',
+	"videolist:all" => 'All Site videos',
+	"videolist:add" => 'Add a Video',
 	"videolist:search" => "All Site videos",
+	'videolist:friends' => "Friends' videos",
 	"videolist:title_videourl" => 'Enter Video Url',
 	"videolist:submit" => 'Submit',
 	"videolist:videoTitle" => "Title",
@@ -50,6 +53,7 @@ $english = array(
 	"videolist:group" => "Group Videos",
 	"videolist:groupall" => "All Group Videos",
 	"videolist:none" => "This group does not have any videos yet",
+	"videolist:none:found" => "No videos were found."
 );
 
 add_translation("en",$english);

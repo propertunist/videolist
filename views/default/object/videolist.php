@@ -23,59 +23,34 @@ if(!empty($video_file)) {
 	$mime = "image/html";
 	$thumbnail = $videothumbnail;
 	$watch_URL = $vars['url']."pg/videolist/watch/".$video_guid;
-	if (get_input('search_viewtype') == "gallery") {
-		$videodiv .= "<div class=\"filerepo_gallery_item\">";
-		$videodiv .= "<div id='videobox'>";
-		$videodiv .= $title."<br />";
-		$videodiv .= "<a href='".$watch_URL."'>";
-		$videodiv .= "<img src='".$thumbnail."' width='120' class='tubesearch'/>";
-		$videodiv .= "</a>";
+	
+	$object_acl = get_readable_access_level($video_file->access_id);
+	// metadata block, - access level, edit, delete, + options view extender
+	$info = "<div class='entity_metadata'><span class='access_level'>" . $object_acl . "</span>";
 
-		$videodiv .= "</div>";
-		//$videodiv .= "<div id='videoDescbox'>";
-		//$videodiv .= "<span class='title'>".elgg_echo('videolist:videoTitle')." : </span>".$title."<br />";
-		//$videodiv .= "</div>";
-
-		$numcomments = elgg_count_comments($video_file);
-		$videodiv .= "<div id='videoActionbox'>";
-
-		if ($numcomments) {
-			$videodiv .= "<a href=\"{$watch_URL}\">" . sprintf(elgg_echo("comments")) . " (" . $numcomments . ")</a> <br />";
-		}
-
-		if($video_file->canEdit()) {
-			$videodiv .=  elgg_view("output/confirmlink", array(
-															'href' => $vars['url'] . "action/videolist/remove?video_id=" . $video_guid,
-															'text' => elgg_echo('delete'),
-															'confirm' => elgg_echo('deleteconfirm'),
-														));
-		}
-
-		$videodiv .= "</div></div>";
-		$videodiv .= "<div class=\"clearfloat\"></div>";
-		print $videodiv;
-	} else if(get_input('show_viewtype') == "all") {
-		$info .= '<p><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class=\"owner_timestamp\"><a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
+	// view for plugins to extend	
+	$info .= elgg_view('videolist/options', array('entity' => $video_file));
+					
+	// include edit and delete options
+	if ($owner->canEdit()) {
+		$info .= "<span class='entity_edit'><a href=\"{$vars['url']}mod/videolist/edit.php?file_guid={$video_guid}\">" . elgg_echo('edit') . "</a></span>";
+		$info .= "<span class='delete_button'>" . elgg_view('output/confirmlink',array('href' => $vars['url'] . "action/videolist/delete?file=" . $video_guid, 'text' => elgg_echo("delete"),'confirm' => elgg_echo("videolist:delete:confirm"),)). "</span>";  
+	}
+	$info .= "</div>";
+	
+	if(get_input('show_viewtype') == "all") {
+		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
+		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
 		$info .= "</p>";
-		$icon = "<a href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
-
-		echo elgg_view_listing($icon, $info);
+		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
+		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
 	} else {
-		/*
-		$videodiv .= "<a href='".$vars['url']."pg/videolist/watch/".$video_guid."'>";
-		$videodiv .= "<img src='http://img.youtube.com/vi/".$video_id."/default.jpg' width='50' alt='unable to fetch image'/>";
-		$videodiv .= "</a> &nbsp;&nbsp;<a href='".$vars['url']."pg/videolist/watch/".$video_guid."'><span class='title'>Title : </span>".$title;
-		$videodiv .= "</a><br />";
-		*/
-		//video list-entity view
-		$info = '<p><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class=\"owner_timestamp\"><a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
+		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
+		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
 		$info .= "</p>";
-		$icon = "<a href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
-
-		echo elgg_view_listing($icon, $info);
+		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
+		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
 	}
 } else {
-	echo "No videos were found.";
+	echo "<p class='margin_top'>".elgg_echo('videolist:none:found')."</p>";
 }

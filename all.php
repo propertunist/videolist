@@ -24,12 +24,14 @@ if ($page_owner === false || is_null($page_owner)) {
 $title = sprintf(elgg_echo("videolist:search"));
 
 // Get objects
-$area2 = elgg_view_title($title);
+$area1 = elgg_view('page_elements/content_header', array('context' => "everyone", 'type' => 'videolist'));
 set_input('show_viewtype', 'all');
-$area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10, 'full_view' => TRUE, 'view_type_toggle' => FALSE, 'pagination' => TRUE));
+$area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'limit' => 10, 'full_view' => TRUE, 'view_type_toggle' => FALSE, 'pagination' => TRUE));
+// include a view for plugins to extend
+$area3 .= elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
 
 set_context('videolist');
-$body = elgg_view_layout('one_column_with_sidebar',$area1. $area2);
+$body = elgg_view_layout('one_column_with_sidebar', $area1.$area2, $area3);
 
 // Finally draw the page
 page_draw($title, $body);

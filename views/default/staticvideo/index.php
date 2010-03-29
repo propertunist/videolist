@@ -37,22 +37,16 @@ if(!empty($owner_videos)) {
 
 		$videodiv .= "<div id='videoActionbox'>";
 		$videodiv .=  elgg_view("output/confirmlink", array(
-																	'href' => $vars['url'] . "action/videolist/remove?video_id=" . $video_guid,
-																	'text' => elgg_echo('delete'),
-																	'confirm' => elgg_echo('deleteconfirm'),
-																));
-		/*
-		$videodiv .= "<a href='".$vars['url']."pg/videolist/remove/".$video_id."'>";
-		$videodiv .= "delete";
-		$videodiv .= "</a>";
-		*/
+								'href' => $vars['url'] . "action/videolist/remove?video_id=" . $video_guid,
+								'text' => elgg_echo('delete'),
+								'confirm' => elgg_echo('deleteconfirm'),
+							));
 		$videodiv .= "</div>";
-		$videodiv .= "<div class=\"clearfloat\"></div>";
 	}
 
 	print $videodiv;
 } else {
-	echo "No videos were found.";
+	echo "<p class='margin_top'>".elgg_echo('videolist:none:found')."</p>";
 }
 ?>
 </div>

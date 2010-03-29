@@ -8,9 +8,16 @@
  * @author Prateek Choudhary <synapticfield@gmail.com>
  * @copyright Prateek Choudhary
  */
+ 
+global $CONFIG;
+
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 $owner = page_owner_entity();
+if ($page_owner === false || is_null($page_owner)) {
+	$page_owner = $_SESSION['user'];
+	set_page_owner($page_owner->getGUID());
+}
 
 //get videolist GUID
 $container_guid = get_input('username');
@@ -20,22 +27,26 @@ if(isset($container_guid) && !empty($container_guid)) {
 	if ($container_guid[0] == "group") {
 		$container = get_entity($container_guid[1]);
 		set_context("groupsvideos");
-		//$page_owner = page_owner_entity();
 	}
 }
-//set page owner
-//set_page_owner($videolist_guid);
 
+elgg_push_breadcrumb(elgg_echo('videolist:find'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(sprintf(elgg_echo("videolist:home"),$page_owner->name));
 $title = sprintf(elgg_echo("videolist:home"), "$owner->name");
 
-// Get objects
-$area2 = elgg_view_title($title);
-$area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10));
+//set videolist header
+if(page_owner() == get_loggedin_userid()) {
+	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist'));
+} else {
+	$area1 .= elgg_view('navigation/breadcrumbs');
+	$area1 .= elgg_view('page_elements/content_header_member', array('type' => 'videolist'));
+}
 
-//$area2 .= elgg_view("staticvideo/index");
+// Get objects
+$area2 = elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10));
 
 set_context('videolist');
-$body = elgg_view_layout('one_column_with_sidebar',$area1. $area2);
+$body = elgg_view_layout('one_column_with_sidebar', $area1.$area2, $area3);
 
 // Finally draw the page
 page_draw($title, $body);

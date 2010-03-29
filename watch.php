@@ -31,13 +31,11 @@ if ($videos = get_entity($video_id)) {
 									'entity_owner' => $page_owner,
 									'full' => true
 									));
-	//$area2 .= elgg_view("videolist/comments", array('entity' => $videos));
-	$body = elgg_view_layout("one_column_with_sidebar", $area1  . $area2);
+	$body = elgg_view_layout("one_column_with_sidebar", $area1.$area2, $area3);
 } else {
-		// Display the 'post not found' page instead
-		$body = elgg_view("videolist/notfound");
+		// video not found
+		$body = "<p class='margin_top'>".elgg_echo('videolist:none:found')."</p>";
 		$title = elgg_echo("video:none");
-
 }
 
 // Finally draw the page
