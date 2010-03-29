@@ -11,7 +11,7 @@
 
 ?>
 <div id="filerepo_widget_layout">
-<h2><?php echo elgg_echo("videolist:group"); ?></h2>
+<h3><?php echo elgg_echo("videolist:group"); ?></h3>
 
 <?php
 
@@ -41,7 +41,7 @@ if ($videos) {
 			echo "</div>";
 		}
 		echo "<div class=\"filerepo_listview_date\"><p class=\"filerepo_timestamp\"><small>" . friendly_time($f->time_created) . "</small></p></div>";
-		echo "</div><div class=\"clearfloat\" style=\"height:8px;\"></div>";
+		echo "</div>";
 
 	}
 	echo "</div>";
@@ -52,7 +52,7 @@ if ($videos) {
 	echo "<div class=\"forum_latest\"><a href=\"{$users_file_url}\">" . elgg_echo("videolist:groupall") . "</a></div>";
 
 } else {
-	echo "<div class=\"forum_latest\">" . elgg_echo("videolist:none") . "</div>";
+	echo "<p class='margin_top'>" . elgg_echo("videolist:none") . "</p>";
 }
 
 ?>
