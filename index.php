@@ -30,8 +30,7 @@ $title = sprintf(elgg_echo("videolist:home"), "$owner->name");
 
 // Get objects
 $area2 = elgg_view_title($title);
-//set_input('search_viewtype', 'gallery');
-$area2 .= list_entities("object","videolist", page_owner(), 10);
+$area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10));
 
 //$area2 .= elgg_view("staticvideo/index");
 

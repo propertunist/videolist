@@ -16,7 +16,7 @@ function videolist_init() {
 	}
 
 	// Extend system CSS with our own styles
-	extend_view('css','videolist/css');
+	elgg_extend_view('css','videolist/css');
 
 	// Load the language file - default is english
 	register_translations($CONFIG->pluginspath . "videolist/languages/");
@@ -25,7 +25,7 @@ function videolist_init() {
 	register_page_handler('videolist','videolist_page_handler');
 
 	//extend this plugin for groups
-	extend_view('groups/left_column','videolist/groupprofile_videolist');
+	elgg_extend_view('groups/left_column','videolist/groupprofile_videolist');
 
 	// Add a new videolist widget
 	add_widget_type('videolist_view',elgg_echo("videolist:widget"),elgg_echo("videolist:widget:description"), 'profile');

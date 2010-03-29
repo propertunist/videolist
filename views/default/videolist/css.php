@@ -10,7 +10,7 @@
  */
 ?>
 
-.error{
+.videolist_error{
 	color:red;
 	font-weight:bold;
 	font-size:11px;

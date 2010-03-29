@@ -138,7 +138,7 @@ $body .= elgg_view('input/hidden',array('internalname'=>'guid', 'value'=>$vars['
 $body .= '<p><label>'.elgg_echo("videolist:title_videourl").'<br />';
 $body .= elgg_view("input/text",array('internalname' => 'title_videourl','value'=>$title_add_videourl));
 if($error['no-video'] == 0) {
-	$body .= '<div class="error">'.$error_msg['no-video'].'</div>';
+	$body .= '<div class="videolist_error">'.$error_msg['no-video'].'</div>';
 }
 $body .= '</label></p>';
 

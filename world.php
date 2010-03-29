@@ -26,9 +26,7 @@ $title = sprintf(elgg_echo("videolist:search"));
 // Get objects
 $area2 = elgg_view_title($title);
 set_input('show_viewtype', 'all');
-$area2 .= list_entities("object","videolist", 0, 10, $fullview=true, $viewtypetoggle=false,$pagination=true);
-
-//$area2 .= elgg_view("staticvideo/index");
+$area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10, 'full_view' => TRUE, 'view_type_toggle' => FALSE, 'pagination' => TRUE));
 
 set_context('videolist');
 $body = elgg_view_layout('one_column_with_sidebar',$area1. $area2);

@@ -19,7 +19,7 @@ $body .= "</div>";
 $body .= "<div style='float:left;width:45%;'>";
 $body .= "<input type=\"text\" name=\"title_search\" value=\"\" id=\"title_search\" size=\"30\"/> &nbsp;&nbsp;";
 if ($error['no-search'] == 0) {
-	$body .= '<div class="error">'.$error_msg['no-search'].'</div>';
+	$body .= '<div class="videolist_error">'.$error_msg['no-search'].'</div>';
 }
 $body .= "</div>";
 //$body .= "<div>";
