@@ -10,7 +10,7 @@
  */
 
 ?>
-<div id="filerepo_widget_layout">
+<div class="group_tool_widget">
 <h3><?php echo elgg_echo("videolist:group"); ?></h3>
 
 <?php

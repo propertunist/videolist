@@ -25,7 +25,7 @@ function videolist_init() {
 	register_page_handler('videolist','videolist_page_handler');
 
 	//extend this plugin for groups
-	elgg_extend_view('groups/left_column','videolist/groupprofile_videolist');
+	elgg_extend_view('groups/tool_latest','videolist/groupprofile_videolist');
 
 	if (is_callable('register_notification_object')) {
 		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));
