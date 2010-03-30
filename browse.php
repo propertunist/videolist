@@ -1,14 +1,16 @@
 <?php
-
 /**
- * Elgg Video Plugin
- * This plugin allows users to create a library of youtube/vimeo/metacafe videos
- *
- * @package Elgg
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
- */
+* Elgg Video Plugin
+* This plugin allows users to create a library of youtube/vimeo/metacafe videos
+*
+* @package Elgg
+* @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
+* @author Prateek Choudhary <synapticfield@gmail.com>
+* @copyright Prateek Choudhary
+*/
+ 
+global $CONFIG;
+
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 //get videolist GUID
@@ -31,11 +33,19 @@ if(isset($container_guid) && !empty($container_guid)) {
 	}
 }
 
-$title = sprintf(elgg_echo("videolist:browse"), $page_owner->name);
+elgg_push_breadcrumb(elgg_echo('videolist:find'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(elgg_echo("videolist:browsemenu"));
 
-$area2 = elgg_view_title($title);
+$title = elgg_echo("videolist:browsemenu");
+
+$area1 = elgg_view('navigation/breadcrumbs');
+$area1 .= elgg_view_title($title);
 $area2 .= elgg_view("forms/browsetube");
 
-$body = elgg_view_layout('one_column_with_sidebar', $area1 . $area2);
+// get the latest comments on all videos
+$comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
+$area3 = elgg_view('annotation/latest_comments', array('comments' => $comments));
+
+$body = elgg_view_layout('one_column_with_sidebar', $area1.$area2, $area3);
 
 page_draw($title, $body);

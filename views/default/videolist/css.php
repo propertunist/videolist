@@ -34,96 +34,66 @@
 	margin-left:15px;
 }
 
-
-
-
-/* /////////////////////////////////////////// @todo clean up / update rules below */
-#video-list-main{
-	padding:10px;
-}
-#videocontainer{
-	width:100%;
-	margin-bottom:10px;
-}
-#videobox{
-	width:98%;
-	text-align:center;
-	margin-top:10px;
-}
-#videoDescbox{
-	width:95%;
-	margin:0px 5px 0px 8px;
-}
-#videoActionbox{
-	width:90%;
-	margin:0px 5px 0px 8px;
-	float:left;
-}
-th{
-	text-align:center;
-	font-weight:bold;
-	font-size:13px;
-}
-#parentTab{
-	-moz-border-radius-bottomleft:8px;
-	-moz-border-radius-bottomright:8px;
-	-moz-border-radius-topleft:8px;
-	-moz-border-radius-topright:8px;
-	border-top:1px solid #CCC;
-	border-bottom:6px solid #CCC;
-	border-left:1px solid #CCC;
-	border-right:5px solid #CCC;
-	background:#FFFFFF;
-	margin-top:7px;
-}
-.tabcellDesc{
-	padding:5px 5px 5px 10px;
-	text-align: left;
-}
-.tabcellText{
-	padding:5px;
+/* single video view page */
+.video_view {
 	text-align: center;
+	margin-top:5px;
+	padding-bottom:20px;
+	border-bottom:1px solid #CCCCCC;
 }
-.videoDisp{
+.video_view embed {
+	margin-top:20px;
+}
+
+/* search for videos */
+#loading_search_results .ajax_loader {
+	margin:10px 0;
+}
+.search_videos {
+	width:100%;
+}
+.search_videos .submit_button {
+	margin:0;
+}
+
+/* find videos search results list */
+#videosearch_results .video_entity {
+	padding:10px 0;
+	border-top:1px dotted #CCCCCC;
+}
+#videosearch_results .video_entity table {
+	width:100%;
+}
+#videosearch_results .video_actions {
+	text-align: right;
+	width:15%;
+}
+#videosearch_results .video_entity .entity_title {
+	margin:0;
+}
+
+/* pop-up video player */
+#page_overlay {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	height:100%;
+	width:100%;
+	z-index:299999;
+}
+.video_popup{
 	position:absolute;
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #000000;
 	display:none;
-	padding:10px;
-	margin-left:120px;
-	margin-top:-100px;
-	background:#FFFFFF;
+	padding:5px 10px 10px 10px;
+	background:black;
 	z-index:300000;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
 }
-.tubesearch{
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #666666;
+.close_video {
+	margin-bottom:5px;
+	text-align: right;
 }
-.searchvideorow{
-	padding:10px;
-	-moz-border-radius-topleft:5px;
-	-moz-border-radius-topright:5px;
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #CCCCCC;
-}
-#videosearch-tablecontainer{
-	-moz-border-radius-bottomleft:5px;
-	-moz-border-radius-bottomright:5px;
-	border:1px solid #CCCCCC;
-	background:#FFF;
-	padding:10px;
-}
-#videosearch-interface{
-	border-color:#CCCCCC;
-	border-style:solid;
-	border-width:0 1px 1px;
-	margin-top:-15px;
-	padding:15px 0 15px 20px;
+.close_video a {
+	color:white;
 }

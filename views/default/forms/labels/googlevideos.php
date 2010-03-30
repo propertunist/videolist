@@ -10,9 +10,8 @@
  * @copyright Prateek Choudhary
  */
 
-$body = '<p><label>'.elgg_echo("videolist:title_search_tube").'<br />';
-//$body .= elgg_view("input/text",array('internalname' => 'title_search','value' => '', 'id' => 'title_search'));
-$body .= "<div style='width:100%;'>";
+$body = '<p class="margin_none"><label>'.elgg_echo("videolist:title_search_tube").'</label></p>';
+$body .= "<div class='search_videos clearfloat'>";
 $body .= "<div style='float:left;width:19%;'>";
 $body .= "<a href=\"http://video.google.com\"><img src='".$vars['url']."mod/videolist/graphics/logo_videos.png' width='120'/></a>";
 $body .= "</div>";
@@ -22,11 +21,7 @@ if($error['no-search'] == 0) {
 	$body .= '<div class="videolist_error">'.$error_msg['no-search'].'</div>';
 }
 $body .= "</div>";
-//$body .= "<div>";
-//$body .= '<input type="submit" value="Submit" class="submit_button" name="submit" onclick="sendSearchRequest(1);"/>';
 $body .= elgg_view('input/submit', array('internalname' => 'submit', 'value' => elgg_echo('videolist:searchTubeVideos:vimeo')));
-//$body .= "</div>";
 $body .= "</div>";
-$body .= '</label></p>';
 $body .=  '<div id="searchcontrol">Loading...</div>';
 print $body;

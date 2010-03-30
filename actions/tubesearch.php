@@ -48,7 +48,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 		$startOffset = $counts->startIndex;
 		$endOffset = ($startOffset-1) + $counts->itemsPerPage;
 
-		$body = '<div id="pagination">';
+		$body = '<div class="pagination">';
 		$rem = floor($total/10);
 		$rem*=10;
 		if($rem<$total)
@@ -74,7 +74,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 		$body .=  '<a href="javascript:void(0);">last</a>';
 		}
 		$body .=  '</div>';
-		$body .= '<div id="videosearch-tablecontainer">';
+		$body .= '<div id="videosearch_results">';
 		$k = 0;$counter = 0;
 		foreach ($sxml->entry as $entry) {
 			$k++;
@@ -103,22 +103,20 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 			$tags[] = $media->group->keywords;
 
 			$showEncodedVideo = preg_replace('/(http:)(\/\/)(www.)([^ \/"]*)([^ >"]*)watch\?(v=)([^ >"]*)/i', '$1$2$3$4$5v/$7', $watch);
-			$body .=  '<div class="parentTabClass"><table id="parentTab" cellpadding="4" cellspacing="4" border="1">';
+			$body .=  '<div class="video_entity clearfloat"><table id="parentTab" cellpadding="0" cellspacing="0" border="0">';
 			$body .=  '<tr class="searchvideorow">';
 
 			$body .=  '<td class="tabcellText" width="15%">';
-			$body .=  "<span class=\"HoverLink\"><a href=\"javascript:void(0);\" onclick=\"showV_idFeed('".$showEncodedVideo."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\" class=\"tubesearch\"/></a></span>";
-			$body .=  '<div id="vidContainer'.$k.'" class="videoDisp"></div></td>';
+			$body .=  "<span><a href=\"javascript:void(0);\" onclick=\"showV_idFeed('".$showEncodedVideo."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\"/></a></span>";
+			$body .=  '<div id="vidContainer'.$k.'" class="video_popup"></div></td>';
 
 			$body .=  '<td class="tabcellDesc" width="60%">';
-			$body .=  "<a href=\"javascript:void(0);\" onclick=\"showV_idFeed('".$showEncodedVideo."', ".$k.")\">".$media->group->title."</a><br>";
-			$body .=  "<b>Duration : </b>" . sprintf("%0.2f", $length/60) . " min.<br /><b>user rating : </b>".$rating."<br/>";
-			$body .=  "<b>Description : </b>".substr($media->group->description, 0, 140)." ...";
+			$body .=  "<p class='entity_title'><a href=\"javascript:void(0);\" onclick=\"showV_idFeed('".$showEncodedVideo."', ".$k.")\">".$media->group->title."</a></p>";
+			$body .=  "<p class='entity_subtext'><b>Duration : </b>" . sprintf("%0.2f", $length/60) . " min.<br /><b>user rating : </b>".$rating."<br/>";
+			$body .=  "<b>Description : </b>".substr($media->group->description, 0, 140)." ...</p>";
 			$body .=  '</td>';
 
-			//$body .=  "<td class=\"tabcellText\" width=\"12%\"><a href=\"javascript:void(0);\" onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\">play</a> | <a href=\"javascript:void(0);\" onclick=\"javascript:InsertVideoUrl('".$showEncodedVideo."','".$tags[$counter]."');\">add</a></td>";
-
-			$body .=  "<td class=\"tabcellText\" width=\"15%\"><input type=\"button\" name=\"play\" value=\"Play\" onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\" class=\"submit_button\"> <a href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$vid_array[1]."/page/".$queryCatgory."\");\"><input type=\"button\" name=\"add\" value=\"Add\" class=\"submit_button\"></a></td>";
+			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$vid_array[1]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 			$body .=  '</tr>';
 			$body .=  '</table></div>';
@@ -134,7 +132,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 		$startOffset = $start_index;
 		$endOffset = ($startOffset-1) + $results_perpage;
 
-		$body = '<div id="paginateSearch">';
+		$body = '<div class="pagination">';
 		$rem = floor($total/10);
 		$rem*=10;
 		if($rem<$total) {
@@ -162,7 +160,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 
 		$body .=  '</div>';
 		$k = 0;
-		$body .= '<div id="videosearch-tablecontainer">';
+		$body .= '<div id="videosearch_results">';
 		$myitem = $sxml->getElementsByTagName('item');
 		foreach($myitem as $searchNode) {
 			$k++;
@@ -197,23 +195,20 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 			$start = intval(strpos($string, $ot) + strlen($ot));
 			$desc_src = substr($string,$start,intval(strpos($string,$ct) - $start));
 
-			$body .=  '<div class="parentTabClass">';
-			$body .= '<table id="parentTab" cellpadding="4" cellspacing="4" border="1">';
+			$body .=  '<div class="video_entity clearfloat">';
+			$body .= '<table id="parentTab" cellpadding="0" cellspacing="0" border="0">';
 			$body .=  '<tr class="searchvideorow">';
 
 			$body .=  '<td class="tabcellText" width="15%">';
-			$body .=  "<span class=\"HoverLink\"><a href=\"javascript:void(0);\" onclick=\"showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\" class=\"tubesearch\"/></a></span>";
-			$body .=  '<div id="vidContainer'.$k.'" class="videoDisp"></div></td>';
+			$body .=  "<span><a href=\"javascript:void(0);\" onclick=\"showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\"/></a></span>";
+			$body .=  '<div id="vidContainer'.$k.'" class="video_popup"></div></td>';
 
 			$body .=  '<td class="tabcellDesc" width="60%">';
-			$body .=  "<a href=\"javascript:void(0);\" onclick=\"showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\">".$valueTitle."</a><br>";
-			//$body .=  "<b>Duration : </b>" . sprintf("%0.2f", $length/60) . " min.<br /><b>user rating : </b>".$rating."<br/>";
-			$body .=  "<b>Description : </b>".$desc_src;
+			$body .=  "<p class='entity_title'><a href=\"javascript:void(0);\" onclick=\"showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\">".$valueTitle."</a></p>";
+			$body .=  "<p class='entity_subtext'><b>Description : </b>".$desc_src."</p>";
 			$body .=  '</td>';
 
-			//$body .=  "<td class=\"tabcellText\" width=\"12%\"><a href=\"javascript:void(0);\" onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\">play</a> | <a href=\"javascript:void(0);\" onclick=\"javascript:InsertVideoUrl('".$showEncodedVideo."','".$tags[$counter]."');\">add</a></td>";
-
-			$body .=  "<td class=\"tabcellText\" width=\"15%\"><input type=\"button\" name=\"play\" value=\"Play\" onclick=\"javascript:showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\" class=\"submit_button\"> <a href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$metacafevideoIdArray[0]."/page/".$queryCatgory."\");\"><input type=\"button\" name=\"add\" value=\"Add\" class=\"submit_button\"></a></td>";
+			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$metacafevideoIdArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 			$body .=  '</tr>';
 			$body .=  '</table>';
@@ -236,7 +231,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 		$startOffset = $start_index;
 
 		$endOffset = ($startOffset-1) + $results_perpage;
-		$body = '<div id="paginateSearch">';
+		$body = '<div class="pagination">';
 		$rem = floor($total/10);
 		$rem*=10;
 		if($rem<$total) {
@@ -262,7 +257,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 			$body .=  '<a href="javascript:void(0);">last</a>';
 		}
 		$body .=  '</div>';
-		$body .= '<div id="videosearch-tablecontainer">';
+		$body .= '<div id="videosearch_results">';
 		$counter = 0;$k = 0;
 		foreach($aoVideos as $oVideo) {
 			$k++;
@@ -290,23 +285,23 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 				}
 				$play_idArray = explode("http://vimeo.com/", $url);
 				$embedidArray = explode("/", $play_idArray[1]);
-				$body .=  '<div class="parentTabClass">';
-				$body .= '<table id="parentTab" cellpadding="4" cellspacing="4" border="1">';
+				$body .=  '<div class="video_entity clearfloat">';
+				$body .= '<table id="parentTab" cellpadding="0" cellspacing="0" border="0">';
 				$body .=  '<tr class="searchvideorow">';
 
 				$body .=  '<td class="tabcellText" width="15%">';
-				$body .=  "<span class=\"HoverLink\"><a href=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\" class=\"tubesearch\"/></a></span>";
-				$body .=  '<div id="vidContainer'.$k.'" class="videoDisp"></div></td>';
+				$body .=  "<span><a href=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\"><img src=\"".$thumbnail."\" width=\"90%\" height=\"90%\"/></a></span>";
+				$body .=  '<div id="vidContainer'.$k.'" class="video_popup"></div></td>';
 
 				$body .=  '<td class="tabcellDesc" width="60%">';
-				$body .=  "<a href=\"javascript:void(0);\" onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\">".$title."</a><br>";
-				$body .=  "<b>User Likes : </b>".$rating."<br/>";
+				$body .=  "<p class='entity_title'><a href=\"javascript:void(0);\" onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\">".$title."</a></p>";
+				$body .=  "<p class='entity_subtext'><b>User Likes : </b>".$rating."<br/>";
 				$body .=  "<b>Played : </b>".$playedTimes." times<br/>";
 				$body .=  "<b>Description : </b>".$description." ...<br/>";
-				$body .=  "<b>Tags : </b>".implode(', ', $aTags);
+				$body .=  "<b>Tags : </b>".implode(', ', $aTags)."</p>";
 				$body .=  '</td>';
 
-				$body .=  "<td class=\"tabcellText\" width=\"15%\"><input type=\"button\" name=\"play\" value=\"Play\" onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\" class=\"submit_button\"> <a href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$embedidArray[0]."/page/".$queryCatgory."\");\"><input type=\"button\" name=\"add\" value=\"Add\" class=\"submit_button\"></a></td>";
+				$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$embedidArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 				$body .=  '</tr>';
 				$body .=  '</table>';

@@ -201,5 +201,4 @@ global $CONFIG;
 
 register_action("videolist/add", false, $CONFIG->pluginspath . "videolist/actions/add.php");
 register_action("videolist/tubesearch", false, $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
-//register_action("videolist/addcomment", false, $CONFIG->pluginspath . "videolist/actions/comments/add.php");
 register_action("videolist/remove", false, $CONFIG->pluginspath . "videolist/actions/delete.php");
