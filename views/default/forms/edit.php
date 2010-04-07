@@ -8,7 +8,7 @@ $page_owner = page_owner_entity();
 $container_guid = $vars['entity']->container_guid;
 ?>
 
-<form action="<?php echo $vars['url']; ?>action/videolist/add" enctype="multipart/form-data" method="post" class="margin_top">
+<form action="<?php echo $vars['url']; ?>action/videolist/edit" enctype="multipart/form-data" method="post" class="margin_top">
 
 	<p><label><?php echo elgg_echo("title"); ?><br />
 		<?php echo elgg_view("input/text", array("internalname" => "title_videourl","value" => $vars['entity']->title));?>
@@ -27,7 +27,7 @@ $container_guid = $vars['entity']->container_guid;
 		echo "<input type='hidden' name=\"container_guid\" value=\"{$container_guid}\" />";
 		
 		if (isset($vars['entity'])) {
-			echo "<input type='hidden' name=\"file_guid\" value=\"{$vars['entity']->getGUID()}\" />";
+			echo "<input type='hidden' name=\"video_guid\" value=\"{$vars['entity']->getGUID()}\" />";
 		}
 		echo elgg_view('input/securitytoken');
 	?>
