@@ -11,24 +11,17 @@
 // Make sure we're logged in (send us to the front page if not)
 gatekeeper();
 
-// Get the current page's owner
-$page_owner = page_owner_entity();
-if ($page_owner === false || is_null($page_owner)) {
-	$page_owner = $_SESSION['user'];
-	set_page_owner($_SESSION['guid']);
-}
-
 // Get input data
-$guid = (int) get_input('video_id');
+$guid = (int) get_input('video');
 
 // Make sure we actually have permission to edit
-$videos = get_entity($guid);
-if ($videos->getSubtype() == "videolist" && $videos->canEdit()) {
+$video = get_entity($guid);
+if ($video->getSubtype() == "videolist" && $video->canEdit()) {
 	// Get owning user
-	$owner = get_entity($videos->getOwner());
+	$owner = get_entity($video->getOwner());
 
 	// Delete it!
-	$rowsaffected = $videos->delete();
+	$rowsaffected = $video->delete();
 	if ($rowsaffected > 0) {
 		// Success message
 		system_message(elgg_echo("videos:deleted"));
@@ -36,6 +29,5 @@ if ($videos->getSubtype() == "videolist" && $videos->canEdit()) {
 		register_error(elgg_echo("videos:notdeleted"));
 	}
 	// Forward to the main video list page
-	//forward("pg/videolist/owned/" . page_owner_entity()->username);
 	forward($_SERVER['HTTP_REFERER']);
 }

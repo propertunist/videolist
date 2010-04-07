@@ -33,8 +33,8 @@ if(!empty($video_file)) {
 					
 	// include edit and delete options
 	if ($owner->canEdit()) {
-		$info .= "<span class='entity_edit'><a href=\"{$vars['url']}mod/videolist/edit.php?file_guid={$video_guid}\">" . elgg_echo('edit') . "</a></span>";
-		$info .= "<span class='delete_button'>" . elgg_view('output/confirmlink',array('href' => $vars['url'] . "action/videolist/delete?file=" . $video_guid, 'text' => elgg_echo("delete"),'confirm' => elgg_echo("videolist:delete:confirm"),)). "</span>";  
+		$info .= "<span class='entity_edit'><a href=\"{$vars['url']}mod/videolist/edit.php?video={$video_guid}\">" . elgg_echo('edit') . "</a></span>";
+		$info .= "<span class='delete_button'>" . elgg_view('output/confirmlink',array('href' => $vars['url'] . "action/videolist/delete?video=" . $video_guid, 'text' => elgg_echo("delete"),'confirm' => elgg_echo("videolist:delete:confirm"),)). "</span>";  
 	}
 	$info .= "</div>";
 	

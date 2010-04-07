@@ -56,6 +56,7 @@ $english = array(
 	"videolist:searchTubeVideos:googlevideos" => "Search video.google.com",
 	"videolist:group" => "Group Videos",
 	"videolist:groupall" => "All Group Videos",
+	"videolist:delete:confirm" => "Are you sure you want to delete this video?",
 	"videolist:none" => "This group does not have any videos yet",
 	"videolist:none:found" => "No videos were found."
 );

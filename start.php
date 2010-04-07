@@ -200,5 +200,6 @@ register_elgg_event_handler('annotate','all','videolist_object_notifications');
 global $CONFIG;
 
 register_action("videolist/add", false, $CONFIG->pluginspath . "videolist/actions/add.php");
+register_action("videolist/edit", false, $CONFIG->pluginspath . "videolist/actions/edit.php");
 register_action("videolist/tubesearch", false, $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
-register_action("videolist/remove", false, $CONFIG->pluginspath . "videolist/actions/delete.php");
+register_action("videolist/delete", false, $CONFIG->pluginspath . "videolist/actions/delete.php");
