@@ -11,9 +11,7 @@
 function videolist_init() {
 	global $CONFIG;
 
-	if (isloggedin()) {
-		add_menu(elgg_echo('videolist'), $CONFIG->wwwroot . "mod/videolist/all.php");
-	}
+	add_menu(elgg_echo('videolist'), $CONFIG->wwwroot . "mod/videolist/all.php");
 
 	// Extend system CSS with our own styles
 	elgg_extend_view('css','videolist/css');
