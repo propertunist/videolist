@@ -16,21 +16,20 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 $video_id = (int) get_input('video_id');
 $video = get_entity($video_id);
 
-// set up breadcrumbs
-$page_owner = page_owner_entity();
-if ($page_owner === false || is_null($page_owner)) {
-	$page_owner = $_SESSION['user'];
-	set_page_owner($page_owner->getGUID());
-}
-elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
-elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), $CONFIG->wwwroot."pg/videolist/".$page_owner->username);
-elgg_push_breadcrumb(sprintf($video->title));
-$area1 = elgg_view('navigation/breadcrumbs');
-
 // If we can get out the video corresponding to video_id object ...
 if ($videos = get_entity($video_id)) {
 	set_page_owner($videos->container_guid);
 	$videos_container = get_entity($videos->container_guid);
+	// set up breadcrumbs
+	$page_owner = page_owner_entity();
+	if ($page_owner === false || is_null($page_owner)) {
+		$page_owner = $_SESSION['user'];
+		set_page_owner($page_owner->getGUID());
+	}
+	elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
+	elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), $CONFIG->wwwroot."pg/videolist/".$page_owner->username);
+	elgg_push_breadcrumb(sprintf($video->title));
+	$area1 = elgg_view('navigation/breadcrumbs');
 
 	if($videos_container->type == "group") {
 		set_context("groupsvideos");
