@@ -42,11 +42,12 @@ if ($videos = get_entity($video_id)) {
 	$area1 .= "<div id='content_header' class='clearfloat'><div class='content_header_title'><h2>".$title."</h2></div>";
 	if ($videos->canEdit()) {
 		$area1 .= "<div class='content_header_options'>
-					<a class='action_button' href=\"{$CONFIG->wwwroot}mod/videolist/edit.php?file_guid={$videos->getGUID()}\">".elgg_echo('edit')."</a>";
+					<a class='action_button' href=\"{$CONFIG->wwwroot}mod/videolist/edit.php?video={$videos->getGUID()}\">".elgg_echo('edit')."</a>";
 
 		$area1 .= elgg_view('output/confirmlink',array(	
-							'href' => $CONFIG->wwwroot . "action/videolist/delete?file=" . $videos->getGUID(),
+							'href' => $CONFIG->wwwroot . "action/videolist/delete?video=" . $videos->getGUID(),
 							'text' => elgg_echo('delete'),
+							'is_action' => true,
 							'confirm' => elgg_echo('document:delete:confirm'),
 							'class' => 'action_button disabled'))."</div>";  
 	}
