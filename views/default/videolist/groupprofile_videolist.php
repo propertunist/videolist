@@ -10,7 +10,7 @@
  */
 
 ?>
-<div class="group_tool_widget">
+<div class="group_tool_widget video">
 <h3><?php echo elgg_echo("videolist:group"); ?></h3>
 
 <?php
@@ -25,35 +25,26 @@ $videos = get_user_objects($vars['entity']->guid, "videolist", $number, 0);
 
 //if there are some files, go get them
 if ($videos) {
-
-	//display in list mode
-	echo "<div class=\"filerepo_widget_singleitem\" style=\"width:310px;padding:5px;\">";
-
 	foreach($videos as $f){
 		$mime = $f->mimetype;
 		$owner = get_entity($f->getOwner());
 		$numcomments = elgg_count_comments($f);
-		echo "<div class=\"filerepo_listview_icon\" style=\"float:left;width:90px;padding:8px 0 0 0;\"><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\"><img src=\"".$f->thumbnail."\" border=\"0\" width=\"85\" /></a></div>";
-		echo "<div class=\"filerepo_widget_content\" style=\"width:210px;margin-left:100px;\">";
-		echo "<div class=\"filerepo_listview_title\"><p class=\"filerepo_title\" style=\"font-weight:normal;font-size:12px;\"><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\">" . $f->title ."</a></p><br />by <a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a>";
-		if ($numcomments) {
-			echo "<br /><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\">" . sprintf(elgg_echo("comments")) . " (" . $numcomments . ")</a>";
-			echo "</div>";
-		}
-		echo "<div class=\"filerepo_listview_date\"><p class=\"filerepo_timestamp\"><small>" . friendly_time($f->time_created) . "</small></p></div>";
-		echo "</div>";
+		echo "<div class='entity_listing clearfloat'>";
+		echo "<div class='entity_listing_icon'><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\"><img src=\"".$f->thumbnail."\" border=\"0\" width=\"85\" /></a></div>";
+		echo "<div class='entity_listing_info'>";
+		echo "<p class='entity_title'><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\">" . $f->title ."</a><br />by <a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a></p>";
+		echo "<p class='entity_subtext'>" . friendly_time($f->time_created) . "</p>";
+		echo "</div></div>";
 
 	}
-	echo "</div>";
 
 	//get a link to the users files
 	$users_file_url = $vars['url'] . "pg/videolist/owned/" . page_owner_entity()->username;
 
-	echo "<div class=\"forum_latest\"><a href=\"{$users_file_url}\">" . elgg_echo("videolist:groupall") . "</a></div>";
+	echo "<p><a href=\"{$users_file_url}\">" . elgg_echo("videolist:groupall") . "</a></p>";
 
 } else {
 	echo "<p class='margin_top'>" . elgg_echo("videolist:none") . "</p>";
 }
-
+echo "</div>";
 ?>
-</div>
