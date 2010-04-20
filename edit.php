@@ -7,7 +7,7 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
 gatekeeper();
 
-$video_file = (int) get_input('file_guid');
+$video_file = (int) get_input('video');
 if ($video_file = get_entity($video_file)) {
 	
 	// Set the page owner
