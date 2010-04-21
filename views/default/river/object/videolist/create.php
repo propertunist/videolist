@@ -13,8 +13,11 @@ if(!$title) {
 }
 
 $string = sprintf(elgg_echo("videolist:river:created"),$url) . " ";
-$string .= elgg_echo("videolist:river:item") . " titled <a href=\"" . $object->getURL() . "\">" . $title . "</a> <span class='entity_subtext'>" . friendly_time($object->time_created) . "</span> <a class='river_comment_form_button link'>Comment</a>";
-$string .= elgg_view('likes/forms/link', array('entity' => $object));
+$string .= elgg_echo("videolist:river:item") . " titled <a href=\"" . $object->getURL() . "\">" . $title . "</a> <span class='entity_subtext'>" . friendly_time($object->time_created) . "</span>";
+if (get_plugin_setting('activitytype', 'riverdashboard') != 'classic'){
+	$string .= "<a class='river_comment_form_button link'>Comment</a>";
+	$string .= elgg_view('likes/forms/link', array('entity' => $object));
+}
 $string .= "<div class=\"river_content_display\">";
 $string .= "<a href=\"" . $object->getURL() . "\"><img src='".$thumbnail."' width='120' class='tubesearch'/></a>";
 $string .= "</div>";
