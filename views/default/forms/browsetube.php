@@ -53,7 +53,7 @@ $body .= 			"</li>";
 $body .= 		"</ul>";
 $body .= "</div>";
 
-$body .= '<form action="javascript:sendSearchRequest(1);" method="get">';
+$body .= '<form action="javascript:sendSearchRequest(1);" method="get" id="browse_video_form">';
 $body .= elgg_view('input/hidden',array('internalname'=>'video_action', 'value'=>'search_video'));
 $body .= elgg_view('input/hidden',array('internalname'=>'guid', 'value'=>$vars['guid']));
 

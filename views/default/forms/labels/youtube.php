@@ -12,7 +12,7 @@
 
 $body = '<p class="margin_none"><label>'.elgg_echo("videolist:title_search_tube").'</label></p>';
 $body .= "<div class='search_videos clearfloat'>";
-$body .= "<div style='float:left;width:10%;'>";
+$body .= "<div style='float:left;'>";
 $body .= "<a href=\"http://www.youtube.com\"><img src='".$vars['url']."mod/videolist/graphics/badge3.gif' height='30'/></a>";
 $body .= "</div>";
 $body .= "<div style='float:left;width:45%;'>";

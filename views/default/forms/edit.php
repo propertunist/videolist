@@ -8,7 +8,7 @@ $page_owner = page_owner_entity();
 $container_guid = $vars['entity']->container_guid;
 ?>
 
-<form action="<?php echo $vars['url']; ?>action/videolist/edit" enctype="multipart/form-data" method="post" class="margin_top">
+<form action="<?php echo $vars['url']; ?>action/videolist/edit" enctype="multipart/form-data" method="post" id="edit_video_form">
 
 	<p><label><?php echo elgg_echo("title"); ?><br />
 		<?php echo elgg_view("input/text", array("internalname" => "title_videourl","value" => $vars['entity']->title));?>

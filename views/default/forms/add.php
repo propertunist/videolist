@@ -127,7 +127,7 @@ if(isset($confirm_action) && ($confirm_action == 'add_video')) {
 	}
 }
 
-$body = '<form action="'.$_SERVER['php_self'].'" method="post" class="margin_top">';
+$body = '<form action="'.$_SERVER['php_self'].'" method="post" id="add_video_form">';
 $body .= elgg_view('input/hidden',array('internalname'=>'video_action', 'value'=>'add_video'));
 $body .= elgg_view('input/hidden',array('internalname'=>'guid', 'value'=>$vars['guid']));
 
