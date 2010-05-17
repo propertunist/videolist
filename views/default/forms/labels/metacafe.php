@@ -13,10 +13,10 @@
 $body = '<p class="margin_none"><label>'.elgg_echo("videolist:title_search_tube").'</label></p>';
 $body .= "<div  class='search_videos clearfloat'>";
 $body .= "<div style='float:left;'>";
-$body .= "<a href=\"http://www.metacafe.com\"><img src='".$vars['url']."mod/videolist/graphics/metacafe.jpg' width='120'/></a>";
+$body .= "<a href=\"http://www.metacafe.com\"><img src='".$vars['url']."mod/videolist/graphics/metacafe.jpg' height='30'/></a>";
 $body .= "</div>";
-$body .= "<div style='float:left;width:45%;'>";
-$body .= "<input type=\"text\" name=\"title_search\" value=\"\" id=\"title_search\" size=\"30\"/> &nbsp;&nbsp;";
+$body .= "<div style='float:left;'>";
+$body .= "<input type=\"text\" name=\"title_search\" value=\"\" id=\"title_search\" size=\"30\"/>";
 if($error['no-search'] == 0) {
 	$body .= '<div class="videolist_error">'.$error_msg['no-search'].'</div>';
 }

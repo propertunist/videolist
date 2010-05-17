@@ -15,8 +15,8 @@ $body .= "<div class='search_videos clearfloat'>";
 $body .= "<div style='float:left;'>";
 $body .= "<a href=\"http://www.youtube.com\"><img src='".$vars['url']."mod/videolist/graphics/badge3.gif' height='30'/></a>";
 $body .= "</div>";
-$body .= "<div style='float:left;width:45%;'>";
-$body .= "<input type=\"text\" name=\"title_search\" value=\"\" id=\"title_search\" size=\"30\"/> &nbsp;&nbsp;";
+$body .= "<div style='float:left;'>";
+$body .= "<input type=\"text\" name=\"title_search\" value=\"\" id=\"title_search\" size=\"30\"/>";
 if($error['no-search'] == 0) {
 	$body .= '<div class="videolist_error">'.$error_msg['no-search'].'</div>';
 }

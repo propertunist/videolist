@@ -51,9 +51,14 @@
 }
 .search_videos {
 	width:100%;
+	margin-top:4px;
 }
 .search_videos .submit_button {
 	margin:0;
+}
+.search_videos #title_search {
+	margin-left:14px;
+	margin-right:14px;
 }
 
 /* find videos search results list */
