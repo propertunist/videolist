@@ -24,7 +24,12 @@ set_page_owner($container_guid);
 
 $confirm_action = get_input('video_action');
 $guid = get_input('guid');
-$access_id = get_input('access_id');
+if(page_owner_entity() instanceof ElggGroup){
+	//if in a group, set the access level to default to the group
+	$access_id = page_owner_entity()->group_acl;
+}else{
+	$access_id = get_default_access(get_loggedin_user());
+}
 $title_videourl = get_input('title_videourl');
 $Pagecontainer = get_input('page');
 $get_addvideourl = get_input('add_videourl');
