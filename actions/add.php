@@ -32,23 +32,23 @@ if($page_owner->type == "group") {
 require_once(dirname(dirname(__FILE__)) . "/models/lib/class.vimeo.php");
 
 function fetchyoutubeDatatitle($videoid){
-	$buffer = file_get_contents('http://www.youtube.com/api2_rest?method=youtube.videos.get_details&dev_id=rG48P7iz0eo&video_id='.$videoid);
+	$buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$videoid);
 	/**
 	** generate XML View
 	**/
 	$xml_buffer = new SimpleXMLElement($buffer);
-	$vidDataTitle = $xml_buffer->video_details->title;
+	$vidDataTitle = $xml_buffer->title;
 	return $vidDataTitle;
 	//return "";
 }
 
 function fetchyoutubeDatadesc($videoid){
-	$buffer = file_get_contents('http://www.youtube.com/api2_rest?method=youtube.videos.get_details&dev_id=rG48P7iz0eo&video_id='.$videoid);
+	$buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$videoid);
 	/**
 	 ** generate XML View
 	 **/
 	$xml_buffer = new SimpleXMLElement($buffer);
-	$vidDataDesc = $xml_buffer->video_details->description;
+	$vidDataDesc = $xml_buffer->content;
 	return $vidDataDesc;
 	//return "";
 }
