@@ -108,8 +108,8 @@ function videolist_pagesetup() {
 		*/
 		if ((page_owner() == $_SESSION['guid'] || !page_owner()) && isloggedin()) {
 			//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
-			add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
-			add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
+			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
+			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
 			//add_submenu_item(sprintf(elgg_echo('videolist:find'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/search/");
 		} else if (page_owner() && $page_owner instanceof ElggUser) {
 			add_submenu_item(sprintf(elgg_echo("videolist:home"),$page_owner->name), $CONFIG->wwwroot . "pg/videolist/owned/". $page_owner->username);
