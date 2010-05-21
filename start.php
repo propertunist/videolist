@@ -40,6 +40,9 @@ function videolist_init() {
 
 	// Register entity type
 	register_entity_type('object','videolist');
+	
+	// Register profile menu hook
+	register_plugin_hook('profile_menu', 'profile', 'videolist_profile_menu');
 }
 
 /**
@@ -180,6 +183,17 @@ function videolist_object_notifications_intercept($hook, $entity_type, $returnva
 		}
 	}
 	return null;
+}
+
+function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
+	global $CONFIG;
+	
+	$return_value[] = array(
+		'text' => elgg_echo('videolist'),
+		'href' => "{$CONFIG->url}pg/videolist/owned/{$params['owner']->username}",
+	);
+	
+	return $return_value;
 }
 
 // Register a handler for adding videos
