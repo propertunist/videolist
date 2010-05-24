@@ -97,7 +97,7 @@ function videolist_pagesetup() {
 	$page_owner = page_owner_entity();
 
 	if ($page_owner instanceof ElggGroup && get_context() == "groups") {
-		add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
+		//add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
 	} else if (get_context() == "videolist") {
 		/**********************************************************************************************
 		****if user is OR is not registered user then show him following page menus to choose from
