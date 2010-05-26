@@ -13,7 +13,7 @@ global $CONFIG;
 
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
-$owner = page_owner_entity();
+$page_owner = page_owner_entity();
 if ($page_owner === false || is_null($page_owner)) {
 	$page_owner = $_SESSION['user'];
 	set_page_owner($page_owner->getGUID());
@@ -37,10 +37,14 @@ $title = sprintf(elgg_echo("videolist:home"), "$owner->name");
 //set videolist header
 if(page_owner() == get_loggedin_userid()) {
 	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist'));
+}elseif(page_owner_entity() instanceof ElggGroup){
+	$area1 .= elgg_view('navigation/breadcrumbs');	
+	$area1 .= elgg_view('videolist/group_video_header');
 } else {
 	$area1 .= elgg_view('navigation/breadcrumbs');
 	$area1 .= elgg_view('page_elements/content_header_member', array('type' => 'videolist'));
 }
+
 
 // include a view for plugins to extend
 $area3 = elgg_view("videolist/sidebar", array("object_type" => 'videolist'));

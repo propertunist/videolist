@@ -40,9 +40,6 @@ function videolist_init() {
 
 	// Register entity type
 	register_entity_type('object','videolist');
-	
-	// Register profile menu hook
-	register_plugin_hook('profile_menu', 'profile', 'videolist_profile_menu');
 }
 
 /**
@@ -97,7 +94,7 @@ function videolist_pagesetup() {
 	$page_owner = page_owner_entity();
 
 	if ($page_owner instanceof ElggGroup && get_context() == "groups") {
-		//add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
+		add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
 	} else if (get_context() == "videolist") {
 		/**********************************************************************************************
 		****if user is OR is not registered user then show him following page menus to choose from
@@ -109,19 +106,11 @@ function videolist_pagesetup() {
 
 		add_submenu_item(elgg_echo('videolist:find'),$CONFIG->wwwroot."pg/videolist/search/");
 		*/
-		if ((page_owner() == $_SESSION['guid'] || !page_owner()) && isloggedin()) {
-			//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
-			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
-			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
-			//add_submenu_item(sprintf(elgg_echo('videolist:find'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/search/");
-		} else if (page_owner() && $page_owner instanceof ElggUser) {
-			add_submenu_item(sprintf(elgg_echo("videolist:home"),$page_owner->name), $CONFIG->wwwroot . "pg/videolist/owned/". $page_owner->username);
-		}
-	} else if (get_context() == "groupsvideos") {
-		add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
+	} else if (get_context() == "groups") {
+		//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
 		if ($page_owner->canEdit()) {
-			add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
-			add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
+			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
+			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
 		}
 	}
 }
@@ -183,17 +172,6 @@ function videolist_object_notifications_intercept($hook, $entity_type, $returnva
 		}
 	}
 	return null;
-}
-
-function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
-	global $CONFIG;
-	
-	$return_value[] = array(
-		'text' => elgg_echo('videolist'),
-		'href' => "{$CONFIG->url}pg/videolist/owned/{$params['owner']->username}",
-	);
-	
-	return $return_value;
 }
 
 // Register a handler for adding videos
