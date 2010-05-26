@@ -32,8 +32,8 @@ if ($videos) {
 		echo "<div class='entity_listing clearfloat'>";
 		echo "<div class='entity_listing_icon'><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\"><img src=\"".$f->thumbnail."\" border=\"0\" width=\"85\" /></a></div>";
 		echo "<div class='entity_listing_info'>";
-		echo "<p class='entity_title'><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\">" . $f->title ."</a><br />by <a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a></p>";
-		echo "<p class='entity_subtext'>" . friendly_time($f->time_created) . "</p>";
+		echo "<p class='entity_title'><a href=\"{$vars['url']}pg/videolist/watch/{$f->guid}\">" . $f->title ."</a></p><p class='entity_subtext'><a href=\"{$vars['url']}pg/profile/{$owner->username}\">{$owner->name}</a> ";
+		echo friendly_time($f->time_created) . "</p>";
 		echo "</div></div>";
 
 	}

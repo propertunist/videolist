@@ -102,3 +102,14 @@
 .close_video a {
 	color:white;
 }
+
+/* videos group widget */
+.group_tool_widget.video .entity_listing_icon img {
+	margin:0;
+	width:auto;
+	max-width:80px;
+	height:60px;
+}
+.group_tool_widget.video .entity_listing_info {
+	width:260px;
+}
