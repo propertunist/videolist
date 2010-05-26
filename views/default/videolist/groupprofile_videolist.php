@@ -21,7 +21,7 @@ if (!$number)
 	$number = 5;
 
 //get the user's files
-$videos = get_user_objects($vars['entity']->guid, "videolist", $number, 0);
+$videos = elgg_get_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => $number));
 
 //if there are some files, go get them
 if ($videos) {
