@@ -30,6 +30,12 @@ if(page_owner_entity() instanceof ElggGroup){
 }else{
 	$access_id = get_default_access(get_loggedin_user());
 }
+//if it is a group, pull out the group access view
+if(page_owner_entity() instanceof ElggGroup){
+	$options = group_access_options(page_owner_entity());
+}else{
+	$options = '';
+}
 $title_videourl = get_input('title_videourl');
 $Pagecontainer = get_input('page');
 $get_addvideourl = get_input('add_videourl');
@@ -149,7 +155,7 @@ $body .= elgg_view('input/tags', array('internalname' => 'videolisttags', 'value
 $body .= '</label></p>';
 
 $body .= '<p><label>'.elgg_echo("videolist:title_access").'<br />';
-$body .= elgg_view('input/access',array('internalname'=>'access_id', 'value' => $access_id));
+$body .= elgg_view('input/access',array('internalname'=>'access_id', 'value' => $access_id, 'options' => $options));
 $body .= '</label></p>';
 $body .= elgg_view('input/submit', array('internalname'=>'submit','value'=>elgg_echo('videolist:submit')));
 $body .= '</form>';

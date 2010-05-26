@@ -23,7 +23,7 @@ if ($page_owner === false || is_null($page_owner)) {
 	set_page_owner($_SESSION['guid']);
 }
 
-if($page_owner->type == "group") {
+if($page_owner instanceof ElggGroup) {
 	$entity_referer = $page_owner->type.":".$page_owner->getGUID();
 } else {
 	$entity_referer = $page_owner->username;
