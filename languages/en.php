@@ -23,6 +23,7 @@ $english = array(
 	"videolist:search" => "All Site videos",
 	'videolist:friends' => "Friends' videos",
 	'videolist:edit' => "Edit video",
+	'videolist:ingroup' => "in the group",
 	"videolist:title_videourl" => 'Enter Video Url',
 	"videolist:submit" => 'Submit',
 	"videolist:videoTitle" => "Title",
