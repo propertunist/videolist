@@ -15,7 +15,7 @@ if(!$title) {
 $string = sprintf(elgg_echo("videolist:river:created"),$url) . " ";
 $string .= elgg_echo("videolist:river:item") . " titled <a href=\"" . $object->getURL() . "\">" . $title . "</a>";
 //if the video was added to a group, show that unless displayed on the group profile
-if($is_group && get_context() != 'groups'){
+if(($is_group instanceof ElggGroup) && (get_context() != 'groups')){
 	$string .= " " . elgg_echo('videolist:ingroup') . " " . $is_group->name;
 }
 $string .= "<span class='entity_subtext'>" . friendly_time($object->time_created) . "</span>";
