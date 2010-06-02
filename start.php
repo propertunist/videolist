@@ -40,8 +40,15 @@ function videolist_init() {
 
 	// Register entity type
 	register_entity_type('object','videolist');
-	
+
 	register_plugin_hook('profile_menu', 'profile', 'videolist_profile_menu');
+
+	// register for embed
+	register_plugin_hook('embed_get_sections', 'all', 'videolist_embed_get_sections');
+	register_plugin_hook('embed_get_items', 'videolist', 'videolist_embed_get_items');
+
+	// override icons for ElggEntity::getIcon()
+	register_plugin_hook('entity:icon:url', 'user', 'profile_usericon_hook');
 }
 
 /**
@@ -178,13 +185,70 @@ function videolist_object_notifications_intercept($hook, $entity_type, $returnva
 
 function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
 	global $CONFIG;
-	
+
 	$return_value[] = array(
 		'text' => elgg_echo('videolist'),
 		'href' => "{$CONFIG->url}pg/videolist/owned/{$params['owner']->username}",
 	);
-	
+
 	return $return_value;
+}
+
+
+/**
+ * Register videolist as an embed type.
+ *
+ * @param unknown_type $hook
+ * @param unknown_type $type
+ * @param unknown_type $value
+ * @param unknown_type $params
+ */
+function videolist_embed_get_sections($hook, $type, $value, $params) {
+	$value['videolist'] = array(
+		'name' => elgg_echo('videolist'),
+		'layout' => 'list',
+	);
+
+	return $value;
+}
+
+/**
+ * Return a list of videos for embedding
+ *
+ * @param unknown_type $hook
+ * @param unknown_type $type
+ * @param unknown_type $value
+ * @param unknown_type $params
+ */
+function videolist_embed_get_items($hook, $type, $value, $params) {
+	$options = array(
+		'owner_guid' => get_loggedin_userid(),
+		'type_subtype_pair' => array('object' => 'videolist'),
+		'count' => TRUE
+	);
+
+	$count = elgg_get_entities($options);
+	$value['count'] += $count;
+
+	unset($options['count']);
+	$options['offset'] = $params['offset'];
+	$options['limit'] = $params['limit'];
+
+	$items = elgg_get_entities($options);
+
+	$value['items'] = array_merge($items, $value['items']);
+
+	return $value;
+}
+
+/**
+ * Returns the URL of the icon for $entity at $size.
+ *
+ * @param ElggEntity $entity
+ * @param string $size Not used yet.  Not sure if possible.
+ */
+function videolist_get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
+	return $entity->thumbnail;
 }
 
 // Register a handler for adding videos
