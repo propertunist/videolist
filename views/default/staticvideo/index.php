@@ -12,7 +12,8 @@
 
 $owner = $_SESSION['guid'];
 $number = 10;
-$owner_videos = get_entities("object", "videolist", $_SESSION['guid'], $number);
+$owner_videos = elgg_get_entities(array('types' => 'object', 'subtypes' => 'videolist', 'owner_guids' => $_SESSION['guid']));
+//get_entities("object", "videolist", $_SESSION['guid'], $number);
 $videodiv = '';
 $width = "390";
 $height = "275";

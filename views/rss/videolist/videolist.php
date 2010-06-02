@@ -9,7 +9,7 @@
 	 * @copyright Prateek Choudhary
 	 */
 
-	 if ($foreach = get_entities('object','',$vars['entity']->guid)) {
+	 if ($foreach = elgg_get_entities(array('types' => 'object', 'subtypes' => 'videolist'))) {
 	 	foreach($foreach as $videos)
 	 		echo elgg_view_entity($videos);
 	 }
