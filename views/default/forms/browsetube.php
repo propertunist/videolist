@@ -206,7 +206,7 @@ function disableScreen(embed_video, param2) {
 			
 	$(getContainer).css({
 					top: getPageScroll()[1] + (getPageHeight() / 10),
-					left: ((getPageWidth() / 2) - (300)),
+					left: ((getPageWidth() / 2) - (400)),
 					height: "0px"
       }).animate( {height:"390px"}, 600 );			
 	
