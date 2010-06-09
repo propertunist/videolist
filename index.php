@@ -38,7 +38,9 @@ $title = sprintf(elgg_echo("videolist:home"), "$owner->name");
 
 //set videolist header
 if(page_owner() == get_loggedin_userid()) {
-	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist'));
+	// get the filter menu
+	$friend_link = $CONFIG->wwwroot . "pg/videolist/friends/" . $page_owner->username;
+	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist', 'friend_link' => $friend_link));
 }elseif(page_owner_entity() instanceof ElggGroup){
 	$area1 .= elgg_view('navigation/breadcrumbs');	
 	$area1 .= elgg_view('videolist/group_video_header');

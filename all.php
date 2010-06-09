@@ -21,9 +21,10 @@ if ($page_owner === false || is_null($page_owner)) {
 }
 
 $title = sprintf(elgg_echo("videolist:search"));
-
+// get the filter menu
+$friend_link = $CONFIG->wwwroot . "pg/videolist/friends/" . $page_owner->username;
 // Get objects
-$area1 = elgg_view('page_elements/content_header', array('context' => "everyone", 'type' => 'videolist'));
+$area1 = elgg_view('page_elements/content_header', array('context' => "everyone", 'type' => 'videolist', 'friend_link' => $friend_link));
 set_input('show_viewtype', 'all');
 $area2 .= elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'limit' => 10, 'full_view' => TRUE, 'view_type_toggle' => FALSE, 'pagination' => TRUE));
 // include a view for plugins to extend
