@@ -248,6 +248,13 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
  * @param string $size Not used yet.  Not sure if possible.
  */
 function videolist_get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
+
+	// tiny thumbnails are too small to be useful, so give a generic video icon
+	if ($size == 'tiny') {
+		global $CONFIG;
+		return "{$CONFIG->url}mod/videolist/graphics/video_icon_tiny.png";
+	}
+
 	return $entity->thumbnail;
 }
 
