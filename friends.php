@@ -14,10 +14,16 @@ require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 	
 // get the filter menu
 $area1 = elgg_view("page_elements/content_header", array('context' => "friends", 'type' => 'videolist'));
-			
+
+$page_owner = page_owner_entity();
+if ($page_owner === false || is_null($page_owner)) {
+	$page_owner = $_SESSION['user'];
+	set_page_owner($page_owner->getGUID());
+}
+		
 // List videos
 set_context('search');
-$area2 .= list_user_friends_objects(page_owner(),'videolist',10,false,false);
+$area2 .= list_user_friends_objects($page_owner->getGUID(), 'videolist', 10, false, false);
 set_context('videolist');
 		
 // include a view for plugins to extend
