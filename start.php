@@ -206,7 +206,8 @@ function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
 function videolist_embed_get_sections($hook, $type, $value, $params) {
 	$value['videolist'] = array(
 		'name' => elgg_echo('videolist'),
-		'layout' => 'gallery',
+		'layout' => 'list',
+		'icon_size' => 'medium',
 	);
 
 	return $value;
