@@ -57,6 +57,8 @@ $area3 = elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
 $comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
 $area3 .= elgg_view('annotation/latest_comments', array('comments' => $comments));
 
+// tag-cloud display
+$area3 .= display_tagcloud(0, 50, 'tags', 'object', 'videolist');
 
 // Get objects
 $area2 = elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10));

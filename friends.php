@@ -36,6 +36,9 @@ $area3 = elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
 // fetch & display latest comments on friends videos
 $comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
 $area3 .= elgg_view('annotation/latest_comments', array('comments' => $comments));
+
+// tag-cloud display
+$area3 .= display_tagcloud(0, 50, 'tags', 'object', 'videolist');
 				
 // Format page
 $body = elgg_view_layout('one_column_with_sidebar', $area1.$area2, $area3);

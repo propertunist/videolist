@@ -58,6 +58,17 @@ if ($videos = get_entity($video_id)) {
 						'entity_owner' => $page_owner,
 						'full' => true
 						));
+						
+	// include a view for plugins to extend
+	$area3 .= elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
+	
+	// get the latest comments on all videos
+	$comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
+	$area3 .= elgg_view('annotation/latest_comments', array('comments' => $comments));
+
+	// tag-cloud display
+	$area3 .= display_tagcloud(0, 50, 'tags', 'object', 'videolist');				
+							
 	$body = elgg_view_layout("one_column_with_sidebar", $area1.$area2, $area3);
 } else {
 		// video not found
