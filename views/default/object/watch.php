@@ -18,12 +18,20 @@ if(isset($vars['entity'])) {
 	$title = $videos->title;
 	$url = $videos->url;
 	$videoid = $videos->video_id;
+	$tags = $videos->tags;
 	
 	$videodiv .= "<div class='video_view'>";
 	
 	// view for plugins to extend	
 	$videodiv .= elgg_view('videolist/options', array('entity' => $videos)) .
 				 elgg_view_likes($videos); // include likes
+				 
+	// display any tags for the Video
+	if (!empty($tags)) {
+		$videodiv .= "<p class='tags margin_none'>";
+		$videodiv .= elgg_view('output/tags',array('value' => $tags));
+		$videodiv .= "</p>";
+	}
 	
 	if ($videos->videotype == "youtube") {
 		$videodiv .= "<br /><object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0&auoplay=1\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"wmode\" value=\"transparent\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0&autoplay=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\" wmode=\"transparent\"></embed></object>";

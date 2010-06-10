@@ -44,6 +44,9 @@
 .video_view embed {
 	margin-top:20px;
 }
+.video_view .tags {
+	text-align:left;
+}
 
 /* search for videos */
 #loading_search_results .ajax_loader {
