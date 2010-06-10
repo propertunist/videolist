@@ -44,7 +44,8 @@ if ($videos) {
 	echo "<p><a href=\"{$users_file_url}\">" . elgg_echo("videolist:groupall") . "</a></p>";
 
 } else {
-	echo "<p class='margin_top'>" . elgg_echo("videolist:none") . "</p>";
+	$upload_video = $vars['url'] . "pg/videolist/browse/" . page_owner_entity()->username;
+	echo "<p class='margin_top'><a href=\"{$upload_video}\">" . elgg_echo("videolist:add") . "</a></p>";
 }
 echo "</div>";
 ?>
