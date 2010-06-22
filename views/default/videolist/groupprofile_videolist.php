@@ -11,6 +11,7 @@
 
 ?>
 <div class="group_tool_widget video">
+<span class="group_widget_link"><a href="<?php echo $vars['url'] . "pg/videolist/owned/" . page_owner_entity()->username; ?>"><?php echo elgg_echo('link:view:all')?></a></span>
 <h3><?php echo elgg_echo("videolist:group"); ?></h3>
 
 <?php
@@ -37,11 +38,6 @@ if ($videos) {
 		echo "</div></div>";
 
 	}
-
-	//get a link to the users files
-	$users_file_url = $vars['url'] . "pg/videolist/owned/" . page_owner_entity()->username;
-
-	echo "<p><a href=\"{$users_file_url}\">" . elgg_echo("videolist:groupall") . "</a></p>";
 
 } else {
 	$upload_video = $vars['url'] . "pg/videolist/browse/" . page_owner_entity()->username;
