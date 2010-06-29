@@ -39,4 +39,4 @@ if ($result)
 else
 	register_error(elgg_echo("videolist:editfailed"));
 	
-forward($CONFIG->wwwroot . "pg/videolist/" . $container->username);
+forward($_SERVER['HTTP_REFERER']);
