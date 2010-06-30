@@ -6,6 +6,12 @@
 gatekeeper();
 $page_owner = page_owner_entity();
 $container_guid = $vars['entity']->container_guid;
+$owner = get_entity($container_guid);
+if($owner instanceof ElggGroup){
+	$options = group_access_options($owner);
+}else{
+	$options = '';
+}
 ?>
 
 <form action="<?php echo $vars['url']; ?>action/videolist/edit" enctype="multipart/form-data" method="post" id="edit_video_form">
@@ -19,7 +25,7 @@ $container_guid = $vars['entity']->container_guid;
 	</label></p>
 	
 	<p><label><?php echo elgg_echo('access'); ?><br />
-		<?php echo elgg_view('input/access', array('internalname' => 'access_id','value' => $vars['entity']->access_id)); ?>
+		<?php echo elgg_view('input/access', array('internalname' => 'access_id','value' => $vars['entity']->access_id, 'options' => $options)); ?>
 	</label></p>
 	
 	<p>
