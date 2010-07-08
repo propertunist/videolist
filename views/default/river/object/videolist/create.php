@@ -18,11 +18,13 @@ $string .= elgg_echo("videolist:river:item") . " titled <a href=\"" . $object->g
 if(($is_group instanceof ElggGroup) && (get_context() != 'groups')){
 	$string .= " " . elgg_echo('videolist:ingroup') . " " . $is_group->name;
 }
-$string .= "<span class='entity_subtext'>" . friendly_time($object->time_created) . "</span>";
+$string .= "<span class='entity_subtext'>" . friendly_time($object->time_created);
 if (isloggedin()){
 	$string .= "<a class='river_comment_form_button link'>Comment</a>";
 	$string .= elgg_view('likes/forms/link', array('entity' => $object));
 }
+$string .= "</span>";
+
 $string .= "<div class=\"river_content_display\">";
 $string .= "<a href=\"" . $object->getURL() . "\"><img src='".$thumbnail."' width='120' class='tubesearch'/></a>";
 $string .= "</div>";
