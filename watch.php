@@ -8,7 +8,6 @@
  * @author Prateek Choudhary <synapticfield@gmail.com>
  * @copyright Prateek Choudhary
  */
-global $CONFIG;
 
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
@@ -26,8 +25,8 @@ if ($videos = get_entity($video_id)) {
 		$page_owner = $_SESSION['user'];
 		set_page_owner($page_owner->getGUID());
 	}
-	elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
-	elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), $CONFIG->wwwroot."pg/videolist/".$page_owner->username);
+	elgg_push_breadcrumb(elgg_echo('videolist:all'), elgg_get_site_url()."videolist/all.php");
+	elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), elgg_get_site_url()."videolist/".$page_owner->username);
 	elgg_push_breadcrumb(sprintf($video->title));
 	$area1 = elgg_view('navigation/breadcrumbs');
 
@@ -41,10 +40,10 @@ if ($videos = get_entity($video_id)) {
 	$area1 .= "<div id='content_header' class='clearfloat'><div class='content_header_title'><h2>".$title."</h2></div>";
 	if ($videos->canEdit()) {
 		$area1 .= "<div class='content_header_options'>
-					<a class='action_button' href=\"{$CONFIG->wwwroot}mod/videolist/edit.php?video={$videos->getGUID()}\">".elgg_echo('edit')."</a>";
+					<a class='action_button' href=\"".elgg_get_site_url()."videolist/edit.php?video={$videos->getGUID()}\">".elgg_echo('edit')."</a>";
 
 		$area1 .= elgg_view('output/confirmlink',array(	
-							'href' => $CONFIG->wwwroot . "action/videolist/delete?video=" . $videos->getGUID(),
+							'href' => elgg_get_site_url() . "action/videolist/delete?video=" . $videos->getGUID(),
 							'text' => elgg_echo('delete'),
 							'is_action' => true,
 							'confirm' => elgg_echo('document:delete:confirm'),

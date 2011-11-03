@@ -9,7 +9,6 @@
  * @copyright Prateek Choudhary
  */
 
-global $CONFIG;
 // Render the video upload page
 // Load Elgg engine
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
@@ -39,7 +38,7 @@ if(isset($container_guid) && !empty($container_guid)){
 $title = sprintf(elgg_echo("videolist:add"));
 
 //set up breadcrumbs
-elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(elgg_echo('videolist:all'), elgg_get_site_url()."videolist/all/");
 elgg_push_breadcrumb(elgg_echo("videolist:add"));
 
 $area1 = elgg_view('navigation/breadcrumbs');

@@ -26,8 +26,8 @@ if ($video_file = get_entity($video_file)) {
 		
 	if ($video_file->canEdit()) {
 		// set up breadcrumbs
-		elgg_push_breadcrumb(elgg_echo('videolist:all'), $CONFIG->wwwroot."mod/videolist/all.php");
-		elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), $CONFIG->wwwroot."pg/videolist/".$page_owner->username);
+		elgg_push_breadcrumb(elgg_echo('videolist:all'), elgg_get_site_url()."videolist/all.php");
+		elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), elgg_get_site_url()."videolist/".$page_owner->username);
 		elgg_push_breadcrumb(sprintf(elgg_echo("videolist:edit")));
 		
 		$area1 = elgg_view('navigation/breadcrumbs');

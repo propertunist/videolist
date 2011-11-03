@@ -9,10 +9,8 @@
  * @link http://elgg.com/
  */
 
-global $CONFIG;
-
 if($vars['videolist']){
-	echo "<img src=\"{$CONFIG->wwwroot}mod/videolist/graphics/icons/Video_Icon.jpg\" border=\"0\" />";
+	echo "<img src=\"".elgg_get_site_url()."mod/videolist/graphics/icons/Video_Icon.jpg\" border=\"0\" />";
 } else {
 	$mime = $vars['mimetype'];
 	if (isset($vars['thumbnail'])) {
@@ -32,7 +30,7 @@ if($vars['videolist']){
 		if ($size == 'large') {
 			echo "<img src=\"{$thumbnail}\" border=\"0\" />";
 		} else {
-			echo "<img src=\"{$CONFIG->wwwroot}mod/videolist/graphics/icons/Video_Icon.jpg\" border=\"0\" />";
+			echo "<img src=\"".elgg_get_site_url()."mod/videolist/graphics/icons/Video_Icon.jpg\" border=\"0\" />";
 		}
 	}
 }

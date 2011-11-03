@@ -6,8 +6,6 @@
 /* @copyright Prateek.Choudhary
 /*****************************************************************************************/
 
-global $CONFIG;
-
 $video_file = $vars['entity'];
 
 if(!empty($video_file)) {
@@ -22,7 +20,7 @@ if(!empty($video_file)) {
 
 	$mime = "image/html";
 	$thumbnail = $videothumbnail;
-	$watch_URL = $vars['url']."pg/videolist/watch/".$video_guid;
+	$watch_URL = $vars['url']."videolist/watch/".$video_guid;
 	
 	$object_acl = get_readable_access_level($video_file->access_id);
 	// metadata block, - access level, edit, delete, + options view extender
@@ -40,13 +38,13 @@ if(!empty($video_file)) {
 	
 	if(get_input('show_viewtype') == "all") {
 		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}pg/videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
+		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
 		$info .= "</p>";
 		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
 		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
 	} else {
 		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}pg/videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
+		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
 		$info .= "</p>";
 		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
 		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";

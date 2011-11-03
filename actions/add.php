@@ -189,7 +189,7 @@ else if($pageContainer == "vimeo"){
 // Before we can set metadata, we need to save the video
 if (!$videolist->save()) {
 	register_error(elgg_echo("videolist:error"));
-	forward("pg/videolist/new");
+	forward("videolist/new");
 }
 //add video tags
 $videolist_tags_array = string_to_tag_array($_SESSION['videolisttags']);
@@ -208,7 +208,7 @@ unset($_SESSION['candidate_profile_video_access_id']); unset($_SESSION['candidat
 unset($_SESSION['videolisttags']);unset($_SESSION['Pagecontainer']);
 // Forward to the main videolist page
 
-forward("pg/videolist/owned/".page_owner_entity()->username);
+forward("videolist/owned/".page_owner_entity()->username);
 
 // Remove the videolist cache
 unset($_SESSION['candidate_profile_video_access_id']); unset($_SESSION['candidate_profile_video']);

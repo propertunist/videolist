@@ -8,8 +8,6 @@
 * @author Prateek Choudhary <synapticfield@gmail.com>
 * @copyright Prateek Choudhary
 */
- 
-global $CONFIG;
 
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
@@ -33,7 +31,7 @@ if(isset($container_guid) && !empty($container_guid)) {
 	}
 }
 
-elgg_push_breadcrumb(elgg_echo('videolist:find'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(elgg_echo('videolist:find'), elgg_get_site_url()."videolist/all/");
 elgg_push_breadcrumb(elgg_echo("videolist:browsemenu"));
 
 $title = elgg_echo("videolist:browsemenu");

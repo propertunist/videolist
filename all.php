@@ -22,7 +22,7 @@ if ($page_owner === false || is_null($page_owner)) {
 
 $title = sprintf(elgg_echo("videolist:search"));
 // get the filter menu
-$friend_link = $CONFIG->wwwroot . "pg/videolist/friends/" . $page_owner->username;
+$friend_link = elgg_get_site_url() . "videolist/friends/" . $page_owner->username;
 // Get objects
 $area1 = elgg_view('page_elements/content_header', array('context' => "everyone", 'type' => 'videolist', 'friend_link' => $friend_link));
 set_input('show_viewtype', 'all');

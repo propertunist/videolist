@@ -30,7 +30,6 @@ if ($page_owner === false || is_null($page_owner)) {
 	set_page_owner($_SESSION['guid']);
 }
 
-global $CONFIG;
 $queryFeed = get_input('q');
 $start_index = get_input('start_index');
 $results_perpage = 10;
@@ -116,7 +115,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 			$body .=  "<b>Description : </b>".substr($media->group->description, 0, 140)." ...</p>";
 			$body .=  '</td>';
 
-			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$vid_array[1]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
+			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeed('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".elgg_get_site_url()."videolist/new/".$container."/title_videourl/".$vid_array[1]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 			$body .=  '</tr>';
 			$body .=  '</table></div>';
@@ -208,7 +207,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 			$body .=  "<p class='entity_subtext'><b>Description : </b>".$desc_src."</p>";
 			$body .=  '</td>';
 
-			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$metacafevideoIdArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
+			$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedMetacafe('".$showEncodedVideo."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".elgg_get_site_url()."videolist/new/".$container."/title_videourl/".$metacafevideoIdArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 			$body .=  '</tr>';
 			$body .=  '</table>';
@@ -301,7 +300,7 @@ if (!isset($queryFeed) || empty($queryFeed)) {
 				$body .=  "<b>Tags : </b>".implode(', ', $aTags)."</p>";
 				$body .=  '</td>';
 
-				$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".$CONFIG->wwwroot."pg/videolist/new/".$container."/title_videourl/".$embedidArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
+				$body .=  "<td class='video_actions'><a class='action_button small' onclick=\"javascript:showV_idFeedVimeo('".$embedidArray[0]."', ".$k.")\">".elgg_echo('videolist:play:video')."</a> <a class='action_button small' href=\"".elgg_get_site_url()."videolist/new/".$container."/title_videourl/".$embedidArray[0]."/page/".$queryCatgory."\">".elgg_echo('videolist:add:video')."</a></td>";
 
 				$body .=  '</tr>';
 				$body .=  '</table>';

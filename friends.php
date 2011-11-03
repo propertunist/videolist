@@ -11,8 +11,6 @@
 
 // Start engine
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
-
-global $CONFIG;
 	
 $page_owner = page_owner_entity();
 if ($page_owner === false || is_null($page_owner)) {
@@ -21,7 +19,7 @@ if ($page_owner === false || is_null($page_owner)) {
 }
 
 // get the filter menu
-$friend_link = $CONFIG->wwwroot . "pg/videolist/friends/" . $page_owner->username;
+$friend_link = elgg_get_site_url() . "videolist/friends/" . $page_owner->username;
 // get the filter menu
 $area1 = elgg_view("page_elements/content_header", array('context' => "friends", 'type' => 'videolist', 'friend_link' => $friend_link));
 	

@@ -8,8 +8,6 @@
  * @author Prateek Choudhary <synapticfield@gmail.com>
  * @copyright Prateek Choudhary
  */
- 
-global $CONFIG;
 
 require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
 
@@ -32,14 +30,14 @@ if(isset($container_guid) && !empty($container_guid)) {
 	}
 }
 
-elgg_push_breadcrumb(elgg_echo('videolist:find'), $CONFIG->wwwroot."mod/videolist/all.php");
+elgg_push_breadcrumb(elgg_echo('videolist:find'), elgg_get_site_url()."videolist/all");
 elgg_push_breadcrumb(sprintf(elgg_echo("videolist:home"),$page_owner->name));
 $title = sprintf(elgg_echo("videolist:home"), "$owner->name");
 
 //set videolist header
 if(page_owner() == get_loggedin_userid()) {
 	// get the filter menu
-	$friend_link = $CONFIG->wwwroot . "pg/videolist/friends/" . $page_owner->username;
+	$friend_link = elgg_get_site_url() . "videolist/friends/" . $page_owner->username;
 	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist', 'friend_link' => $friend_link));
 }elseif(page_owner_entity() instanceof ElggGroup){
 	$area1 .= elgg_view('navigation/breadcrumbs');	

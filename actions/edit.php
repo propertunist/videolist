@@ -2,8 +2,6 @@
 /**
  * Elgg video edit
  */
-
-global $CONFIG;
 	
 // Get variables
 $title = strip_tags(get_input("title_videourl"));
@@ -14,7 +12,7 @@ $guid = (int) get_input('video_guid');
 
 if (!$video = get_entity($guid)) {
 	register_error(elgg_echo("videolist:noentity"));
-	forward($CONFIG->wwwroot . "pg/videolist/" . $_SESSION['user']->username);
+	forward(elgg_get_site_url() . "videolist/" . $_SESSION['user']->username);
 	exit;
 }
 	

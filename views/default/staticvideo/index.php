@@ -27,7 +27,7 @@ if(!empty($owner_videos)) {
 		$video_guid = $node->guid;
 		$video_id = $node->video_id;
 		$videodiv .= "<div id='videobox'>";
-		$videodiv .= "<a href='".$vars['url']."pg/videolist/watch/".$video_guid."'>";
+		$videodiv .= "<a href='".$vars['url']."videolist/watch/".$video_guid."'>";
 		$videodiv .= "<img src='http://img.youtube.com/vi/".$video_id."/default.jpg' width='150' alt='no video'/>";
 		$videodiv .= "</a>";
 

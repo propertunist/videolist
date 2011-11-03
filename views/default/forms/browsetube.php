@@ -42,13 +42,13 @@ if(isset($confirm_action) && ($confirm_action == 'search_video')) {
 $body .= "<div class='elgg_horizontal_tabbed_nav margin_top'>";
 $body .= 		"<ul id='videonav'>";
 $body .= 			"<li class='selected' id='YT'>";
-$body .= 				"<a href=\"".$vars['url']."pg/videolist/browse/".$getcontainer_guid."?q=youtube\">YouTube</a>";
+$body .= 				"<a href=\"".$vars['url']."videolist/browse/".$getcontainer_guid."?q=youtube\">YouTube</a>";
 $body .= 			"</li>";
 $body .= 			"<li id='MC'>";
-$body .= 				"<a href=\"".$vars['url']."pg/videolist/browse/".$getcontainer_guid."?q=metacafe\">Metacafe</a>";
+$body .= 				"<a href=\"".$vars['url']."videolist/browse/".$getcontainer_guid."?q=metacafe\">Metacafe</a>";
 $body .= 			"</li>";
 $body .= 			"<li id='VM'>";
-$body .= 				"<a href=\"".$vars['url']."pg/videolist/browse/".$getcontainer_guid."?q=vimeo\">Vimeo</a>";
+$body .= 				"<a href=\"".$vars['url']."videolist/browse/".$getcontainer_guid."?q=vimeo\">Vimeo</a>";
 $body .= 			"</li>";
 $body .= 		"</ul>";
 $body .= "</div>";
