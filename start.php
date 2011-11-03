@@ -12,6 +12,8 @@
 elgg_register_event_handler('init', 'system', 'videolist_init');
 
 function videolist_init() {
+	
+	elgg_register_library('elgg:videolist', elgg_get_plugins_path() . 'videolist/lib/videolist.php');
 
 	// add a site navigation item
 	$item = new ElggMenuItem('videolist', elgg_echo('videolist'), 'videolist/all');

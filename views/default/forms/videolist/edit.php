@@ -2,6 +2,9 @@
 /**
 * Elgg Video Plugin > Edit view
 */
+
+elgg_load_library('elgg:videolist');
+
 // Make sure we're logged in (send us to the front page if not)
 gatekeeper();
 $page_owner = page_owner_entity();
