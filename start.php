@@ -9,11 +9,13 @@
  * @copyright Prateek Choudhary
  */
 
-register_elgg_event_handler('init','system','videolist_init');
+elgg_register_event_handler('init', 'system', 'videolist_init');
 
 function videolist_init() {
 
-	add_menu(elgg_echo('videolist'), elgg_get_site_url() . "videolist/all");
+	// add a site navigation item
+	$item = new ElggMenuItem('videolist', elgg_echo('videolist'), 'videolist/all');
+	elgg_register_menu_item('site', $item);
 
 	// Extend system CSS with our own styles
 	elgg_extend_view('css','videolist/css');
@@ -22,7 +24,7 @@ function videolist_init() {
 	register_translations(elgg_get_plugins_path() . "videolist/languages/");
 
 	// Register a page handler, so we can have nice URLs
-	register_page_handler('videolist','videolist_page_handler');
+	elgg_register_page_handler('videolist', 'videolist_page_handler');
 
 	//extend this plugin for groups
 	elgg_extend_view('groups/tool_latest','videolist/groupprofile_videolist');
@@ -32,40 +34,40 @@ function videolist_init() {
 	}
 	
 	// Register a handler for adding videos
-	register_elgg_event_handler('create', 'videolist', 'videolist_create_event_listener');
+	elgg_register_event_handler('create', 'videolist', 'videolist_create_event_listener');
 
 	// Register a handler for delete videos
-	register_elgg_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
+	elgg_register_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
 	
-	register_elgg_event_handler('pagesetup','system','videolist_pagesetup');
-	register_elgg_event_handler('annotate','all','videolist_object_notifications');
+	elgg_register_event_handler('pagesetup','system','videolist_pagesetup');
+	elgg_register_event_handler('annotate','all','videolist_object_notifications');
 
-	register_plugin_hook('object:notifications','object','videolist_object_notifications_intercept');
+	elgg_register_plugin_hook_handler('object:notifications','object','videolist_object_notifications_intercept');
 
 	// Register URL handler
-	register_entity_url_handler('video_url','object', 'videolist');
-	register_entity_url_handler('video_url','object', 'watch');
+	elgg_register_entity_url_handler('object', 'videolist', 'video_url');
+	elgg_register_entity_url_handler('object', 'watch', 'video_url');
 
 	//register entity url handler
-	register_entity_url_handler('videolist_url','object','videolist');
+	elgg_register_entity_url_handler('object', 'videolist', 'videolist_url');
 
 	// Register entity type
-	register_entity_type('object','videolist');
+	elgg_register_entity_type('object','videolist');
 
-	register_plugin_hook('profile_menu', 'profile', 'videolist_profile_menu');
+	elgg_register_plugin_hook_handler('profile_menu', 'profile', 'videolist_profile_menu');
 
 	// register for embed
-	register_plugin_hook('embed_get_sections', 'all', 'videolist_embed_get_sections');
-	register_plugin_hook('embed_get_items', 'videolist', 'videolist_embed_get_items');
+	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
+	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
 
 	// override icons for ElggEntity::getIcon()
-	register_plugin_hook('entity:icon:url', 'user', 'profile_usericon_hook');
+	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'profile_usericon_hook');
 	
 	// Register actions
-	register_action("videolist/add", elgg_register_plugins_path() . "videolist/actions/add.php");
-	register_action("videolist/edit", elgg_register_plugins_path() . "videolist/actions/edit.php");
-	register_action("videolist/tubesearch", elgg_register_plugins_path() . "videolist/actions/tubesearch.php");
-	register_action("videolist/delete", elgg_register_plugins_path() . "videolist/actions/delete.php");
+	elgg_register_action("videolist/add", elgg_get_plugins_path() . "videolist/actions/add.php");
+	elgg_register_action("videolist/edit", elgg_get_plugins_path() . "videolist/actions/edit.php");
+	elgg_register_action("videolist/tubesearch", elgg_get_plugins_path() . "videolist/actions/tubesearch.php");
+	elgg_register_action("videolist/delete", elgg_get_plugins_path() . "videolist/actions/delete.php");
 }
 
 /**
@@ -116,11 +118,11 @@ function videolist_page_handler($page) {
 
 
 function videolist_pagesetup() {
-	$page_owner = page_owner_entity();
+	$page_owner = elgg_get_page_owner_entity();
 
-	if ($page_owner instanceof ElggGroup && get_context() == "groups") {
+	if ($page_owner instanceof ElggGroup && elgg_in_context("groups")) {
 		//add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), elgg_get_site_url() . "videolist/owned/" . page_owner_entity()->username);
-	} else if (get_context() == "videolist") {
+	} else if (elgg_in_context("videolist")) {
 		/**********************************************************************************************
 		****if user is OR is not registered user then show him following page menus to choose from
 		***********************************************************************************************/
@@ -131,9 +133,9 @@ function videolist_pagesetup() {
 
 		add_submenu_item(elgg_echo('videolist:find'),elgg_get_site_url()."videolist/search/");
 		*/
-	} else if (get_context() == "group") {
+	} else if (elgg_get_context("group")) {
 		//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), elgg_get_site_url() . "videolist/owned/" . page_owner_entity()->username);
-		if ($page_owner->canEdit()) {
+		if ($page_owner && $page_owner->canEdit()) {
 			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), elgg_get_site_url() . "videolist/browse/". page_owner_entity()->username);
 			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), elgg_get_site_url() . "videolist/new/". page_owner_entity()->username);
 		}
