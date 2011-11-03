@@ -1,8 +1,8 @@
 <?php
 /**
- * All files
+ * All videos
  *
- * @package ElggFile
+ * @package ElggVideolist
  */
 
 elgg_push_breadcrumb(elgg_echo('videolist'));
