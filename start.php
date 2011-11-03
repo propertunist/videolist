@@ -8,6 +8,9 @@
  * @author Prateek Choudhary <synapticfield@gmail.com>
  * @copyright Prateek Choudhary
  */
+
+register_elgg_event_handler('init','system','videolist_init');
+
 function videolist_init() {
 	global $CONFIG;
 
@@ -28,6 +31,15 @@ function videolist_init() {
 	if (is_callable('register_notification_object')) {
 		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));
 	}
+	
+	// Register a handler for adding videos
+	register_elgg_event_handler('create', 'videolist', 'videolist_create_event_listener');
+
+	// Register a handler for delete videos
+	register_elgg_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
+	
+	register_elgg_event_handler('pagesetup','system','videolist_pagesetup');
+	register_elgg_event_handler('annotate','all','videolist_object_notifications');
 
 	register_plugin_hook('object:notifications','object','videolist_object_notifications_intercept');
 
@@ -49,6 +61,12 @@ function videolist_init() {
 
 	// override icons for ElggEntity::getIcon()
 	register_plugin_hook('entity:icon:url', 'user', 'profile_usericon_hook');
+	
+	// Register actions
+	register_action("videolist/add", $CONFIG->pluginspath . "videolist/actions/add.php");
+	register_action("videolist/edit", $CONFIG->pluginspath . "videolist/actions/edit.php");
+	register_action("videolist/tubesearch", $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
+	register_action("videolist/delete", $CONFIG->pluginspath . "videolist/actions/delete.php");
 }
 
 /**
@@ -258,23 +276,3 @@ function videolist_get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
 
 	return $entity->thumbnail;
 }
-
-// Register a handler for adding videos
-register_elgg_event_handler('create', 'videolist', 'videolist_create_event_listener');
-
-// Register a handler for delete videos
-register_elgg_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
-
-// Make sure the status initialisation function is called on initialisation
-register_elgg_event_handler('init','system','videolist_init');
-
-register_elgg_event_handler('pagesetup','system','videolist_pagesetup');
-register_elgg_event_handler('annotate','all','videolist_object_notifications');
-
-// Register actions
-global $CONFIG;
-
-register_action("videolist/add", false, $CONFIG->pluginspath . "videolist/actions/add.php");
-register_action("videolist/edit", false, $CONFIG->pluginspath . "videolist/actions/edit.php");
-register_action("videolist/tubesearch", false, $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
-register_action("videolist/delete", false, $CONFIG->pluginspath . "videolist/actions/delete.php");
