@@ -71,49 +71,60 @@ function videolist_init() {
 }
 
 /**
- * videolist page handler; allows the use of fancy URLs
+ * Dispatches blog pages.
+ * URLs take the form of
+ *  All videos:       videolist/all
+ *  User's videos:    videolist/owner/<username>
+ *  Friends' videos:  videolist/friends/<username>
+ *  Video watch:      videolist/watch/<guid>/<title>
+ *  Video browse:     videolist/browse
+ *  New video:        videolist/add/<guid>
+ *  Edit video:       videolist/edit/<guid>/<revision>
+ *  Group videos:     videolist/group/<guid>/all
  *
- * @param array $page From the page_handler function
- * @return true|false Depending on success
+ * Title is ignored
+ *
+ * @param array $page
+ * @return NULL
  */
 function videolist_page_handler($page) {
-	if (isset($page[0])) {
-		switch($page[0]) {
-			case "owned": if (isset($page[1])) set_input('username',$page[1]);
-								@include(dirname(__FILE__) . "/index.php");
-								break;
-			case "friends":     @include(dirname(__FILE__) . "/friends.php");
-								break;
-			case "search":		@include(dirname(__FILE__) . "/all.php");
-								break;
-			case "video":		@include(dirname(__FILE__) . "/video.php");
-								break;
-			case "new": if (isset($page[3])) set_input('add_videourl',$page[3]);
-									if (isset($page[5])) set_input('page',$page[5]);
-									if (isset($page[1])) set_input('container',$page[1]);
-								@include(dirname(__FILE__) . "/new.php");
-								break;
-			case "watch":	set_input('video_id',$page[1]);
-								@include(dirname(__FILE__) . "/watch.php");
-								break;
-			case "browse":	if (isset($page[1])) set_input('container',$page[1]);
-								@include(dirname(__FILE__) . "/browse.php");
-								break;
-		default : if (isset($page[1])) set_input('username',$page[1]);
-								@include(dirname(__FILE__) . "/index.php");
-								break;
-		}
-	// If the URL is just 'videolist/username', or just 'videolist/', load the standard index file
-	} else {
-		if (isset($page[1])) {
-			set_input('username',$page[1]);
-		}
-
-		include(dirname(__FILE__) . "/index.php");
-		return true;
+	
+	if (!isset($page[0])) {
+		$page[0] = 'all';
 	}
 
-	return false;
+	$videolist_dir = elgg_get_plugins_path() . 'videolist/pages/videolist';
+
+	$page_type = $page[0];
+	switch ($page_type) {
+		case 'owner':
+			include "$videolist_dir/owner.php";
+			break;
+		case 'friends':
+			include "$videolist_dir/friends.php";
+			break;
+		case 'watch':
+			set_input('guid', $page[1]);
+			include "$videolist_dir/watch.php";
+			break;
+		case 'add':
+			include "$videolist_dir/add.php";
+			break;
+		case 'edit':
+			set_input('guid', $page[1]);
+			include "$videolist_dir/edit.php";
+			break;
+		case 'browse':
+			include "$videolist_dir/browse.php";
+			break;
+		case 'group':
+			include "$videolist_dir/owner.php";
+			break;
+		case 'all':
+		default:
+			include "$videolist_dir/all.php";
+			break;
+	}
 }
 
 
