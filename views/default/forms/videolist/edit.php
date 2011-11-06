@@ -1,46 +1,52 @@
 <?php
 /**
-* Elgg Video Plugin > Edit view
-*/
+ * Videolist edit form body
+ *
+ * @package ElggVideolist
+ */
 
-elgg_load_library('elgg:videolist');
+$variables = elgg_get_config('videolist');
 
-// Make sure we're logged in (send us to the front page if not)
-gatekeeper();
-$page_owner = page_owner_entity();
-$container_guid = $vars['entity']->container_guid;
-$owner = get_entity($container_guid);
-if($owner instanceof ElggGroup){
-	$options = group_access_options($owner);
-}else{
-	$options = '';
+if(empty($vars['guid'])){
+	unset($variables['title']);
 }
+
+foreach ($variables as $name => $type) {
 ?>
-
-<form action="<?php echo $vars['url']; ?>action/videolist/edit" enctype="multipart/form-data" method="post" id="edit_video_form">
-
-	<p><label><?php echo elgg_echo("title"); ?><br />
-		<?php echo elgg_view("input/text", array("internalname" => "title_videourl","value" => $vars['entity']->title));?>
-	</label></p>
-	
-	<p><label><?php echo elgg_echo("tags"); ?><br />
-		<?php echo elgg_view("input/tags", array("internalname" => "tags","value" => $vars['entity']->tags));?>
-	</label></p>
-	
-	<p><label><?php echo elgg_echo('access'); ?><br />
-		<?php echo elgg_view('input/access', array('internalname' => 'access_id','value' => $vars['entity']->access_id, 'options' => $options)); ?>
-	</label></p>
-	
-	<p>
+<div>
+	<label><?php echo elgg_echo("videolist:$name") ?></label>
 	<?php
-		echo "<input type='hidden' name=\"container_guid\" value=\"{$container_guid}\" />";
-		
-		if (isset($vars['entity'])) {
-			echo "<input type='hidden' name=\"video_guid\" value=\"{$vars['entity']->getGUID()}\" />";
+		if ($type != 'longtext') {
+			echo '<br />';
 		}
-		echo elgg_view('input/securitytoken');
 	?>
-		<input type="submit" value="<?php echo elgg_echo("save"); ?>" />
-	</p>
+	<?php echo elgg_view("input/$type", array(
+			'name' => $name,
+			'value' => $vars[$name],
+		));
+	?>
+</div>
+<?php
+}
 
-</form>
+$cats = elgg_view('categories', $vars);
+if (!empty($cats)) {
+	echo $cats;
+}
+
+
+echo '<div class="elgg-foot">';
+if ($vars['guid']) {
+	echo elgg_view('input/hidden', array(
+		'name' => 'video_guid',
+		'value' => $vars['guid'],
+	));
+}
+echo elgg_view('input/hidden', array(
+	'name' => 'container_guid',
+	'value' => $vars['container_guid'],
+));
+
+echo elgg_view('input/submit', array('value' => elgg_echo('save')));
+
+echo '</div>';

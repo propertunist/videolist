@@ -27,6 +27,15 @@ function videolist_init() {
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('videolist', 'videolist_page_handler');
+	
+	// Language short codes must be of the form "videolist:key"
+	// where key is the array key below
+	elgg_set_config('videolist', array(
+		'video_url' => 'url',
+		'title' => 'text',
+		'tags' => 'tags',
+		'access_id' => 'access',
+	));
 
 	//extend this plugin for groups
 	elgg_extend_view('groups/tool_latest','videolist/groupprofile_videolist');
