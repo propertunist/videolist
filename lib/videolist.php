@@ -20,7 +20,7 @@ function videolist_parseurl_youtube($url) {
 	
 	return array(
 		'domain' => $domain,
-		'videoid' => $hash,
+		'video_id' => $hash,
 	);
 }
 
@@ -34,7 +34,7 @@ function videolist_parseurl_vimeo($url) {
 
 	return array(
 		'domain' => $domain,
-		'videoid' => $hash,
+		'video_id' => $hash,
 	);
 }
 
@@ -50,7 +50,7 @@ function videolist_parseurl_metacafe($url) {
 
 	return array(
 		'domain' => $domain,
-		'videoid' => $hash,
+		'video_id' => $hash,
 	);
 }
 
@@ -71,30 +71,31 @@ function videolist_parseurl($url){
 
 function videolist_get_data($video_parsed_url) {
 	$site = $video_parsed_url['site'];
-	$videoid = $video_parsed_url['videoid'];
+	$video_id = $video_parsed_url['video_id'];
 	switch($site){
-		case YOUTUBE: return videolist_get_data_youtube($videoid);
-		case VIMEO: return videolist_get_data_vimeo($videoid);
-		case METACAFE: return videolist_get_data_metacafe($videoid);
+		case YOUTUBE: return videolist_get_data_youtube($video_id);
+		case VIMEO: return videolist_get_data_vimeo($video_id);
+		case METACAFE: return videolist_get_data_metacafe($video_id);
 		default: return array();
 	}
 }
 
 
-function videolist_get_data_youtube($videoid){
-	$buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$videoid);
+function videolist_get_data_youtube($video_id){
+	$buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$video_id);
 	$xml = new SimpleXMLElement($buffer);
 	
 	return array(
 		'title' => sanitize_string($xml->title),
 		'description' => sanitize_string($xml->content),
-		'icon' => "http://img.youtube.com/vi/$videoid/default.jpg",
+		'icon' => "http://img.youtube.com/vi/$video_id/default.jpg",
+		'video_id' => $video_id,
 		'videotype' => 'youtube',
 	);
 }
 
-function videolist_get_data_vimeo($videoid){
-	$buffer = file_get_contents("http://vimeo.com/api/v2/video/$videoid.xml");
+function videolist_get_data_vimeo($video_id){
+	$buffer = file_get_contents("http://vimeo.com/api/v2/video/$video_id.xml");
 	$xml = new SimpleXMLElement($buffer);
 	
 	$videos = $xml->children();
@@ -104,12 +105,13 @@ function videolist_get_data_vimeo($videoid){
 		'title' => sanitize_string($video->title),
 		'description' => sanitize_string($video->description),
 		'icon' => sanitize_string($video->thumbnail_medium),
+		'video_id' => $video_id,
 		'videotype' => 'vimeo',
 	);
 }
 
-function videolist_get_data_metacafe($videoid){ //FIXME
-	$buffer = file_get_contents("http://www.metacafe.com/api/item/$videoid");
+function videolist_get_data_metacafe($video_id){ //FIXME
+	$buffer = file_get_contents("http://www.metacafe.com/api/item/$video_id");
 	$xml = new SimpleXMLElement($buffer);
 	
 	$children = $xml->children();
@@ -121,6 +123,7 @@ function videolist_get_data_metacafe($videoid){ //FIXME
 		'title' => $channel->title,
 		'description' => $channel->description,
 		'icon' => $matches[1],
+		'video_id' => $video_id,
 		'videotype' => 'metacafe',
 	);
 }

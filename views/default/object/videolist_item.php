@@ -51,40 +51,31 @@ if(!$full_view) {
 		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
 	}
 } else {
-	$videodiv = '';
+	$html = '';
 	$width = "600";
 	$height = "400";
-	$file = $vars['entity'];
+	$entity = $vars['entity'];
 	
-	$videos = get_entity($vars['entity']);
-	$title = $videos->title;
-	$url = $videos->url;
-	$videoid = $videos->video_id;
-	$tags = $videos->tags;
+	$title = $entity->title;
+	$url = $entity->video_url;
+	$video_id = $entity->video_id;
 	
-	$videodiv .= "<div class='video_view'>";
-				 
-	// display any tags for the Video
-	if (!empty($tags)) {
-		$videodiv .= "<p class='tags margin_none'>";
-		$videodiv .= elgg_view('output/tags',array('value' => $tags));
-		$videodiv .= "</p>";
-	}
-	
-	if ($videos->videotype == "youtube") {
-		$videodiv .= "<br /><object width=\"$width\" height=\"$height\"><param name=\"movie\" value=\"http://{$url}&hl=en&fs=1&showinfo=0&auoplay=1\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"wmode\" value=\"transparent\"></param><embed src=\"http://{$url}&hl=en&fs=1&showinfo=0&autoplay=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"$width\" height=\"$height\" wmode=\"transparent\"></embed></object>";
-	} else if($videos->videotype == "metacafe"){
-		$videoid_id = $videoid;
-		$path = explode("/", $videos->thumbnail);
-		$path = array_reverse($path);
-		$thumbnailArray = explode(".", $path[0]);
-		$videoid = $videoid_id."/".$thumbnailArray[0].".swf";
-		$videodiv .= "<br /><embed src=\"http://www.metacafe.com/fplayer/".$videoid."\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\" wmode=\"transparent\" name=\"Metacafe_".$videoid_id."\"></embed>";
-	} else if($videos->videotype == "vimeo") {
-		$videodiv .= "<br /><object width=\"$width\" height=\"$height\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"wmode\" value=\"transparent\"></param><param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=".$videoid."&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=".$videoid."&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\" wmode=\"transparent\"></embed></object>";
+	$html .= "<div class='video_view'>";
+
+	if (!empty($entity->tags)) {
+		$html .= "<p class='tags margin_none'>";
+		$html .= elgg_view('output/tags',array('value' => $entity->tags));
+		$html .= "</p>";
 	}
 
-	$videodiv .= "</div>";
-	$videodiv .= elgg_view_comments($videos);
-	print $videodiv;
+	$html .= elgg_view("videolist/watch/{$entity->videotype}", array(
+		'video_id' => $entity->video_id,
+		'width' => $width,
+		'height' => $height,
+	));
+
+
+	$html .= "</div>";
+	$html .= elgg_view_comments($videos);
+	echo $html;
 }
