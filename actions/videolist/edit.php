@@ -1,40 +1,76 @@
 <?php
 /**
- * Elgg video edit
+ * Create or edit a video
+ *
+ * @package ElggVideolist
  */
-	
-// Get variables
-$title = strip_tags(get_input("title_videourl"));
-$tags = get_input("tags");
-$access_id = (int) get_input("access_id");
-	
-$guid = (int) get_input('video_guid');
 
-if (!$video = get_entity($guid)) {
-	register_error(elgg_echo("videolist:noentity"));
-	forward(elgg_get_site_url() . "videolist/" . $_SESSION['user']->username);
-	exit;
+$variables = elgg_get_config('videolist');
+$input = array();
+foreach ($variables as $name => $type) {
+	$input[$name] = get_input($name);
+	if ($name == 'title') {
+		$input[$name] = strip_tags($input[$name]);
+	}
+	if ($type == 'tags') {
+		$input[$name] = string_to_tag_array($input[$name]);
+	}
 }
-	
-$result = false;
 
-$container_guid = $video->container_guid;
-$container = get_entity($container_guid);
-	
-if ($video->canEdit()) {
-	
-	$video->access_id = $access_id;
-	$video->title = $title;
-	
-	// Save tags
-	$tags = explode(",", $tags);
-	$video->tags = $tags;
-	$result = $video->save();
+// Get guids
+$videolist_guid = (int)get_input('videolist_guid');
+$container_guid = (int)get_input('container_guid');
+
+elgg_make_sticky_form('videolist');
+
+elgg_load_library('elgg:videolist');
+
+if (!$input['video_url']) {
+	register_error(elgg_echo('videolist:error:no_url'));
+	forward(REFERER);
 }
-	
-if ($result)
-	system_message(elgg_echo("videolist:editsaved"));
-else
-	register_error(elgg_echo("videolist:editfailed"));
-	
-forward($_SERVER['HTTP_REFERER']);
+
+$parsed_url = videolist_parseurl($input['video_url']);
+
+if(!$parsed) {
+	register_error(elgg_echo('videolist:error:invalid_url'));
+}
+
+if ($video_guid) {
+	$video = get_entity($video_guid);
+	if (!$video || !$video->canEdit()) {
+		register_error(elgg_echo('videolist:error:no_save'));
+		forward(REFERER);
+	}
+	$new_video = false;
+} else {
+	$video = new ElggObject();
+	$video->subtype = 'videolist_item';
+	$new_video = true;
+}
+
+$input = array_merge($input, videolist_get_data($parsed_url));
+
+if (sizeof($input) > 0) {
+	foreach ($input as $name => $value) {
+		$video->$name = $value;
+	}
+}
+
+$video->container_guid = $container_guid;
+
+if ($video->save()) {
+
+	elgg_clear_sticky_form('videolist');
+
+	system_message(elgg_echo('videolist:saved'));
+
+	if ($new_video) {
+		add_to_river('river/object/videolist_item/create', 'create', elgg_get_logged_in_user_guid(), $video->guid);
+	}
+
+	forward($video->getURL());
+} else {
+	register_error(elgg_echo('videolist:error:no_save'));
+	forward(REFERER);
+}

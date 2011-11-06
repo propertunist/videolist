@@ -75,10 +75,11 @@ function videolist_init() {
 	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'profile_usericon_hook');
 	
 	// Register actions
-	elgg_register_action("videolist/add", elgg_get_plugins_path() . "videolist/actions/add.php");
-	elgg_register_action("videolist/edit", elgg_get_plugins_path() . "videolist/actions/edit.php");
-	elgg_register_action("videolist/tubesearch", elgg_get_plugins_path() . "videolist/actions/tubesearch.php");
-	elgg_register_action("videolist/delete", elgg_get_plugins_path() . "videolist/actions/delete.php");
+	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
+	elgg_register_action("videolist/add", "$actions_path/add.php");
+	elgg_register_action("videolist/edit", "$actions_path/edit.php");
+	elgg_register_action("videolist/tubesearch", "$actions_path/tubesearch.php");
+	elgg_register_action("videolist/delete", "$actions_path/delete.php");
 }
 
 /**

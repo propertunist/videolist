@@ -1,6 +1,10 @@
 <?php
 
-function video_youtube_parse_url($url) {
+define('YOUTUBE', 1);
+define('VIMEO', 2);
+define('METACAFE', 3);
+
+function videolist_parseurl_youtube($url) {
 	if (!preg_match('/(http:\/\/)([a-zA-Z]{2,3}\.)(youtube\.com\/)(.*)/', $url, $matches)) {
 	return false;
 	}
@@ -13,23 +17,28 @@ function video_youtube_parse_url($url) {
 	}
 
 	$hash = $matches[2];
-	return $domain . 'v/' . $hash;
+	
+	return array(
+		'domain' => $domain,
+		'videoid' => $hash,
+	);
 }
 
-function video_vimeo_parse_url($url) {
-	if (!preg_match('/(http:\/\/)([a-zA-Z]{2,3}\.)(vimeo\.com\/)(.*)/', $url, $matches)) {
+function videolist_parseurl_vimeo($url) {
+	if (!preg_match('/(http:\/\/)([a-zA-Z]{2,3}\.)*(vimeo\.com\/)(.*)/', $url, $matches)) {
 		return false;
 	}
 
 	$domain = $matches[2] . $matches[3];
-	$path = $matches[4];
+	$hash = $matches[4];
 
-	$hash = $matches[2];
-
-	return $domain . '/' . $hash;
+	return array(
+		'domain' => $domain,
+		'videoid' => $hash,
+	);
 }
 
-function video_metacafe_parse_url($url) {
+function videolist_parseurl_metacafe($url) {
 	if (!preg_match('/(http:\/\/)([a-zA-Z]{2,3}\.)(metacafe\.com\/)(.*)/', $url, $matches)) {
 		return false;
 	}
@@ -39,48 +48,76 @@ function video_metacafe_parse_url($url) {
 
 	$hash = $matches[2];
 
-	return $domain . '/' . $hash;
+	return array(
+		'domain' => $domain,
+		'videoid' => $hash,
+	);
 }
 
-if(isset($confirm_action) && ($confirm_action == 'add_video')) {
-	if(isset($title_videourl) && ($title_videourl != '')) {
-		if($Pagecontainer != "youtube" || $Pagecontainer != "vimeo" || $Pagecontainer != "metacafe"){
-			if(preg_match("/youtube/i", $title_videourl)) {
-				$Pagecontainer = "youtube";
-			}
-
-			if(preg_match("/vimeo/i", $title_videourl)) {
-				$Pagecontainer = "vimeo";
-			}
-
-			if(preg_match("/metacafe/i", $title_videourl)) {
-				$Pagecontainer = "metacafe";
-			}
-		}
-		if($Pagecontainer == "youtube") {
-			$is_valid_video = video_youtube_parse_url($title_videourl);
-		} else if($Pagecontainer == "vimeo") {
-			$is_valid_video = video_vimeo_parse_url($title_videourl);
-			$is_valid_video = $get_addvideourl;
-		} else if($Pagecontainer == "metacafe"){
-			$is_valid_video = video_metacafe_parse_url($title_videourl);
-			$is_valid_video = $get_addvideourl;
-		}
-
-		if($is_valid_video) {
-			$error['no-video'] = 1;
-			$_SESSION['candidate_profile_video'] = $is_valid_video;
-			$_SESSION['candidate_profile_video_access_id'] = $access_id;
-			$_SESSION['videolisttags'] = $tags;
-			$_SESSION['Pagecontainer'] = $Pagecontainer;
-			$_SESSION['container_guid'] = $container_guid;
-			$url = "action/videolist/add?__elgg_ts={$timestamp}&__elgg_token={$token}";
-			forward($url);
-		}
-		else
-			$error['no-video'] = 0;
+function videolist_parseurl($url){
+	if ($parsed = videolist_parseurl_youtube($url)){
+		$parsed['site'] = YOUTUBE;
+		return $parsed;
+	} elseif ($parsed = videolist_parseurl_vimeo($url)) {
+		$parsed['site'] = VIMEO;
+		return $parsed;
+	} elseif ($parsed = videolist_parseurl_metacafe($url)) {
+		$parsed['site'] = METACAFE;
+		return $parsed;
+	} else {
+		return array();
 	}
-	else {
-		$error['no-video'] = 0;
+}
+
+function videolist_get_data($video_parsed_url) {
+	$site = $video_parsed_url['site'];
+	$videoid = $video_parsed_url['videoid'];
+	switch($site){
+		case YOUTUBE: return videolist_get_data_youtube($videoid);
+		case VIMEO: return videolist_get_data_vimeo($videoid);
+		case METACAFE: return videolist_get_data_metacafe($videoid);
+		default: return array();
 	}
+}
+
+
+function videolist_get_data_youtube($videoid){
+	$buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$videoid);
+	$xml = new SimpleXMLElement($buffer);
+	
+	return array(
+		'title' => sanitize_string($xml->title),
+		'description' => sanitize_string($xml->content),
+		'icon' => "http://img.youtube.com/vi/$videoid/default.jpg",
+	);
+}
+
+function videolist_get_data_vimeo($videoid){
+	$buffer = file_get_contents("http://vimeo.com/api/v2/video/$videoid.xml");
+	$xml = new SimpleXMLElement($buffer);
+	
+	$videos = $xml->children();
+	$video = $videos[0];
+	
+	return array(
+		'title' => sanitize_string($video->title),
+		'description' => sanitize_string($video->description),
+		'icon' => sanitize_string($video->thumbnail_medium),
+	);
+}
+
+function videolist_get_data_metacafe($videoid){ //FIXME
+	$buffer = file_get_contents("http://www.metacafe.com/api/item/$videoid");
+	$xml = new SimpleXMLElement($buffer);
+	
+	$children = $xml->children();
+	$channel = $children[1];
+	
+	preg_match('/<img[^>]+src[\\s=\'"]+([^"\'>\\s]+)/is', $channel->description, $matches);
+	
+	return array(
+		'title' => $channel->title,
+		'description' => $channel->description,
+		'icon' => $matches[1],
+	);
 }
