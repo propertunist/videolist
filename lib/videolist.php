@@ -89,6 +89,7 @@ function videolist_get_data_youtube($videoid){
 		'title' => sanitize_string($xml->title),
 		'description' => sanitize_string($xml->content),
 		'icon' => "http://img.youtube.com/vi/$videoid/default.jpg",
+		'videotype' => 'youtube',
 	);
 }
 
@@ -103,6 +104,7 @@ function videolist_get_data_vimeo($videoid){
 		'title' => sanitize_string($video->title),
 		'description' => sanitize_string($video->description),
 		'icon' => sanitize_string($video->thumbnail_medium),
+		'videotype' => 'vimeo',
 	);
 }
 
@@ -119,5 +121,6 @@ function videolist_get_data_metacafe($videoid){ //FIXME
 		'title' => $channel->title,
 		'description' => $channel->description,
 		'icon' => $matches[1],
+		'videotype' => 'metacafe',
 	);
 }
