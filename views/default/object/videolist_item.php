@@ -61,12 +61,6 @@ if (elgg_in_context('widgets')) {
 
 if ($full && !elgg_in_context('gallery')) {
 	
-	$title = $entity->title;
-	$url = $entity->video_url;
-	$video_id = $entity->video_id;
-	
-	$header = elgg_view_title($entity->title);
-
 	$content= elgg_view("videolist/watch/{$entity->videotype}", array(
 		'video_id' => $entity->video_id,
 		'width' => 600,
@@ -87,7 +81,6 @@ if ($full && !elgg_in_context('gallery')) {
 	$entity_info = elgg_view_image_block($owner_icon, $list_body);
 
 	echo <<<HTML
-$header
 $entity_info
 $body
 HTML;

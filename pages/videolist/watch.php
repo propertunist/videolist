@@ -1,79 +1,36 @@
 <?php
 /**
- * Elgg Video Plugin
- * This plugin allows users to create a library of youtube/vimeo/metacafe videos
+ * View a file
  *
- * @package Elgg
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
+ * @package ElggFile
  */
 
-require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+$videolist_item = get_entity(get_input('guid'));
 
-// Get objects
-$video_id = (int) get_input('video_id');
-$video = get_entity($video_id);
+elgg_set_page_owner_guid($videolist_item->container_guid);
 
-// If we can get out the video corresponding to video_id object ...
-if ($videos = get_entity($video_id)) {
-	set_page_owner($videos->container_guid);
-	$videos_container = get_entity($videos->container_guid);
-	// set up breadcrumbs
-	$page_owner = page_owner_entity();
-	if ($page_owner === false || is_null($page_owner)) {
-		$page_owner = $_SESSION['user'];
-		set_page_owner($page_owner->getGUID());
-	}
-	elgg_push_breadcrumb(elgg_echo('videolist:all'), elgg_get_site_url()."videolist/all.php");
-	elgg_push_breadcrumb(sprintf(elgg_echo("videolist:user"),$page_owner->name), elgg_get_site_url()."videolist/".$page_owner->username);
-	elgg_push_breadcrumb(sprintf($video->title));
-	$area1 = elgg_view('navigation/breadcrumbs');
+$page_owner = elgg_get_page_owner_entity();
 
-	if($videos_container->type == "group") {
-		set_context("groupsvideos");
-	}
-	$page_owner = page_owner_entity();
-	$pagetitle = sprintf(elgg_echo("videolist:home"),page_owner_entity()->name);
-	$title = $videos->title;
-	
-	$area1 .= "<div id='content_header' class='clearfloat'><div class='content_header_title'><h2>".$title."</h2></div>";
-	if ($videos->canEdit()) {
-		$area1 .= "<div class='content_header_options'>
-					<a class='action_button' href=\"".elgg_get_site_url()."videolist/edit.php?video={$videos->getGUID()}\">".elgg_echo('edit')."</a>";
+elgg_push_breadcrumb(elgg_echo('videolist'), 'videolist/all');
 
-		$area1 .= elgg_view('output/confirmlink',array(	
-							'href' => elgg_get_site_url() . "action/videolist/delete?video=" . $videos->getGUID(),
-							'text' => elgg_echo('delete'),
-							'is_action' => true,
-							'confirm' => elgg_echo('document:delete:confirm'),
-							'class' => 'action_button disabled'))."</div>";  
-	}
-	$area1 .= "</div>";
-	
-	// Display it
-	$area2 .= elgg_view("object/watch",array(
-						'entity' => $video_id,
-						'entity_owner' => $page_owner,
-						'full' => true
-						));
-						
-	// include a view for plugins to extend
-	$area3 .= elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
-	
-	// get the latest comments on all videos
-	$comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
-	$area3 .= elgg_view('annotation/latest_comments', array('comments' => $comments));
-
-	// tag-cloud display
-	$area3 .= display_tagcloud(0, 50, 'tags', 'object', 'videolist');				
-							
-	$body = elgg_view_layout("one_column_with_sidebar", $area1.$area2, $area3);
+$crumbs_title = $page_owner->name;
+if (elgg_instanceof($page_owner, 'group')) {
+	elgg_push_breadcrumb($crumbs_title, "videolist/group/$page_owner->guid/all");
 } else {
-		// video not found
-		$body = "<p class='margin_top'>".elgg_echo('videolist:none:found')."</p>";
-		$pagetitle = elgg_echo("video:none");
+	elgg_push_breadcrumb($crumbs_title, "videolist/owner/$page_owner->username");
 }
 
-// Finally draw the page
-page_draw($pagetitle, $body);
+$title = $videolist_item->title;
+
+elgg_push_breadcrumb($title);
+
+$content = elgg_view_entity($videolist_item, array('full_view' => true));
+$content .= elgg_view_comments($videolist_item);
+
+$body = elgg_view_layout('content', array(
+	'content' => $content,
+	'title' => $title,
+	'filter' => '',
+));
+
+echo elgg_view_page($title, $body);

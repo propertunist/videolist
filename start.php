@@ -50,14 +50,14 @@ function videolist_init() {
 	// Register a handler for delete videos
 	elgg_register_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
 	
-	elgg_register_event_handler('pagesetup','system','videolist_pagesetup');
+	// Register entity type for search
+	elgg_register_entity_type('object', 'videolist_item');
+
+	// add a file link to owner blocks
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
 	elgg_register_event_handler('annotate','all','videolist_object_notifications');
 
 	elgg_register_plugin_hook_handler('object:notifications','object','videolist_object_notifications_intercept');
-
-	// Register URL handler
-	elgg_register_entity_url_handler('object', 'videolist', 'video_url');
-	elgg_register_entity_url_handler('object', 'watch', 'video_url');
 
 	//register entity url handler
 	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
@@ -65,8 +65,6 @@ function videolist_init() {
 
 	// Register entity type
 	elgg_register_entity_type('object','videolist');
-
-	elgg_register_plugin_hook_handler('profile_menu', 'profile', 'videolist_profile_menu');
 
 	// register for embed
 	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
@@ -137,30 +135,23 @@ function videolist_page_handler($page) {
 	}
 }
 
-
-function videolist_pagesetup() {
-	$page_owner = elgg_get_page_owner_entity();
-
-	if ($page_owner instanceof ElggGroup && elgg_in_context("groups")) {
-		//add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), elgg_get_site_url() . "videolist/owned/" . page_owner_entity()->username);
-	} else if (elgg_in_context("videolist")) {
-		/**********************************************************************************************
-		****if user is OR is not registered user then show him following page menus to choose from
-		***********************************************************************************************/
-		/*
-		add_submenu_item(elgg_echo('videolist:home'),elgg_get_site_url()."videolist/". $page_owner->username);
-
-		add_submenu_item(elgg_echo('videolist:new'),elgg_get_site_url()."videolist/new");
-
-		add_submenu_item(elgg_echo('videolist:find'),elgg_get_site_url()."videolist/search/");
-		*/
-	} else if (elgg_get_context("group")) {
-		//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), elgg_get_site_url() . "videolist/owned/" . page_owner_entity()->username);
-		if ($page_owner && $page_owner->canEdit()) {
-			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), elgg_get_site_url() . "videolist/browse/". page_owner_entity()->username);
-			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), elgg_get_site_url() . "videolist/new/". page_owner_entity()->username);
+/**
+ * Add a menu item to the user ownerblock
+ */
+function videolist_owner_block_menu($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'user')) {
+		$url = "videolist/owner/{$params['entity']->username}";
+		$item = new ElggMenuItem('videolist', elgg_echo('videolist'), $url);
+		$return[] = $item;
+	} else {
+		if ($params['entity']->videolist_enable != "no") {
+			$url = "videolist/group/{$params['entity']->guid}/all";
+			$item = new ElggMenuItem('videolist', elgg_echo('videolist:group'), $url);
+			$return[] = $item;
 		}
 	}
+
+	return $return;
 }
 
 function video_url($entity) {
@@ -215,15 +206,6 @@ function videolist_object_notifications_intercept($hook, $entity_type, $returnva
 		}
 	}
 	return null;
-}
-
-function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
-	$return_value[] = array(
-		'text' => elgg_echo('videolist'),
-		'href' => elgg_get_site_url() . "videolist/owned/{$params['owner']->username}",
-	);
-
-	return $return_value;
 }
 
 
