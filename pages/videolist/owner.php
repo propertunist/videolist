@@ -1,68 +1,54 @@
 <?php
 /**
- * Elgg Video Plugin
- * This plugin allows users to create a library of youtube/vimeo/metacafe videos
+ * Individual's or group's videolist
  *
- * @package Elgg
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
+ * @package ElggVideolist
  */
 
-require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+// access check for closed groups
+group_gatekeeper();
 
-if (is_callable('group_gatekeeper')) group_gatekeeper();
+$page_owner = elgg_get_page_owner_entity();
 
-$page_owner = page_owner_entity();
-if ($page_owner === false || is_null($page_owner)) {
-	$page_owner = $_SESSION['user'];
-	set_page_owner($page_owner->getGUID());
-}
+elgg_push_breadcrumb(elgg_echo('videolist'), "videolist/all");
+elgg_push_breadcrumb($page_owner->name);
 
-//get videolist GUID
-$container_guid = get_input('username');
-if(isset($container_guid) && !empty($container_guid)) {
-	$container_guid = explode(":", $container_guid);
+elgg_register_title_button();
 
-	if ($container_guid[0] == "group") {
-		$container = get_entity($container_guid[1]);
-		set_context("groupsvideos");
-	}
-}
+$params = array();
 
-elgg_push_breadcrumb(elgg_echo('videolist:find'), elgg_get_site_url()."videolist/all");
-elgg_push_breadcrumb(sprintf(elgg_echo("videolist:home"),$page_owner->name));
-$title = sprintf(elgg_echo("videolist:home"), "$owner->name");
-
-//set videolist header
-if(page_owner() == get_loggedin_userid()) {
-	// get the filter menu
-	$friend_link = elgg_get_site_url() . "videolist/friends/" . $page_owner->username;
-	$area1 .= elgg_view('page_elements/content_header', array('context' => "mine", 'type' => 'videolist', 'friend_link' => $friend_link));
-}elseif(page_owner_entity() instanceof ElggGroup){
-	$area1 .= elgg_view('navigation/breadcrumbs');	
-	$area1 .= elgg_view('videolist/group_video_header');
+if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
+	// user looking at own videolist
+	$params['filter_context'] = 'mine';
+} else if (elgg_instanceof($page_owner, 'user')) {
+	// someone else's videolist
+	// do not show select a tab when viewing someone else's posts
+	$params['filter_context'] = 'none';
 } else {
-	$area1 .= elgg_view('navigation/breadcrumbs');
-	$area1 .= elgg_view('page_elements/content_header_member', array('type' => 'videolist'));
+	// group videolist
+	$params['filter'] = '';
 }
 
+$title = elgg_echo("videolist:user", array($page_owner->name));
 
-// include a view for plugins to extend
-$area3 = elgg_view("videolist/sidebar", array("object_type" => 'videolist'));
+// List videolist
+$content = elgg_list_entities(array(
+	'types' => 'object',
+	'subtypes' => 'videolist_item',
+	'container_guid' => $page_owner->guid,
+	'limit' => 10,
+	'full_view' => FALSE,
+));
+if (!$content) {
+	$content = elgg_echo("videolist:none");
+}
 
-// get the latest comments on all videos
-$comments = get_annotations(0, "object", "videolist", "generic_comment", "", 0, 4, 0, "desc");
-$area3 .= elgg_view('annotation/latest_comments', array('comments' => $comments));
+$sidebar = elgg_view('videolist/sidebar');
 
-// tag-cloud display
-$area3 .= display_tagcloud(0, 50, 'tags', 'object', 'videolist');
+$params['content'] = $content;
+$params['title'] = $title;
+$params['sidebar'] = $sidebar;
 
-// Get objects
-$area2 = elgg_list_entities(array('types' => 'object', 'subtypes' => 'videolist', 'container_guids' => page_owner(), 'limit' => 10));
+$body = elgg_view_layout('content', $params);
 
-set_context('videolist');
-$body = elgg_view_layout('one_column_with_sidebar', $area1.$area2, $area3);
-
-// Finally draw the page
-page_draw($title, $body);
+echo elgg_view_page($title, $body);
