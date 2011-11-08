@@ -15,7 +15,7 @@ $title = elgg_echo('videolist:all');
 
 $content = elgg_list_entities(array(
 	'types' => 'object',
-	'subtypes' => 'videolist',
+	'subtypes' => 'videolist_item',
 	'limit' => $limit,
 	'full_view' => FALSE
 ));

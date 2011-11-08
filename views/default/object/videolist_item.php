@@ -1,81 +1,116 @@
 <?php
-/*****************************************************************************************
-/* youtube video pluggin
-/* @author : Prateek Choudhary <synapticfield@gmail.com>
-/* YouTube/vimeo/metacafe video Object file
-/* @copyright Prateek.Choudhary
-/*****************************************************************************************/
+/**
+ * Videolist item renderer.
+ *
+ * @package ElggVideolist
+ */
 
-$video_file = $vars['entity'];
-$full_view = $vars['full_view'];
+$full = elgg_extract('full_view', $vars, FALSE);
+$entity = elgg_extract('entity', $vars, FALSE);
 
-if(!$full_view) {
-	$url = $video_file->url;
-	$title = $video_file->title;
-	$video_guid = $video_file->guid;
-	$video_id = $video_file->video_id;
-	$videotype = $video_file->videotype;
-	$videothumbnail = $video_file->thumbnail;
-	$owner = $vars['entity']->getOwnerEntity();
-	$friendlytime = friendly_time($vars['entity']->time_created);
+if (!$entity) {
+	return TRUE;
+}
 
-	$mime = "image/html";
-	$thumbnail = $videothumbnail;
-	$watch_URL = $vars['url']."videolist/watch/".$video_guid;
-	
-	$object_acl = get_readable_access_level($video_file->access_id);
-	// metadata block, - access level, edit, delete, + options view extender
-	$info = "<div class='entity_metadata'><span class='access_level'>" . $object_acl . "</span>";
+$owner = $entity->getOwnerEntity();
+$container = $entity->getContainerEntity();
+$categories = elgg_view('output/categories', $vars);
+$excerpt = elgg_get_excerpt($entity->description);
+$mime = $entity->mimetype;
+$base_type = substr($mime, 0, strpos($mime,'/'));
 
-	// view for plugins to extend	
-	$info .= elgg_view('videolist/options', array('entity' => $video_file));
-					
-	// include edit and delete options
-	if ($owner->canEdit()) {
-		$info .= "<span class='entity_edit'><a href=\"{$vars['url']}mod/videolist/edit.php?video={$video_guid}\">" . elgg_echo('edit') . "</a></span>";
-		$info .= "<span class='delete_button'>" . elgg_view('output/confirmlink',array('href' => $vars['url'] . "action/videolist/delete?video=" . $video_guid, 'text' => elgg_echo("delete"),'confirm' => elgg_echo("videolist:delete:confirm"),)). "</span>";  
-	}
-	$info .= "</div>";
-	
-	if(get_input('show_viewtype') == "all") {
-		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
-		$info .= "</p>";
-		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
-		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
-	} else {
-		$info .= '<p class="entity_title"><a href="' .$watch_URL. '">'.$title.'</a></p>';
-		$info .= "<p class='entity_subtext'><a href=\"{$vars['url']}videolist/owned/{$owner->username}\">{$owner->name}</a> {$friendlytime}";
-		$info .= "</p>";
-		$icon = "<a class='video_icon' href=\"{$watch_URL}\">" . elgg_view("videolist/icon", array("mimetype" => $mime, 'thumbnail' => $thumbnail, 'video_guid' => $video_guid, 'size' => 'small')) . "</a>";
-		echo "<div class='video_entity'>".elgg_view_listing($icon, $info)."</div>";
-	}
+$body = elgg_view('output/longtext', array('value' => $entity->description));
+
+$owner_link = elgg_view('output/url', array(
+	'href' => "file/owner/$owner->username",
+	'text' => $owner->name,
+));
+$author_text = elgg_echo('byline', array($owner_link));
+
+$entity_icon = elgg_view_entity_icon($entity, 'small');
+
+$owner_icon = elgg_view_entity_icon($owner, 'small');
+
+$tags = elgg_view('output/tags', array('tags' => $entity->tags));
+$date = elgg_view_friendly_time($entity->time_created);
+
+$comments_count = $entity->countComments();
+//only display if there are commments
+if ($comments_count != 0) {
+	$text = elgg_echo("comments") . " ($comments_count)";
+	$comments_link = elgg_view('output/url', array(
+		'href' => $entity->getURL() . '#file-comments',
+		'text' => $text,
+	));
 } else {
-	$html = '';
-	$width = "600";
-	$height = "400";
-	$entity = $vars['entity'];
+	$comments_link = '';
+}
+
+$metadata = elgg_view_menu('entity', array(
+	'entity' => $vars['entity'],
+	'handler' => 'file',
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-hz',
+));
+
+$subtitle = "$author_text $date $categories $comments_link";
+
+// do not show the metadata and controls in widget view
+if (elgg_in_context('widgets')) {
+	$metadata = '';
+}
+
+if ($full && !elgg_in_context('gallery')) {
 	
 	$title = $entity->title;
 	$url = $entity->video_url;
 	$video_id = $entity->video_id;
 	
-	$html .= "<div class='video_view'>";
+	$header = elgg_view_title($entity->title);
 
-	if (!empty($entity->tags)) {
-		$html .= "<p class='tags margin_none'>";
-		$html .= elgg_view('output/tags',array('value' => $entity->tags));
-		$html .= "</p>";
-	}
-
-	$html .= elgg_view("videolist/watch/{$entity->videotype}", array(
+	$content= elgg_view("videolist/watch/{$entity->videotype}", array(
 		'video_id' => $entity->video_id,
-		'width' => $width,
-		'height' => $height,
+		'width' => 600,
+		'height' => 400,
 	));
 
+	$params = array(
+		'entity' => $entity,
+		'title' => false,
+		'content' => $content,
+		'metadata' => $metadata,
+		'subtitle' => $subtitle,
+		'tags' => $tags,
+	);
+	$params = $params + $vars;
+	$list_body = elgg_view('object/elements/summary', $params);
 
-	$html .= "</div>";
-	$html .= elgg_view_comments($videos);
-	echo $html;
+	$entity_info = elgg_view_image_block($owner_icon, $list_body);
+
+	echo <<<HTML
+$header
+$entity_info
+$body
+HTML;
+
+} elseif (elgg_in_context('gallery')) {
+	echo '<div class="videolist-gallery-item">';
+	echo "<h3>" . $entity->title . "</h3>";
+	echo elgg_view_entity_icon($entity, 'medium');
+	echo "<p class='subtitle'>$owner_link $date</p>";
+	echo '</div>';
+} else {
+	// brief view
+
+	$params = array(
+		'entity' => $entity,
+		'metadata' => $metadata,
+		'subtitle' => $subtitle,
+		'tags' => $tags,
+		'content' => $excerpt,
+	);
+	$params = $params + $vars;
+	$list_body = elgg_view('object/elements/summary', $params);
+
+	echo elgg_view_image_block($entity_icon, $list_body);
 }
