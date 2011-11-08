@@ -60,7 +60,8 @@ function videolist_init() {
 	elgg_register_entity_url_handler('object', 'watch', 'video_url');
 
 	//register entity url handler
-	elgg_register_entity_url_handler('object', 'videolist', 'videolist_url');
+	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
 	// Register entity type
 	elgg_register_entity_type('object','videolist');
@@ -70,9 +71,6 @@ function videolist_init() {
 	// register for embed
 	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
 	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
-
-	// override icons for ElggEntity::getIcon()
-	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'profile_usericon_hook');
 	
 	// Register actions
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
@@ -91,7 +89,7 @@ function videolist_init() {
  *  Video watch:      videolist/watch/<guid>/<title>
  *  Video browse:     videolist/browse
  *  New video:        videolist/add/<guid>
- *  Edit video:       videolist/edit/<guid>/<revision>
+ *  Edit video:       videolist/edit/<guid>
  *  Group videos:     videolist/group/<guid>/all
  *
  * Title is ignored
@@ -170,12 +168,10 @@ function video_url($entity) {
 	return elgg_get_site_url() . "videolist/watch/" . $entity->getGUID() . "/" . $video_id;
 }
 
-function videolist_url($videolistpage) {
-	$owner = $videolistpage->container_guid;
-	$userdata = get_entity($owner);
-	$title = $videolistpage->title;
-	$title = friendly_title($title);
-	return elgg_get_site_url() . "videolist/watch/" . $videolistpage->getGUID();
+function videolist_url($videolist_item) {
+	$guid = $videolist_item->guid;
+	$title = elgg_get_friendly_title($videolist_item->title);
+	return elgg_get_site_url() . "videolist/watch/$guid/$title";
 }
 
 /**
@@ -279,17 +275,24 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 }
 
 /**
- * Returns the URL of the icon for $entity at $size.
+ * Override the default entity icon for videoslist items
  *
- * @param ElggEntity $entity
- * @param string $size Not used yet.  Not sure if possible.
+ * @return string Relative URL
  */
-function videolist_get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
-
+function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
+	$videolist_item = $params['entity'];
+	$size = $params['size'];
+	
+	if($videolist_item->getSubtype() != 'videolist_item'){
+		return $returnvalue;
+	}
+	
 	// tiny thumbnails are too small to be useful, so give a generic video icon
-	if ($size == 'tiny') {
-		return elgg_get_site_url() . "mod/videolist/graphics/video_icon_tiny.png";
+	if ($size != 'tiny' && isset($videolist_item->thumbnail)) {
+		return $videolist_item->thumbnail;
 	}
 
-	return $entity->thumbnail;
+	if (in_array($size, array('tiny', 'small', 'medium'))){
+		return "mod/videolist/graphics/videolist_icon_{$size}.png";
+	}
 }

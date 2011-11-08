@@ -27,8 +27,7 @@ $owner_link = elgg_view('output/url', array(
 ));
 $author_text = elgg_echo('byline', array($owner_link));
 
-$entity_icon = elgg_view_entity_icon($entity, 'small');
-
+$entity_icon = elgg_view_entity_icon($entity, 'medium');
 $owner_icon = elgg_view_entity_icon($owner, 'small');
 
 $tags = elgg_view('output/tags', array('tags' => $entity->tags));
