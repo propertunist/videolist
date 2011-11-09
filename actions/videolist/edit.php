@@ -32,8 +32,9 @@ if (!$input['video_url']) {
 
 $parsed_url = videolist_parseurl($input['video_url']);
 
-if(!$parsed) {
+if(!$parsed_url) {
 	register_error(elgg_echo('videolist:error:invalid_url'));
+	forward(REFERER);
 }
 
 if ($video_guid) {

@@ -10,6 +10,11 @@
  */
 ?>
 
+.videolist-watch {
+	margin-top: 40px;
+	margin-left: 20px;
+}
+
 .videolist_error{
 	color:red;
 	font-weight:bold;

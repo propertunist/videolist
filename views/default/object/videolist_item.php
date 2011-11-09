@@ -60,11 +60,12 @@ if (elgg_in_context('widgets')) {
 
 if ($full && !elgg_in_context('gallery')) {
 	
-	$content= elgg_view("videolist/watch/{$entity->videotype}", array(
-		'video_id' => $entity->video_id,
+	$content = elgg_view("videolist/watch/{$entity->videotype}", array(
+		'entity' => $entity,
 		'width' => 600,
 		'height' => 400,
 	));
+	$content = "<div class=\"videolist-watch\">$content</div>";
 
 	$params = array(
 		'entity' => $entity,

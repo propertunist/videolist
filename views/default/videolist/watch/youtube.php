@@ -1,6 +1,6 @@
 <?php
 
-$video_id = $vars['video_id'];
+$video_id = $vars['entity']->video_id;
 $width = $vars['width'];
 $height = $vars['height'];
 
