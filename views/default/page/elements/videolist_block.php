@@ -14,10 +14,11 @@ $container = get_entity($container_guid);
 
 $options = array(
 	'container_guid' => $container_guid,
-	'limit' => elgg_extract('limit', $vars, 4),
+	'limit' => elgg_extract('limit', $vars, 6),
 	'type' => 'object',
 	'subtypes' => 'videolist_item',
 	'full_view' => false,
+	'pagination' => false,
 );
 
 if($container) {

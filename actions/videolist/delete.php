@@ -28,7 +28,7 @@ if (!$videolist_item->delete()) {
 }
 
 // we can't come back to video url because it's deleted
-if($url != REFERER) {
+if($url != $_SERVER['HTTP_REFERER']) {
 	forward(REFERER);
 }
 

@@ -107,7 +107,7 @@ function videolist_get_data_youtube($video_id){
 	
 	return array(
 		'title' => sanitize_string($xml->title),
-		'description' => sanitize_string($xml->content),
+		'description' => strip_tags($xml->content),
 		'thumbnail' => "http://img.youtube.com/vi/$video_id/default.jpg",
 		'video_id' => $video_id,
 		'videotype' => 'youtube',
@@ -123,22 +123,22 @@ function videolist_get_data_vimeo($video_id){
 	
 	return array(
 		'title' => sanitize_string($video->title),
-		'description' => sanitize_string($video->description),
+		'description' => strip_tags($video->description),
 		'thumbnail' => sanitize_string($video->thumbnail_medium),
 		'video_id' => $video_id,
 		'videotype' => 'vimeo',
 	);
 }
 
-function videolist_get_data_metacafe($video_id){ //FIXME
+function videolist_get_data_metacafe($video_id){
 	$buffer = file_get_contents("http://www.metacafe.com/api/item/$video_id");
 	$xml = new SimpleXMLElement($buffer);
 	
 	return array(
-		'title' => current($xml->xpath('/rss/channel/item/title')),
-		'description' => current($xml->xpath('/rss/channel/item/description')),
-		'thumbnail' => current($xml->xpath('/rss/channel/item/media:thumbnail/@url')),
-		'embedurl' => current($xml->xpath('/rss/channel/item/media:content/@url')),
+		'title' => sanitize_string(current($xml->xpath('/rss/channel/item/title'))),
+		'description' => strip_tags(current($xml->xpath('/rss/channel/item/description'))),
+		'thumbnail' => sanitize_string(current($xml->xpath('/rss/channel/item/media:thumbnail/@url'))),
+		'embedurl' => sanitize_string(current($xml->xpath('/rss/channel/item/media:content/@url'))),
 		'video_id' => $video_id,
 		'videotype' => 'metacafe',
 	);
@@ -149,10 +149,10 @@ function videolist_get_data_bliptv($video_id){
 	$xml = new SimpleXMLElement($buffer);
 	
 	return array(
-		'title' => current($xml->xpath('/rss/channel/item/title')),
-		'description' => current($xml->xpath('/rss/channel/item/description')),
-		'thumbnail' => current($xml->xpath('/rss/channel/item/media:thumbnail/@url')),
-		'embedurl' => current($xml->xpath('/rss/channel/item/blip:embedUrl')),
+		'title' => sanitize_string(current($xml->xpath('/rss/channel/item/title'))),
+		'description' => strip_tags(current($xml->xpath('/rss/channel/item/description'))),
+		'thumbnail' => sanitize_string(current($xml->xpath('/rss/channel/item/media:thumbnail/@url'))),
+		'embedurl' => sanitize_string(current($xml->xpath('/rss/channel/item/blip:embedUrl'))),
 		'video_id' => $video_id,
 		'videotype' => 'bliptv',
 	);
@@ -166,7 +166,7 @@ function videolist_get_data_gisstv($video_id){
 	foreach($xml->xpath('/rss/channel/item') as $item){
 		if(sanitize_string($item->link) == 'http://giss.tv/dmmdb//contents/'.$video_id) {
 			$data['title'] = sanitize_string($item->title);
-			$data['description'] = sanitize_string($item->description);
+			$data['description'] = strip_tags($item->description);
 			$data['thumbnail'] = sanitize_string($item->thumbnail);
 			break;
 		}
