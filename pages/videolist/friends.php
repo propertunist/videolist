@@ -21,7 +21,7 @@ if (!$content) {
 	$content = elgg_echo("videolist:none");
 }
 
-//$sidebar = elgg_view('videolist/sidebar', array());
+$sidebar = elgg_view('videolist/sidebar', array());
 
 $body = elgg_view_layout('content', array(
 	'filter_context' => 'friends',

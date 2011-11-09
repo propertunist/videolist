@@ -16,8 +16,6 @@ $owner = $entity->getOwnerEntity();
 $container = $entity->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 $excerpt = elgg_get_excerpt($entity->description);
-$mime = $entity->mimetype;
-$base_type = substr($mime, 0, strpos($mime,'/'));
 
 $body = elgg_view('output/longtext', array('value' => $entity->description));
 
@@ -88,9 +86,12 @@ HTML;
 
 } elseif (elgg_in_context('gallery')) {
 	echo '<div class="videolist-gallery-item">';
-	echo "<h3>" . $entity->title . "</h3>";
-	echo elgg_view_entity_icon($entity, 'medium');
-	echo "<p class='subtitle'>$owner_link $date</p>";
+	$content = elgg_view('output/url', array(
+		'text' => elgg_get_excerpt($entity->title, 25),
+		'href' => $entity->getURL(),
+	));
+	$content .= "<p class='subtitle'>$owner_link $date</p>";
+	echo elgg_view_image_block($entity_icon, $content);
 	echo '</div>';
 } else {
 	// brief view

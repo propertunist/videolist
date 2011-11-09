@@ -27,10 +27,16 @@ elgg_push_breadcrumb($title);
 $content = elgg_view_entity($videolist_item, array('full_view' => true));
 $content .= elgg_view_comments($videolist_item);
 
+$sidebar = elgg_view('videolist/sidebar', array(
+	'show_comments' => false,
+	'show_videolist' => true,
+));
+
 $body = elgg_view_layout('content', array(
 	'content' => $content,
 	'title' => $title,
 	'filter' => '',
+	'sidebar' => $sidebar,
 ));
 
 echo elgg_view_page($title, $body);

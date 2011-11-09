@@ -20,22 +20,7 @@ $content = elgg_list_entities(array(
 	'full_view' => FALSE
 ));
 
-// get the latest comments on all videos
-$comments = elgg_get_annotations(array(
-	'type' => 'object',
-	'subype' => 'videolist',
-	'annotation_names' => array('generic_comment'),
-	'limit' => 4,
-	'order_by' => 'time_created desc',
-));
-$sidebar = elgg_view('annotation/latest_comments', array('comments' => $comments));
-
-// tag-cloud display
-$sidebar .= elgg_view_tagcloud(array(
-	'type' => 'object',
-	'subtype' => 'videolist',
-	'limit' => 50,
-));
+$sidebar = elgg_view('videolist/sidebar');
 
 elgg_set_context('videolist');
 $body = elgg_view_layout('content', array(
