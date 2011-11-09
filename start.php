@@ -37,8 +37,8 @@ function videolist_init() {
 		'access_id' => 'access',
 	));
 
-	//extend this plugin for groups
-	elgg_extend_view('groups/tool_latest','videolist/groupprofile_videolist');
+	// extend group main page
+	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
 
 	if (is_callable('register_notification_object')) {
 		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));

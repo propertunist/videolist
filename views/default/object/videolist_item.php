@@ -22,7 +22,7 @@ $base_type = substr($mime, 0, strpos($mime,'/'));
 $body = elgg_view('output/longtext', array('value' => $entity->description));
 
 $owner_link = elgg_view('output/url', array(
-	'href' => "file/owner/$owner->username",
+	'href' => "videolist/owner/$owner->username",
 	'text' => $owner->name,
 ));
 $author_text = elgg_echo('byline', array($owner_link));
@@ -38,7 +38,7 @@ $comments_count = $entity->countComments();
 if ($comments_count != 0) {
 	$text = elgg_echo("comments") . " ($comments_count)";
 	$comments_link = elgg_view('output/url', array(
-		'href' => $entity->getURL() . '#file-comments',
+		'href' => $entity->getURL() . '#videolist-item-comments',
 		'text' => $text,
 	));
 } else {
@@ -47,7 +47,7 @@ if ($comments_count != 0) {
 
 $metadata = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
-	'handler' => 'file',
+	'handler' => 'videolist',
 	'sort_by' => 'priority',
 	'class' => 'elgg-menu-hz',
 ));
@@ -57,6 +57,7 @@ $subtitle = "$author_text $date $categories $comments_link";
 // do not show the metadata and controls in widget view
 if (elgg_in_context('widgets')) {
 	$metadata = '';
+	$excerpt = '';
 }
 
 if ($full && !elgg_in_context('gallery')) {

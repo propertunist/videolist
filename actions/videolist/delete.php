@@ -1,33 +1,39 @@
 <?php
 /**
- * Elgg Videolist Plugin -
- * This plugin allows users to delete videos
- *
- * @package Elgg
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
- */
-// Make sure we're logged in (send us to the front page if not)
-gatekeeper();
+* Elgg videolist item delete
+* 
+* @package ElggVideolist
+*/
 
-// Get input data
-$guid = (int) get_input('video');
+$guid = (int) get_input('guid');
 
-// Make sure we actually have permission to edit
-$video = get_entity($guid);
-if ($video->getSubtype() == "videolist" && $video->canEdit()) {
-	// Get owning user
-	$owner = get_entity($video->getOwner());
+$videolist_item = get_entity($guid);
+if (!$videolist_item->guid) {
+	register_error(elgg_echo("videolist:deletefailed"));
+	forward('videolist/all');
+}
 
-	// Delete it!
-	$rowsaffected = $video->delete();
-	if ($rowsaffected > 0) {
-		// Success message
-		system_message(elgg_echo("videos:deleted"));
-	} else {
-		register_error(elgg_echo("videos:notdeleted"));
-	}
-	// Forward to the main video list page
-	forward($_SERVER['HTTP_REFERER']);
+if (!$videolist_item->canEdit()) {
+	register_error(elgg_echo("videolist:deletefailed"));
+	forward($videolist_item->getURL());
+}
+
+$container = $videolist_item->getContainerEntity();
+$url = $videolist_item->getURL();
+
+if (!$videolist_item->delete()) {
+	register_error(elgg_echo("videolist:deletefailed"));
+} else {
+	system_message(elgg_echo("videolist:deleted"));
+}
+
+// we can't come back to video url because it's deleted
+if($url != REFERER) {
+	forward(REFERER);
+}
+
+if (elgg_instanceof($container, 'group')) {
+	forward("videolist/group/$container->guid/all");
+} else {
+	forward("videolist/owner/$container->username");
 }
