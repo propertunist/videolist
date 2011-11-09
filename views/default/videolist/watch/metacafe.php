@@ -1,15 +1,7 @@
 <?php
 
-/* TODO
-$video_id = $vars['video_id'];
+$embedurl = $vars['entity']->embedurl;
 $width = $vars['width'];
 $height = $vars['height'];
 
-$path = explode("/", $videos->thumbnail);
-$path = array_reverse($path);
-$thumbnailArray = explode(".", $path[0]);
-$video_id = $video_id."/".$thumbnailArray[0].".swf";
-
-echo "<br />
-<embed src=\"http://www.metacafe.com/fplayer/".$video_id."\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"$width\" height=\"$height\" wmode=\"transparent\" name=\"Metacafe_".$video_id."\"></embed>";
-*/
+echo "<embed flashVars=\"playerVars=autoPlay=no\" src=\"$embedurl\" width=\"540\" height=\"304\" wmode=\"transparent\" allowFullScreen=\"true\" allowScriptAccess=\"always\" name=\"Metacafe_$video_id\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\"></embed>";
