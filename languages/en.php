@@ -46,6 +46,7 @@ $english = array(
 	"videolist:searchTubeVideos" => "Search youtube.com",
 	"videolist:comments" => "Comments",
 	"videolist:commentspost" => "Post",
+	"river:create:object:videolist_item" => "%s added the video %s",
 	"river:comment:object:videolist_item" => "%s commented on %s",
 	"videolist:river:item" => "a video",
 	"videolist:river:created" => "%s added",
