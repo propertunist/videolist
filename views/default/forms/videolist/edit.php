@@ -9,6 +9,7 @@ $variables = elgg_get_config('videolist');
 
 if(empty($vars['guid'])){
 	unset($variables['title']);
+	unset($variables['description']);
 }
 
 foreach ($variables as $name => $type) {

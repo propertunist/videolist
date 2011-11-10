@@ -33,6 +33,7 @@ function videolist_init() {
 	elgg_set_config('videolist', array(
 		'video_url' => 'url',
 		'title' => 'text',
+		'description' => 'longtext',
 		'tags' => 'tags',
 		'access_id' => 'access',
 	));
