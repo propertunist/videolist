@@ -20,10 +20,7 @@ function videolist_init() {
 	elgg_register_menu_item('site', $item);
 
 	// Extend system CSS with our own styles
-	elgg_extend_view('css','videolist/css');
-
-	// Load the language file - default is english
-	register_translations(elgg_get_plugins_path() . "videolist/languages/");
+	elgg_extend_view('css/elgg','videolist/css');
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('videolist', 'videolist_page_handler');
@@ -42,14 +39,8 @@ function videolist_init() {
 	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
 
 	if (is_callable('register_notification_object')) {
-		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));
+		register_notification_object('object', 'videolist_item', elgg_echo('videolist:new'));
 	}
-	
-	// Register a handler for adding videos
-	elgg_register_event_handler('create', 'videolist', 'videolist_create_event_listener');
-
-	// Register a handler for delete videos
-	elgg_register_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
 	
 	// Register entity type for search
 	elgg_register_entity_type('object', 'videolist_item');
@@ -64,9 +55,6 @@ function videolist_init() {
 	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
-	// Register entity type
-	elgg_register_entity_type('object','videolist');
-
 	// register for embed
 	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
 	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
@@ -75,7 +63,6 @@ function videolist_init() {
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
 	elgg_register_action("videolist/add", "$actions_path/add.php");
 	elgg_register_action("videolist/edit", "$actions_path/edit.php");
-	elgg_register_action("videolist/tubesearch", "$actions_path/tubesearch.php");
 	elgg_register_action("videolist/delete", "$actions_path/delete.php");
 }
 
@@ -123,9 +110,6 @@ function videolist_page_handler($page) {
 			set_input('guid', $page[1]);
 			include "$videolist_dir/edit.php";
 			break;
-		case 'browse':
-			include "$videolist_dir/browse.php";
-			break;
 		case 'group':
 			include "$videolist_dir/owner.php";
 			break;
@@ -155,11 +139,6 @@ function videolist_owner_block_menu($hook, $type, $return, $params) {
 	return $return;
 }
 
-function video_url($entity) {
-	$video_id = $entity->video_id;
-	return elgg_get_site_url() . "videolist/watch/" . $entity->getGUID() . "/" . $video_id;
-}
-
 function videolist_url($videolist_item) {
 	$guid = $videolist_item->guid;
 	$title = elgg_get_friendly_title($videolist_item->title);
@@ -178,7 +157,7 @@ function videolist_object_notifications($event, $object_type, $object) {
 
 	if (is_callable('object_notifications')) {
 		if ($object instanceof ElggObject) {
-			if ($object->getSubtype() == 'videolist') {
+			if ($object->getSubtype() == 'videolist_item') {
 				if ($flag == 0) {
 					$flag = 1;
 					object_notifications($event, $object_type, $object);
@@ -201,7 +180,7 @@ function videolist_object_notifications($event, $object_type, $object) {
 function videolist_object_notifications_intercept($hook, $entity_type, $returnvalue, $params) {
 	if (isset($params)) {
 		if ($params['event'] == 'create' && $params['object'] instanceof ElggObject) {
-			if ($params['object']->getSubtype() == 'videolist') {
+			if ($params['object']->getSubtype() == 'videolist_item') {
 				return true;
 			}
 		}
@@ -239,7 +218,7 @@ function videolist_embed_get_sections($hook, $type, $value, $params) {
 function videolist_embed_get_items($hook, $type, $value, $params) {
 	$options = array(
 		'owner_guid' => get_loggedin_userid(),
-		'type_subtype_pair' => array('object' => 'videolist'),
+		'type_subtype_pair' => array('object' => 'videolist_item'),
 		'count' => TRUE
 	);
 
