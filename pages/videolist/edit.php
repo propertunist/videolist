@@ -36,6 +36,7 @@ $body_vars = array('guid' => $guid);
 foreach(array_keys(elgg_get_config('videolist')) as $variable) {
 	$body_vars[$variable] = $videolist_item->$variable;
 }
+$body_vars['container_guid'] = $videolist_item->container_guid;
 
 $content = elgg_view_form('videolist/edit', $form_vars, $body_vars);
 

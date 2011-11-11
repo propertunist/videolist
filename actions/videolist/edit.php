@@ -18,7 +18,7 @@ foreach ($variables as $name => $type) {
 }
 
 // Get guids
-$videolist_guid = (int)get_input('videolist_guid');
+$video_guid = (int)get_input('video_guid');
 $container_guid = (int)get_input('container_guid');
 
 elgg_make_sticky_form('videolist');
