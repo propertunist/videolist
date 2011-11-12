@@ -25,16 +25,26 @@ elgg_make_sticky_form('videolist');
 
 elgg_load_library('elgg:videolist');
 
-if (!$input['video_url']) {
-	register_error(elgg_echo('videolist:error:no_url'));
-	forward(REFERER);
-}
+// If new video, get data from video providers
+if(!$video_guid) {
+	if (!$input['video_url']) {
+		register_error(elgg_echo('videolist:error:no_url'));
+		forward(REFERER);
+	}
 
-$parsed_url = videolist_parseurl($input['video_url']);
+	$parsed_url = videolist_parseurl($input['video_url']);
 
-if(!$parsed_url) {
-	register_error(elgg_echo('videolist:error:invalid_url'));
-	forward(REFERER);
+	if(!$parsed_url) {
+		register_error(elgg_echo('videolist:error:invalid_url'));
+		forward(REFERER);
+	}
+	
+	unset($input['title']);
+	unset($input['description']);
+	$input = array_merge(videolist_get_data($parsed_url), $input);
+	
+} else {
+	unset($input['video_url']);
 }
 
 if ($video_guid) {
@@ -49,8 +59,6 @@ if ($video_guid) {
 	$video->subtype = 'videolist_item';
 	$new_video = true;
 }
-
-$input = array_merge($input, videolist_get_data($parsed_url));
 
 if (sizeof($input) > 0) {
 	foreach ($input as $name => $value) {
