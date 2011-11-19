@@ -37,6 +37,9 @@ function videolist_init() {
 
 	// extend group main page
 	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
+	
+	//add a widget
+	elgg_register_widget_type('videolist', elgg_echo('videolist'), elgg_echo('videolist:widget:description'));
 
 	if (is_callable('register_notification_object')) {
 		register_notification_object('object', 'videolist_item', elgg_echo('videolist:new'));
