@@ -1,13 +1,10 @@
 <?php
 /**
- * Elgg Video Plugin
- * This plugin allows users to create a library of youtube/vimeo/metacafe videos
- * @file - language file 'en'
- * @package Elgg
- * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
+ * Elgg videolist english language pack.
+ *
+ * @package ElggVideolist
  */
+ 
 $english = array(
 
 	"videolist" => "Videos",
@@ -24,24 +21,24 @@ $english = array(
 	'videolist:friends' => "Friends' videos",
 	'videolist:edit' => "Edit video",
 	'videolist:ingroup' => "in the group",
-	"videolist:title_videourl" => 'Enter Video Url',
 	"videolist:submit" => 'Submit',
-	"videolist:videoTitle" => "Title",
-	"videolist:error" => 'There was an error in saving the video, please try after sometime',
-	"videolist:posted" => 'Your video has been saved successfully!',
-	"video:more" => "View all videos",
-	"video:none" => "sorry, no videos were found",
-	"candidateprofile:candidatevideo" => "My videos",
-	"videos:deleted" => "Your Video was removed successfully!",
-	"videos:notdeleted" => "Unfortunately, this video could not be removed now. Please try again later",
+	"videolist:title" => "Title",
+	"videolist:description" => "Description",
+	"videolist:video_url" => "Enter video URL",
+	"videolist:error:no_save" => 'There was an error in saving the video, please try after sometime',
+	"videolist:saved" => 'Your video has been saved successfully!',
+	"videolist_item:more" => "View all videos",
+	"videolist_item:none" => "sorry, no videos were found",
+	"videolist:deleted" => "Your video was removed successfully!",
+	"videolist:deletefailed" => "Unfortunately, this video could not be removed now. Please try again later",
 	"videolist:widget" => "Videos",
 	"videolist:widget:description" => "Your personal video playlist",
 	"videolist:num_videos" => "Number of videos to display",
 	'videolist:widget' => "My Videos",
 	"videolist:widget:description" => "Showcase your personal video gallery from youtube",
 	"profile:videoheader" => "My Video Gallery",
-	"videolist:title_access" => "Access",
-	"item:object:videolist" => "Videos",
+	"videolist:access_id" => "Who can see you posted this video?",
+	"item:object:videolist_item" => "Videos",
 	"videolist:tags" => "Add Tags",
 	"videolist:browse" => "Find Videos - %s",
 	"videolist:browsemenu" => "Find Videos",
@@ -49,17 +46,14 @@ $english = array(
 	"videolist:searchTubeVideos" => "Search youtube.com",
 	"videolist:comments" => "Comments",
 	"videolist:commentspost" => "Post",
-	"videolist:river:annotate" => "%s commented on",
+	"river:create:object:videolist_item" => "%s added the video %s",
+	"river:comment:object:videolist_item" => "%s commented on %s",
 	"videolist:river:item" => "a video",
 	"videolist:river:created" => "%s added",
-	"videolist:searchTubeVideos:metacafe" => "Search metacafe.com",
-	"videolist:searchTubeVideos:vimeo" => "Search vimeo.com",
-	"videolist:searchTubeVideos:googlevideos" => "Search video.google.com",
-	"videolist:group" => "Videos",
+	"videolist:group" => "Group Videos",
 	"videolist:groupall" => "All Group Videos",
 	"videolist:delete:confirm" => "Are you sure you want to delete this video?",
-	"videolist:none" => "This group does not have any videos yet",
-	"videolist:none:found" => "No videos were found."
+	"videolist:none" => "No videos were found.",
 );
 
 add_translation("en",$english);

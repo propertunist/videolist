@@ -8,136 +8,141 @@
  * @author Prateek Choudhary <synapticfield@gmail.com>
  * @copyright Prateek Choudhary
  */
-function videolist_init() {
-	global $CONFIG;
 
-	add_menu(elgg_echo('videolist'), $CONFIG->wwwroot . "mod/videolist/all.php");
+elgg_register_event_handler('init', 'system', 'videolist_init');
+
+function videolist_init() {
+	
+	elgg_register_library('elgg:videolist', elgg_get_plugins_path() . 'videolist/lib/videolist.php');
+
+	// add a site navigation item
+	$item = new ElggMenuItem('videolist', elgg_echo('videolist'), 'videolist/all');
+	elgg_register_menu_item('site', $item);
 
 	// Extend system CSS with our own styles
-	elgg_extend_view('css','videolist/css');
-
-	// Load the language file - default is english
-	register_translations($CONFIG->pluginspath . "videolist/languages/");
+	elgg_extend_view('css/elgg','videolist/css');
 
 	// Register a page handler, so we can have nice URLs
-	register_page_handler('videolist','videolist_page_handler');
+	elgg_register_page_handler('videolist', 'videolist_page_handler');
+	
+	// Language short codes must be of the form "videolist:key"
+	// where key is the array key below
+	elgg_set_config('videolist', array(
+		'video_url' => 'url',
+		'title' => 'text',
+		'description' => 'longtext',
+		'tags' => 'tags',
+		'access_id' => 'access',
+	));
 
-	//extend this plugin for groups
-	elgg_extend_view('groups/tool_latest','videolist/groupprofile_videolist');
+	// extend group main page
+	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
 
 	if (is_callable('register_notification_object')) {
-		register_notification_object('object', 'videolist', elgg_echo('videolist:new'));
+		register_notification_object('object', 'videolist_item', elgg_echo('videolist:new'));
 	}
+	
+	// Register entity type for search
+	elgg_register_entity_type('object', 'videolist_item');
 
-	register_plugin_hook('object:notifications','object','videolist_object_notifications_intercept');
+	// add a file link to owner blocks
+	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
+	elgg_register_event_handler('annotate','all','videolist_object_notifications');
 
-	// Register URL handler
-	register_entity_url_handler('video_url','object', 'videolist');
-	register_entity_url_handler('video_url','object', 'watch');
+	elgg_register_plugin_hook_handler('object:notifications','object','videolist_object_notifications_intercept');
 
 	//register entity url handler
-	register_entity_url_handler('videolist_url','object','videolist');
-
-	// Register entity type
-	register_entity_type('object','videolist');
-
-	register_plugin_hook('profile_menu', 'profile', 'videolist_profile_menu');
+	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
+	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
 	// register for embed
-	register_plugin_hook('embed_get_sections', 'all', 'videolist_embed_get_sections');
-	register_plugin_hook('embed_get_items', 'videolist', 'videolist_embed_get_items');
-
-	// override icons for ElggEntity::getIcon()
-	register_plugin_hook('entity:icon:url', 'user', 'profile_usericon_hook');
+	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
+	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
+	
+	// Register actions
+	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
+	elgg_register_action("videolist/add", "$actions_path/add.php");
+	elgg_register_action("videolist/edit", "$actions_path/edit.php");
+	elgg_register_action("videolist/delete", "$actions_path/delete.php");
 }
 
 /**
- * videolist page handler; allows the use of fancy URLs
+ * Dispatches blog pages.
+ * URLs take the form of
+ *  All videos:       videolist/all
+ *  User's videos:    videolist/owner/<username>
+ *  Friends' videos:  videolist/friends/<username>
+ *  Video watch:      videolist/watch/<guid>/<title>
+ *  Video browse:     videolist/browse
+ *  New video:        videolist/add/<guid>
+ *  Edit video:       videolist/edit/<guid>
+ *  Group videos:     videolist/group/<guid>/all
  *
- * @param array $page From the page_handler function
- * @return true|false Depending on success
+ * Title is ignored
+ *
+ * @param array $page
+ * @return NULL
  */
 function videolist_page_handler($page) {
-	if (isset($page[0])) {
-		switch($page[0]) {
-			case "owned": if (isset($page[1])) set_input('username',$page[1]);
-								@include(dirname(__FILE__) . "/index.php");
-								break;
-			case "friends":     @include(dirname(__FILE__) . "/friends.php");
-								break;
-			case "search":		@include(dirname(__FILE__) . "/all.php");
-								break;
-			case "video":		@include(dirname(__FILE__) . "/video.php");
-								break;
-			case "new": if (isset($page[3])) set_input('add_videourl',$page[3]);
-									if (isset($page[5])) set_input('page',$page[5]);
-									if (isset($page[1])) set_input('container',$page[1]);
-								@include(dirname(__FILE__) . "/new.php");
-								break;
-			case "watch":	set_input('video_id',$page[1]);
-								@include(dirname(__FILE__) . "/watch.php");
-								break;
-			case "browse":	if (isset($page[1])) set_input('container',$page[1]);
-								@include(dirname(__FILE__) . "/browse.php");
-								break;
-		default : if (isset($page[1])) set_input('username',$page[1]);
-								@include(dirname(__FILE__) . "/index.php");
-								break;
-		}
-	// If the URL is just 'videolist/username', or just 'videolist/', load the standard index file
+	
+	if (!isset($page[0])) {
+		$page[0] = 'all';
+	}
+
+	$videolist_dir = elgg_get_plugins_path() . 'videolist/pages/videolist';
+
+	$page_type = $page[0];
+	switch ($page_type) {
+		case 'owner':
+			include "$videolist_dir/owner.php";
+			break;
+		case 'friends':
+			include "$videolist_dir/friends.php";
+			break;
+		case 'watch':
+			set_input('guid', $page[1]);
+			include "$videolist_dir/watch.php";
+			break;
+		case 'add':
+			include "$videolist_dir/add.php";
+			break;
+		case 'edit':
+			set_input('guid', $page[1]);
+			include "$videolist_dir/edit.php";
+			break;
+		case 'group':
+			include "$videolist_dir/owner.php";
+			break;
+		case 'all':
+		default:
+			include "$videolist_dir/all.php";
+			break;
+	}
+}
+
+/**
+ * Add a menu item to the user ownerblock
+ */
+function videolist_owner_block_menu($hook, $type, $return, $params) {
+	if (elgg_instanceof($params['entity'], 'user')) {
+		$url = "videolist/owner/{$params['entity']->username}";
+		$item = new ElggMenuItem('videolist', elgg_echo('videolist'), $url);
+		$return[] = $item;
 	} else {
-		if (isset($page[1])) {
-			set_input('username',$page[1]);
-		}
-
-		include(dirname(__FILE__) . "/index.php");
-		return true;
-	}
-
-	return false;
-}
-
-
-function videolist_pagesetup() {
-	global $CONFIG;
-	$page_owner = page_owner_entity();
-
-	if ($page_owner instanceof ElggGroup && get_context() == "groups") {
-		//add_submenu_item(sprintf(elgg_echo("videolist:group"), page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
-	} else if (get_context() == "videolist") {
-		/**********************************************************************************************
-		****if user is OR is not registered user then show him following page menus to choose from
-		***********************************************************************************************/
-		/*
-		add_submenu_item(elgg_echo('videolist:home'),$CONFIG->wwwroot."pg/videolist/". $page_owner->username);
-
-		add_submenu_item(elgg_echo('videolist:new'),$CONFIG->wwwroot."pg/videolist/new");
-
-		add_submenu_item(elgg_echo('videolist:find'),$CONFIG->wwwroot."pg/videolist/search/");
-		*/
-	} else if (get_context() == "group") {
-		//add_submenu_item(sprintf(elgg_echo("videolist:home"),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/owned/" . page_owner_entity()->username);
-		if ($page_owner->canEdit()) {
-			//add_submenu_item(sprintf(elgg_echo('videolist:browsemenu'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/browse/". page_owner_entity()->username);
-			//add_submenu_item(sprintf(elgg_echo('videolist:new'),page_owner_entity()->name), $CONFIG->wwwroot . "pg/videolist/new/". page_owner_entity()->username);
+		if ($params['entity']->videolist_enable != "no") {
+			$url = "videolist/group/{$params['entity']->guid}/all";
+			$item = new ElggMenuItem('videolist', elgg_echo('videolist:group'), $url);
+			$return[] = $item;
 		}
 	}
+
+	return $return;
 }
 
-function video_url($entity) {
-	global $CONFIG;
-	$video_id = $entity->video_id;
-	return $CONFIG->url . "pg/videolist/watch/" . $entity->getGUID() . "/" . $video_id;
-}
-
-function videolist_url($videolistpage) {
-	global $CONFIG;
-
-	$owner = $videolistpage->container_guid;
-	$userdata = get_entity($owner);
-	$title = $videolistpage->title;
-	$title = friendly_title($title);
-	return $CONFIG->url . "pg/videolist/watch/" . $videolistpage->getGUID();
+function videolist_url($videolist_item) {
+	$guid = $videolist_item->guid;
+	$title = elgg_get_friendly_title($videolist_item->title);
+	return elgg_get_site_url() . "videolist/watch/$guid/$title";
 }
 
 /**
@@ -152,7 +157,7 @@ function videolist_object_notifications($event, $object_type, $object) {
 
 	if (is_callable('object_notifications')) {
 		if ($object instanceof ElggObject) {
-			if ($object->getSubtype() == 'videolist') {
+			if ($object->getSubtype() == 'videolist_item') {
 				if ($flag == 0) {
 					$flag = 1;
 					object_notifications($event, $object_type, $object);
@@ -175,23 +180,12 @@ function videolist_object_notifications($event, $object_type, $object) {
 function videolist_object_notifications_intercept($hook, $entity_type, $returnvalue, $params) {
 	if (isset($params)) {
 		if ($params['event'] == 'create' && $params['object'] instanceof ElggObject) {
-			if ($params['object']->getSubtype() == 'videolist') {
+			if ($params['object']->getSubtype() == 'videolist_item') {
 				return true;
 			}
 		}
 	}
 	return null;
-}
-
-function videolist_profile_menu($hook, $entity_type, $return_value, $params) {
-	global $CONFIG;
-
-	$return_value[] = array(
-		'text' => elgg_echo('videolist'),
-		'href' => "{$CONFIG->url}pg/videolist/owned/{$params['owner']->username}",
-	);
-
-	return $return_value;
 }
 
 
@@ -224,7 +218,7 @@ function videolist_embed_get_sections($hook, $type, $value, $params) {
 function videolist_embed_get_items($hook, $type, $value, $params) {
 	$options = array(
 		'owner_guid' => get_loggedin_userid(),
-		'type_subtype_pair' => array('object' => 'videolist'),
+		'type_subtype_pair' => array('object' => 'videolist_item'),
 		'count' => TRUE
 	);
 
@@ -243,38 +237,24 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 }
 
 /**
- * Returns the URL of the icon for $entity at $size.
+ * Override the default entity icon for videoslist items
  *
- * @param ElggEntity $entity
- * @param string $size Not used yet.  Not sure if possible.
+ * @return string Relative URL
  */
-function videolist_get_entity_icon_url(ElggEntity $entity, $size = 'medium') {
-
+function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
+	$videolist_item = $params['entity'];
+	$size = $params['size'];
+	
+	if($videolist_item->getSubtype() != 'videolist_item'){
+		return $returnvalue;
+	}
+	
 	// tiny thumbnails are too small to be useful, so give a generic video icon
-	if ($size == 'tiny') {
-		global $CONFIG;
-		return "{$CONFIG->url}mod/videolist/graphics/video_icon_tiny.png";
+	if ($size != 'tiny' && isset($videolist_item->thumbnail)) {
+		return $videolist_item->thumbnail;
 	}
 
-	return $entity->thumbnail;
+	if (in_array($size, array('tiny', 'small', 'medium'))){
+		return "mod/videolist/graphics/videolist_icon_{$size}.png";
+	}
 }
-
-// Register a handler for adding videos
-register_elgg_event_handler('create', 'videolist', 'videolist_create_event_listener');
-
-// Register a handler for delete videos
-register_elgg_event_handler('delete', 'videolist', 'videolist_delete_event_listener');
-
-// Make sure the status initialisation function is called on initialisation
-register_elgg_event_handler('init','system','videolist_init');
-
-register_elgg_event_handler('pagesetup','system','videolist_pagesetup');
-register_elgg_event_handler('annotate','all','videolist_object_notifications');
-
-// Register actions
-global $CONFIG;
-
-register_action("videolist/add", false, $CONFIG->pluginspath . "videolist/actions/add.php");
-register_action("videolist/edit", false, $CONFIG->pluginspath . "videolist/actions/edit.php");
-register_action("videolist/tubesearch", false, $CONFIG->pluginspath . "videolist/actions/tubesearch.php");
-register_action("videolist/delete", false, $CONFIG->pluginspath . "videolist/actions/delete.php");
