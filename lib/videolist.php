@@ -1,6 +1,6 @@
 <?php
 
-define('VIDEOLIST_SUPPORTED_PLATFORMS', 'youtube, vimeo, metacafe, bliptv');
+define('VIDEOLIST_SUPPORTED_PLATFORMS', 'youtube, vimeo, metacafe, bliptv', 'gisstv');
 
 foreach(explode(', ', VIDEOLIST_SUPPORTED_PLATFORMS) as $videotype){
 	include(elgg_get_plugins_path()."videolist/lib/$videotype.php");
