@@ -121,6 +121,7 @@ function videolist_page_handler($page) {
 			include "$videolist_dir/all.php";
 			break;
 	}
+	return true;
 }
 
 /**
