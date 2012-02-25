@@ -67,6 +67,8 @@ function videolist_init() {
 	elgg_register_action("videolist/add", "$actions_path/add.php");
 	elgg_register_action("videolist/edit", "$actions_path/edit.php");
 	elgg_register_action("videolist/delete", "$actions_path/delete.php");
+	
+	elgg_register_event_handler('upgrade', 'system', 'videolist_run_upgrades');
 }
 
 /**
@@ -260,5 +262,16 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 
 	if (in_array($size, array('tiny', 'small', 'medium'))){
 		return "mod/videolist/graphics/videolist_icon_{$size}.png";
+	}
+}
+
+/**
+ * Process upgrades for the videolist plugin
+ */
+function videolist_run_upgrades() {
+	$path = elgg_get_plugins_path() . 'videolist/upgrades/';
+	$files = elgg_get_upgrade_files($path);
+	foreach ($files as $file) {
+		include "$path{$file}";
 	}
 }
