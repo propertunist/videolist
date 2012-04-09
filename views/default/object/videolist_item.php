@@ -7,6 +7,7 @@
 
 $full = elgg_extract('full_view', $vars, FALSE);
 $entity = elgg_extract('entity', $vars, FALSE);
+/* @var ElggObject $entity */
 
 if (!$entity) {
 	return TRUE;

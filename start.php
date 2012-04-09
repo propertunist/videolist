@@ -128,6 +128,12 @@ function videolist_page_handler($page) {
 
 /**
  * Add a menu item to the user ownerblock
+ *
+ * @param string $hook
+ * @param string $type
+ * @param array $return
+ * @param array $params
+ * @return array
  */
 function videolist_owner_block_menu($hook, $type, $return, $params) {
 	if (elgg_instanceof($params['entity'], 'user')) {
@@ -145,6 +151,10 @@ function videolist_owner_block_menu($hook, $type, $return, $params) {
 	return $return;
 }
 
+/**
+ * @param ElggObject $videolist_item
+ * @return string
+ */
 function videolist_url($videolist_item) {
 	$guid = $videolist_item->guid;
 	$title = elgg_get_friendly_title($videolist_item->title);
@@ -154,6 +164,9 @@ function videolist_url($videolist_item) {
 /**
  * Event handler for videolist
  *
+ * @param string $event
+ * @param string $object_type
+ * @param ElggObject $object
  */
 function videolist_object_notifications($event, $object_type, $object) {
 	static $flag;
@@ -177,11 +190,11 @@ function videolist_object_notifications($event, $object_type, $object) {
  * Intercepts the notification on an event of new video being created and prevents a notification from going out
  * (because one will be sent on the annotation)
  *
- * @param unknown_type $hook
- * @param unknown_type $entity_type
- * @param unknown_type $returnvalue
- * @param unknown_type $params
- * @return unknown
+ * @param string $hook
+ * @param string $entity_type
+ * @param array $returnvalue
+ * @param array $params
+ * @return bool
  */
 function videolist_object_notifications_intercept($hook, $entity_type, $returnvalue, $params) {
 	if (isset($params)) {
@@ -198,10 +211,11 @@ function videolist_object_notifications_intercept($hook, $entity_type, $returnva
 /**
  * Register videolist as an embed type.
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
+ * @param string $hook
+ * @param string $type
+ * @param array $value
+ * @param array $params
+ * @return array
  */
 function videolist_embed_get_sections($hook, $type, $value, $params) {
 	$value['videolist'] = array(
@@ -216,10 +230,11 @@ function videolist_embed_get_sections($hook, $type, $value, $params) {
 /**
  * Return a list of videos for embedding
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $value
- * @param unknown_type $params
+ * @param string $hook
+ * @param string $type
+ * @param array $value
+ * @param array $params
+ * @return array
  */
 function videolist_embed_get_items($hook, $type, $value, $params) {
 	$options = array(
@@ -245,13 +260,18 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 /**
  * Override the default entity icon for videoslist items
  *
+ * @param string $hook
+ * @param string $type
+ * @param string $returnvalue
+ * @param array $params
  * @return string Relative URL
  */
 function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 	$videolist_item = $params['entity'];
-	$size = $params['size'];
-	
-	if($videolist_item->getSubtype() != 'videolist_item'){
+    /* @var ElggObject $videolist_item */
+    $size = $params['size'];
+
+    if($videolist_item->getSubtype() != 'videolist_item'){
 		return $returnvalue;
 	}
 	

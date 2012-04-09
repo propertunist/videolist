@@ -6,6 +6,10 @@ foreach(explode(', ', VIDEOLIST_SUPPORTED_PLATFORMS) as $videotype){
 	include(elgg_get_plugins_path()."videolist/lib/$videotype.php");
 }
 
+/**
+ * @param string $url
+ * @return array
+ */
 function videolist_parseurl($url){
 	foreach(explode(', ', VIDEOLIST_SUPPORTED_PLATFORMS) as $videotype){
 		if (is_callable("videolist_parseurl_$videotype")){
@@ -17,6 +21,10 @@ function videolist_parseurl($url){
 	return array();
 }
 
+/**
+ * @param array $parsed
+ * @return array
+ */
 function videolist_get_data($parsed) {
 	$videotype = $parsed['videotype'];
 	$video_id = $parsed['video_id'];

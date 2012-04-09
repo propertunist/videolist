@@ -29,6 +29,7 @@ foreach ($items as $item) {
  * Downloads the thumbnail and saves into data folder
  *
  * @param ElggObject $item
+ * @return bool
  */
 function videolist_2012022501($item) {
 

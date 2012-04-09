@@ -11,6 +11,7 @@
  */
 
 $entity = $vars['entity'];
+/* @var ElggObject $entity */
 
 $sizes = array('small', 'medium', 'large', 'tiny', 'master', 'topbar');
 $img_width = array('tiny' => 25, 'small' => 40, 'medium' => 100, 'large' => 200);
