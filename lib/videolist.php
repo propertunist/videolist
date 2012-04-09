@@ -29,6 +29,10 @@ function videolist_get_default_platforms() {
  */
 function videolist_parse_url($url) {
     $parsed = parse_url($url);
+    if (empty($parsed['host']) && ! empty($parsed['path']) && $parsed['path'][0] !== '/') {
+        // user probably forgot scheme
+        $url = 'http://' . $url;
+    }
     $params['url'] = $url;
     $platforms = videolist_get_default_platforms();
 	$platforms = elgg_trigger_plugin_hook('videolist:prepare', 'platforms', $params, $platforms);
