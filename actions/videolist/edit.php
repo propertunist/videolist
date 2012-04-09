@@ -32,16 +32,19 @@ if(!$video_guid) {
 		forward(REFERER);
 	}
 
-	$parsed_url = videolist_parseurl($input['video_url']);
 
-	if(!$parsed_url) {
+	$parsedPlatform = videolist_parse_url($input['video_url']);
+
+	if (!$parsedPlatform) {
 		register_error(elgg_echo('videolist:error:invalid_url'));
 		forward(REFERER);
 	}
-	
+    list ($parsed, $platform) = $parsedPlatform;
+    /* @var Videolist_PlatformInterface $platform */
+
 	unset($input['title']);
 	unset($input['description']);
-	$input = array_merge(videolist_get_data($parsed_url), $input);
+    $input = array_merge($parsed, $platform->getData($parsed), $input);
 	
 } else {
 	unset($input['video_url']);
