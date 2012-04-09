@@ -27,8 +27,7 @@ function videolist_parseurl($url){
  */
 function videolist_get_data($parsed) {
 	$videotype = $parsed['videotype'];
-	$video_id = $parsed['video_id'];
-	
+
 	if(is_callable("videolist_get_data_$videotype")){
 		return array_merge($parsed, call_user_func("videolist_get_data_$videotype", $parsed));
 	} else {
