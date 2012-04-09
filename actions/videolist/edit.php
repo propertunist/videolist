@@ -32,6 +32,8 @@ if(!$video_guid) {
 		forward(REFERER);
 	}
 
+    // get_input (htmlawed) "fixes" URLs by breaking them
+    $input['video_url'] = str_replace('&amp;', '&', $input['video_url']);
 
 	$parsedPlatform = videolist_parse_url($input['video_url']);
 
