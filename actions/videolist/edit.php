@@ -48,6 +48,7 @@ if(!$video_guid) {
 	unset($input['title']);
 	unset($input['description']);
     $input = array_merge($parsed, $platform->getData($parsed), $input);
+    $input['videotype'] = $platform->getType();
 	
 } else {
 	unset($input['video_url']);

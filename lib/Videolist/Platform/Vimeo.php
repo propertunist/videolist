@@ -17,7 +17,6 @@ class Videolist_Platform_Vimeo implements Videolist_PlatformInterface
         }
 
         return array(
-            'videotype' => 'vimeo',
             'video_id' => $path[1],
         );
     }

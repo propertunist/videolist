@@ -17,7 +17,6 @@ class Videolist_Platform_Metacafe implements Videolist_PlatformInterface
         }
 
         return array(
-            'videotype' => 'metacafe',
             'video_id' => $path[2],
         );
     }

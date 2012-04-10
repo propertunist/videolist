@@ -25,7 +25,6 @@ class Videolist_Platform_Gisstv implements Videolist_PlatformInterface
         }
 
         return array(
-            'videotype' => 'gisstv',
             'video_id' => $video_id,
         );
     }

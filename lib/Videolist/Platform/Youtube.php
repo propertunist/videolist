@@ -27,7 +27,6 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
         }
         if ($id) {
             return array(
-                'videotype' => 'youtube',
                 'video_id' => $id,
             );
         }

@@ -17,7 +17,6 @@ class Videolist_Platform_Bliptv implements Videolist_PlatformInterface
         }
 
         return array(
-            'videotype' => 'bliptv',
             'video_id' => $parsed['path'],
         );
     }
