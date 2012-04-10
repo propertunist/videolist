@@ -289,6 +289,34 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 }
 
 /**
+ * @param ElggObject $videolist_item
+ * @return array
+ */
+function videolist_get_video_dimensions(ElggObject $videolist_item) {
+    $dimensions = array(
+        'width' => 600,
+        'height' => 400,
+    );
+    $params['entity'] = $videolist_item;
+    $params['videotype'] = $videolist_item->videotype;
+    $dimensions = elgg_trigger_plugin_hook(
+        'videolist:setdimensions',
+        $params['videotype'],
+        $params,
+        $dimensions);
+    if (! is_array($dimensions)) {
+        $dimensions = array();
+    }
+    if (empty($dimensions['width']) || ! is_numeric($dimensions['width'])) {
+        $dimensions['width'] = 600;
+    }
+    if (empty($dimensions['height']) || ! is_numeric($dimensions['height'])) {
+        $dimensions['height'] = 400;
+    }
+    return $dimensions;
+}
+
+/**
  * Prepend HTTP scheme if missing
  * @param string $hook
  * @param string $type
