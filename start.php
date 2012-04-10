@@ -61,6 +61,9 @@ function videolist_init() {
 	// register for embed
 	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
 	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
+
+    // handle URLs without scheme
+    elgg_register_plugin_hook_handler('videolist:preprocess', 'url', 'videolist_preprocess_url');
 	
 	// Register actions
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
@@ -283,6 +286,26 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 	if (in_array($size, array('tiny', 'small', 'medium'))){
 		return "mod/videolist/graphics/videolist_icon_{$size}.png";
 	}
+}
+
+/**
+ * Prepend HTTP scheme if missing
+ * @param string $hook
+ * @param string $type
+ * @param string $returnvalue
+ * @param array $params
+ * @return string
+ */
+function videolist_preprocess_url($hook, $type, $returnvalue, $params) {
+    // undo get_input (htmlawed's) HTML-encoding
+    $returnvalue = str_replace('&amp;', '&', $returnvalue);
+
+    $parsed = parse_url($returnvalue);
+    if (empty($parsed['host']) && ! empty($parsed['path']) && $parsed['path'][0] !== '/') {
+        // user probably forgot scheme
+        $returnvalue = 'http://' . $returnvalue;
+    }
+    return $returnvalue;
 }
 
 /**

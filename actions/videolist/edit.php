@@ -27,13 +27,13 @@ elgg_load_library('elgg:videolist');
 
 // If new video, get data from video providers
 if(!$video_guid) {
-	if (!$input['video_url']) {
+
+    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
+
+    if (!$input['video_url']) {
 		register_error(elgg_echo('videolist:error:no_url'));
 		forward(REFERER);
 	}
-
-    // get_input (htmlawed) "fixes" URLs by breaking them
-    $input['video_url'] = str_replace('&amp;', '&', $input['video_url']);
 
 	$parsedPlatform = videolist_parse_url($input['video_url']);
 
