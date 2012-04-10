@@ -80,16 +80,19 @@ if ($video->save()) {
 	elgg_clear_sticky_form('videolist');
 	
 	// Let's save the thumbnail in the data folder
-	$thumbnail = file_get_contents($video->thumbnail);
-	if ($thumbnail) {
-		$prefix = "videolist/" . $video->guid;
-		$filehandler = new ElggFile();
-		$filehandler->owner_guid = $video->owner_guid;
-		$filehandler->setFilename($prefix . ".jpg");
-		$filehandler->open("write");
-		$filehandler->write($thumbnail);
-		$filehandler->close();
-	}
+    $thumb_url = $video->thumbnail;
+    if ($thumb_url) {
+        $thumbnail = file_get_contents($thumb_url);
+        if ($thumbnail) {
+            $prefix = "videolist/" . $video->guid;
+            $filehandler = new ElggFile();
+            $filehandler->owner_guid = $video->owner_guid;
+            $filehandler->setFilename($prefix . ".jpg");
+            $filehandler->open("write");
+            $filehandler->write($thumbnail);
+            $filehandler->close();
+        }
+    }
 
 	system_message(elgg_echo('videolist:saved'));
 
