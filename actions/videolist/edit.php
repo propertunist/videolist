@@ -8,7 +8,8 @@
 $variables = elgg_get_config('videolist');
 $input = array();
 foreach ($variables as $name => $type) {
-	$input[$name] = get_input($name);
+    $filter_input = ($name !== 'video_url');
+	$input[$name] = get_input($name, null, $filter_input);
 	if ($name == 'title') {
 		$input[$name] = strip_tags($input[$name]);
 	}

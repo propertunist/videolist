@@ -297,9 +297,6 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
  * @return string
  */
 function videolist_preprocess_url($hook, $type, $returnvalue, $params) {
-    // undo get_input (htmlawed's) HTML-encoding
-    $returnvalue = str_replace('&amp;', '&', $returnvalue);
-
     $parsed = parse_url($returnvalue);
     if (empty($parsed['host']) && ! empty($parsed['path']) && $parsed['path'][0] !== '/') {
         // user probably forgot scheme
