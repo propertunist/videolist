@@ -10,16 +10,28 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
     public function parseUrl($url)
     {
         $parsed = parse_url($url);
-        parse_str($parsed['query'], $query);
-
-        if ($parsed['host'] != 'www.youtube.com' || $parsed['path'] != '/watch' || !isset($query['v'])) {
-            return false;
+        $id = '';
+        if (! empty($parsed['host'])) {
+            if ($parsed['host'] === 'youtu.be') {
+                // short URLs
+                $id = substr($parsed['path'], 1);
+            } elseif ($parsed['host'] === 'www.youtube.com'
+                    && $parsed['path'] === '/watch'
+                    && ! empty($parsed['query'])) {
+                // long URLs
+                parse_str($parsed['query'], $query);
+                if (! empty($query['v'])) {
+                    $id = $query['v'];
+                }
+            }
         }
-
-        return array(
-            'videotype' => 'youtube',
-            'video_id' => $query['v'],
-        );
+        if ($id) {
+            return array(
+                'videotype' => 'youtube',
+                'video_id' => $id,
+            );
+        }
+        return false;
     }
 
     public function getData($parsed)
