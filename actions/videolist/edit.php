@@ -8,7 +8,8 @@
 $variables = elgg_get_config('videolist');
 $input = array();
 foreach ($variables as $name => $type) {
-	$input[$name] = get_input($name);
+    $filter_input = ($name !== 'video_url');
+	$input[$name] = get_input($name, null, $filter_input);
 	if ($name == 'title') {
 		$input[$name] = strip_tags($input[$name]);
 	}
@@ -27,21 +28,27 @@ elgg_load_library('elgg:videolist');
 
 // If new video, get data from video providers
 if(!$video_guid) {
-	if (!$input['video_url']) {
+
+    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
+
+    if (!$input['video_url']) {
 		register_error(elgg_echo('videolist:error:no_url'));
 		forward(REFERER);
 	}
 
-	$parsed_url = videolist_parseurl($input['video_url']);
+	$parsedPlatform = videolist_parse_url($input['video_url']);
 
-	if(!$parsed_url) {
+	if (!$parsedPlatform) {
 		register_error(elgg_echo('videolist:error:invalid_url'));
 		forward(REFERER);
 	}
-	
+    list ($parsed, $platform) = $parsedPlatform;
+    /* @var Videolist_PlatformInterface $platform */
+
 	unset($input['title']);
 	unset($input['description']);
-	$input = array_merge(videolist_get_data($parsed_url), $input);
+    $input = array_merge($parsed, $platform->getData($parsed), $input);
+    $input['videotype'] = $platform->getType();
 	
 } else {
 	unset($input['video_url']);
@@ -73,16 +80,19 @@ if ($video->save()) {
 	elgg_clear_sticky_form('videolist');
 	
 	// Let's save the thumbnail in the data folder
-	$thumbnail = file_get_contents($video->thumbnail);
-	if ($thumbnail) {
-		$prefix = "videolist/" . $video->guid;
-		$filehandler = new ElggFile();
-		$filehandler->owner_guid = $video->owner_guid;
-		$filehandler->setFilename($prefix . ".jpg");
-		$filehandler->open("write");
-		$filehandler->write($thumbnail);
-		$filehandler->close();
-	}
+    $thumb_url = $video->thumbnail;
+    if ($thumb_url) {
+        $thumbnail = file_get_contents($thumb_url);
+        if ($thumbnail) {
+            $prefix = "videolist/" . $video->guid;
+            $filehandler = new ElggFile();
+            $filehandler->owner_guid = $video->owner_guid;
+            $filehandler->setFilename($prefix . ".jpg");
+            $filehandler->open("write");
+            $filehandler->write($thumbnail);
+            $filehandler->close();
+        }
+    }
 
 	system_message(elgg_echo('videolist:saved'));
 
