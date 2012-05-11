@@ -29,7 +29,7 @@ if ($page_owner->guid == elgg_get_logged_in_user_guid()) {
 	$params['filter'] = '';
 }
 
-$title = elgg_echo("videolist:user", array($page_owner->name));
+$title = elgg_echo("videolist:owner", array($page_owner->name));
 
 // List videolist
 $content = elgg_list_entities(array(

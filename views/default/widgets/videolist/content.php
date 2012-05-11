@@ -23,10 +23,10 @@ if ($content) {
 	$url = "pages/owner/" . elgg_get_page_owner_entity()->username;
 	$more_link = elgg_view('output/url', array(
 		'href' => $url,
-		'text' => elgg_echo('videolist_item:more'),
+		'text' => elgg_echo('videolist:more'),
 		'is_trusted' => true,
 	));
 	echo "<span class=\"elgg-widget-more\">$more_link</span>";
 } else {
-	echo elgg_echo('videolist_item:none');
+	echo elgg_echo('videolist:none');
 }

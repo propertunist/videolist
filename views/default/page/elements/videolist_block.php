@@ -22,7 +22,7 @@ $options = array(
 );
 
 if($container) {
-	$title = elgg_echo('videolist:user', array($container->name));
+	$title = elgg_echo('videolist:owner', array($container->name));
 } else {
 	$title = elgg_echo('videolist');
 }
