@@ -40,7 +40,8 @@ function videolist_init() {
 		'height' => 400,
 	));
 
-	// extend group main page
+	// add to groups
+	add_group_tool_option('videolist', elgg_echo('groups:enablevideolist'), true);
 	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
 	
 	//add a widget
