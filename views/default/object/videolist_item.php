@@ -7,6 +7,7 @@
 
 $full = elgg_extract('full_view', $vars, FALSE);
 $entity = elgg_extract('entity', $vars, FALSE);
+/* @var ElggObject $entity */
 
 if (!$entity) {
 	return TRUE;
@@ -59,11 +60,12 @@ if (elgg_in_context('widgets')) {
 }
 
 if ($full && !elgg_in_context('gallery')) {
-	
+
+    $dimensions = videolist_get_video_dimensions($entity);
 	$content = elgg_view("videolist/watch/{$entity->videotype}", array(
 		'entity' => $entity,
-		'width' => 600,
-		'height' => 400,
+		'width' => $dimensions['width'],
+		'height' => $dimensions['height'],
 	));
 	$content = "<div class=\"videolist-watch\">$content</div>";
 
