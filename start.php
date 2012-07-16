@@ -21,6 +21,11 @@ function videolist_init() {
 
 	// Extend system CSS with our own styles
 	elgg_extend_view('css/elgg','videolist/css');
+	
+	// register the js
+	$js = elgg_get_simplecache_url('js', 'videolist/videolist');
+	elgg_register_simplecache_view('js/videolist/videolist');
+	elgg_register_js('elgg.videolist', $js);
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('videolist', 'videolist_page_handler');
@@ -75,6 +80,7 @@ function videolist_init() {
 	elgg_register_action("videolist/add", "$actions_path/add.php");
 	elgg_register_action("videolist/edit", "$actions_path/edit.php");
 	elgg_register_action("videolist/delete", "$actions_path/delete.php");
+	elgg_register_action("videolist/get_metadata_from_url", "$actions_path/get_metadata_from_url.php");
 	
 	elgg_register_event_handler('upgrade', 'system', 'videolist_run_upgrades');
 }

@@ -72,6 +72,7 @@ View and comment on the new video:
 
 	'videolist:num_videos' => 'Number of videos to display',
 	'videolist:widget:description' => 'Your personal video playlist.',
+	'videolist:continue' => "Continue",
 	
 );
 

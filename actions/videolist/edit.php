@@ -26,30 +26,48 @@ elgg_make_sticky_form('videolist');
 
 elgg_load_library('elgg:videolist');
 
-// If new video, get data from video providers
 if(!$video_guid) {
-
-    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
-
-    if (!$input['video_url']) {
-		register_error(elgg_echo('videolist:error:no_url'));
-		forward(REFERER);
-	}
-
-	$parsedPlatform = videolist_parse_url($input['video_url']);
-
-	if (!$parsedPlatform) {
-		register_error(elgg_echo('videolist:error:invalid_url'));
-		forward(REFERER);
-	}
-    list ($parsed, $platform) = $parsedPlatform;
-    /* @var Videolist_PlatformInterface $platform */
-
-	unset($input['title']);
-	unset($input['description']);
-    $input = array_merge($parsed, $platform->getData($parsed), $input);
-    $input['videotype'] = $platform->getType();
+	if (!$input['title']) {
+		// If new video and for some reason the JS prefetch has failed, try again to get data from video provider
+	    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
 	
+	    if (!$input['video_url']) {
+			register_error(elgg_echo('videolist:error:no_url'));
+			forward(REFERER);
+		}
+	
+		$parsedPlatform = videolist_parse_url($input['video_url']);
+	
+		if (!$parsedPlatform) {
+			register_error(elgg_echo('videolist:error:invalid_url'));
+			forward(REFERER);
+		}
+	    list ($parsed, $platform) = $parsedPlatform;
+	    /* @var Videolist_PlatformInterface $platform */
+	
+		unset($input['title']);
+		unset($input['description']);
+	    $input = array_merge($parsed, $platform->getData($parsed), $input);
+	    $input['videotype'] = $platform->getType();
+	} else {
+		$input['videotype'] = get_input('videotype');
+		$input['thumbnail'] = get_input('thumbnail');
+		$input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
+	
+	    if (!$input['video_url']) {
+			register_error(elgg_echo('videolist:error:no_url'));
+			forward(REFERER);
+		}
+	
+		$parsedPlatform = videolist_parse_url($input['video_url']);
+	
+		if (!$parsedPlatform) {
+			register_error(elgg_echo('videolist:error:invalid_url'));
+			forward(REFERER);
+		}
+		list ($parsed, $platform) = $parsedPlatform;
+		$input = array_merge($parsed, $input);
+	}	
 } else {
 	unset($input['video_url']);
 }
