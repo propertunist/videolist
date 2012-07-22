@@ -30,7 +30,7 @@ elgg_make_sticky_form('videolist');
 elgg_load_library('elgg:videolist');
 
 if(!$video_guid) {
-	if (!$input['video_data']) {
+	if (!$video_data) {
 		// If new video and for some reason the JS prefetch has failed, try again to get data from video provider
 	    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
 	
@@ -79,7 +79,7 @@ if(!$video_guid) {
 		} else {
 			$input = array_merge($parsed, $input);
 		}		
-	}	
+	}
 } else {
 	unset($input['video_url']);
 }

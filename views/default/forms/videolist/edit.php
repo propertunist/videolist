@@ -57,6 +57,12 @@ if(empty($vars['guid'])){
 		'name' => 'video_data',
 		'value' => $vars['video_data'],
 	));
+	echo elgg_view('input/hidden', array(
+		'name' => 'videotype',
+	));
+	echo elgg_view('input/hidden', array(
+		'name' => 'thumbnail',
+	));
 	echo elgg_view('input/submit', array('id'=>'videolist-continue-button','value' => elgg_echo('videolist:continue')));
 	echo elgg_view('input/submit', array('id'=>'videolist-submit-button','value' => elgg_echo('save'),'style'=>'display:none'));
 } else {
