@@ -9,57 +9,31 @@ elgg_load_js('elgg.videolist');
 
 $variables = elgg_get_config('videolist');
 
-if(empty($vars['guid'])){
-	unset($variables['title']);
-	unset($variables['description']);
-} else {
-	unset($variables['video_url']);
-}
+unset($variables['video_url']);
 
-foreach ($variables as $name => $type) {
-?>
-<div>
-	<label><?php echo elgg_echo("videolist:$name") ?></label>
-	<?php
-		if ($type != 'longtext') {
-			echo '<br />';
-		}
-	?>
-	<?php echo elgg_view("input/$type", array(
-			'name' => $name,
-			'value' => $vars[$name],
-		));
-	?>
-</div>
-<?php
-}
+$vars['videolist_variables'] = $variables;
+
+$input_bit = elgg_view('videolist/input_bit',$vars);
 
 if(empty($vars['guid'])){
 	// add title and description fields in a hidden section to be revealed later by JS
 	// and videotype, thumbnail as hidden fields
 ?>
-<div id="videolist-metadata" style="display:none">
-	<label><?php echo elgg_echo("videolist:title") ?></label><br />
-	<?php echo elgg_view("input/text", array(
-			'name' => 'title',
-			'value' => $vars['title'],
-		));
-	?>
-	<label><?php echo elgg_echo("videolist:description") ?></label>
-	<?php 
-		echo elgg_view("input/longtext", array(
-			'name' => 'description',
-			'value' => $vars['description'],
-		));
-		echo elgg_view("input/hidden", array(
-			'name' => 'videotype',
-		));
-		echo elgg_view("input/hidden", array(
-			'name' => 'thumbnail',
-		));
-	?>
+<div>
+<label><?php echo elgg_echo("videolist:video_url") ?></label><br />
+<?php 
+	echo elgg_view("input/text", array(
+		'name' => 'video_url',
+		'value' => $vars['video_url'],
+	));
+?>
+</div>
+<div id="videolist-metadata" class="hidden">		
+	<?php echo $input_bit;?>
 </div>
 <?php
+} else {
+	echo $input_bit;
 }
 
 $cats = elgg_view('categories', $vars);
@@ -79,6 +53,10 @@ echo elgg_view('input/hidden', array(
 	'value' => $vars['container_guid'],
 ));
 if(empty($vars['guid'])){
+	echo elgg_view('input/hidden', array(
+		'name' => 'video_data',
+		'value' => $vars['video_data'],
+	));
 	echo elgg_view('input/submit', array('id'=>'videolist-continue-button','value' => elgg_echo('videolist:continue')));
 	echo elgg_view('input/submit', array('id'=>'videolist-submit-button','value' => elgg_echo('save'),'style'=>'display:none'));
 } else {

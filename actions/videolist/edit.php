@@ -22,12 +22,15 @@ foreach ($variables as $name => $type) {
 $video_guid = (int)get_input('video_guid');
 $container_guid = (int)get_input('container_guid');
 
+// get prefetched video data if any
+$video_data = get_input('video_data');
+
 elgg_make_sticky_form('videolist');
 
 elgg_load_library('elgg:videolist');
 
 if(!$video_guid) {
-	if (!$input['title']) {
+	if (!$input['video_data']) {
 		// If new video and for some reason the JS prefetch has failed, try again to get data from video provider
 	    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
 	
@@ -66,7 +69,16 @@ if(!$video_guid) {
 			forward(REFERER);
 		}
 		list ($parsed, $platform) = $parsedPlatform;
-		$input = array_merge($parsed, $input);
+		if ($video_data) {
+			$data_array = json_decode($video_data,TRUE);
+			if ($data_array) {
+				$input = array_merge($parsed, $data_array, $input);
+			} else {
+				$input = array_merge($parsed, $input);
+			}
+		} else {
+			$input = array_merge($parsed, $input);
+		}		
 	}	
 } else {
 	unset($input['video_url']);

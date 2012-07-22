@@ -1,3 +1,7 @@
+<?php 
+// load json2 to support older browsers
+elgg_load_js('elgg.videolist.json2');
+?>
 //<script>
 elgg.provide('elgg.videolist');
 
@@ -15,16 +19,30 @@ elgg.videolist.handleMetadata = function(result) {
 	if (result.error) {
 		elgg.register_error(result.msg);
 	} else {
-		alert(JSON.stringify(result));
 		$('[name="videotype"]').val(result.videotype);
-		$('[name="thumbnail"]').val(result.data["thumbnail"]);
-		$('[name="title"]').val(result.data["title"][0]);
+		// populate any input fields that exist with data from the video provider
+		$.each(result.data, function(k,v) {
+			if ($('[name="'+k+'"]').length > 0) {
+				// flatten arrays and objects just in case
+				// for example, Youtube returns the title as an object indexed by 0
+				if (Object.prototype.toString.call( v ) === '[object Array]') {
+					if (v.length > 0) {
+						$('[name="'+k+'"]').val(v[0])
+					}
+				} else if (typeof v == 'object') {
+					$('[name="'+k+'"]').val(v[0])
+				} else {
+					$('[name="'+k+'"]').val(v)
+				}
+			}
+		});
+		// special handing for TinyMCE's description field
 		var description = result.data["description"];
 		if (typeof tinyMCE == "object") {
 			tinyMCE.activeEditor.setContent(description);
-		} else {
-			$('[name="description"]').html(description);
 		}
+		// we also return the video data as a JSON string
+		$('[name="video_data"]').val(JSON.stringify(result.data));
 		
 		$('#videolist-metadata').show();
 		$('#videolist-continue-button').hide();

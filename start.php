@@ -26,6 +26,10 @@ function videolist_init() {
 	$js = elgg_get_simplecache_url('js', 'videolist/videolist');
 	elgg_register_simplecache_view('js/videolist/videolist');
 	elgg_register_js('elgg.videolist', $js);
+	
+	$js = elgg_get_simplecache_url('js', 'videolist/json2');
+	elgg_register_simplecache_view('js/videolist/json2');
+	elgg_register_js('elgg.videolist.json2', $js);
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('videolist', 'videolist_page_handler');
