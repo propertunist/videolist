@@ -187,16 +187,13 @@ function videolist_url($videolist_item) {
  * @param ElggObject $object
  */
 function videolist_object_notifications($event, $object_type, $object) {
-	static $flag;
-	if (!isset($flag)) {
-		$flag = 0;
-	}
+	static $was_called = false;
 
 	if (is_callable('object_notifications')) {
 		if ($object instanceof ElggObject) {
 			if ($object->getSubtype() == 'videolist_item') {
-				if ($flag == 0) {
-					$flag = 1;
+				if (! $was_called) {
+					$was_called = true;
 					object_notifications($event, $object_type, $object);
 				}
 			}
@@ -258,7 +255,7 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 	$options = array(
 		'owner_guid' => elgg_get_logged_in_user_guid(),
 		'type_subtype_pair' => array('object' => 'videolist_item'),
-		'count' => TRUE
+		'count' => true,
 	);
 
 	$count = elgg_get_entities($options);
@@ -287,9 +284,10 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 	$videolist_item = $params['entity'];
     /* @var ElggObject $videolist_item */
+
     $size = $params['size'];
 
-    if($videolist_item->getSubtype() != 'videolist_item'){
+    if ($videolist_item->getSubtype() != 'videolist_item') {
 		return $returnvalue;
 	}
 	
@@ -298,7 +296,7 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 		return elgg_get_site_url() . "mod/videolist/thumbnail.php?guid=" . $videolist_item->guid;
 	}
 
-	if (in_array($size, array('tiny', 'small', 'medium'))){
+	if (in_array($size, array('tiny', 'small', 'medium'))) {
 		return "mod/videolist/graphics/videolist_icon_{$size}.png";
 	}
 }

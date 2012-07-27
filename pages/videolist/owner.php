@@ -37,7 +37,7 @@ $content = elgg_list_entities(array(
 	'subtypes' => 'videolist_item',
 	'container_guid' => $page_owner->guid,
 	'limit' => 10,
-	'full_view' => FALSE,
+	'full_view' => false,
 ));
 if (!$content) {
 	$content = elgg_echo("videolist:none");

@@ -7,13 +7,16 @@ elgg.provide('elgg.videolist');
 
 elgg.videolist.init = function () {
 	$('#videolist-continue-button').click(elgg.videolist.getMetadata);
-}
+};
 
 elgg.videolist.getMetadata = function(e) {
-	elgg.action('videolist/get_metadata_from_url', {data: {url: $('[name="video_url"]').val()}, success: elgg.videolist.handleMetadata});
+	elgg.action('videolist/get_metadata_from_url', {
+		data: { url: $('[name="video_url"]').val() },
+		success: elgg.videolist.handleMetadata
+	});
 	e.preventDefault();
 	return false;
-}
+};
 
 elgg.videolist.handleMetadata = function(result) {
 	if (result.error) {
@@ -49,6 +52,7 @@ elgg.videolist.handleMetadata = function(result) {
 		$('#videolist-continue-button').hide();
 		$('#videolist-submit-button').show();
 	}	
-}
+};
+
 elgg.register_hook_handler('init', 'system', elgg.videolist.init);
 //</script>

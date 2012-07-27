@@ -70,7 +70,7 @@ if(!$video_guid) {
 		}
 		list ($parsed, $platform) = $parsedPlatform;
 		if ($video_data) {
-			$data_array = json_decode($video_data,TRUE);
+			$data_array = json_decode($video_data, true);
 			if ($data_array) {
 				$input = array_merge($parsed, $data_array, $input);
 			} else {

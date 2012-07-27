@@ -17,7 +17,7 @@ $content = elgg_list_entities(array(
 	'types' => 'object',
 	'subtypes' => 'videolist_item',
 	'limit' => $limit,
-	'full_view' => FALSE
+	'full_view' => false,
 ));
 
 $sidebar = elgg_view('videolist/sidebar');

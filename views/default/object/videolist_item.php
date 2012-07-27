@@ -5,12 +5,12 @@
  * @package ElggVideolist
  */
 
-$full = elgg_extract('full_view', $vars, FALSE);
-$entity = elgg_extract('entity', $vars, FALSE);
+$full = elgg_extract('full_view', $vars, false);
+$entity = elgg_extract('entity', $vars, false);
 /* @var ElggObject $entity */
 
 if (!$entity) {
-	return TRUE;
+	return true;
 }
 
 $owner = $entity->getOwnerEntity();
