@@ -9,7 +9,7 @@ gatekeeper();
 
 $guid = (int) get_input('guid');
 $videolist_item = get_entity($guid);
-if (!$videolist_item) {
+if (!elgg_instanceof($videolist_item, 'object', 'videolist_item')) {
 	forward();
 }
 if (!$videolist_item->canEdit()) {

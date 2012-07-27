@@ -21,24 +21,25 @@ elgg.videolist.handleMetadata = function(result) {
 	} else {
 		$('[name="videotype"]').val(result.videotype);
 		// populate any input fields that exist with data from the video provider
-		$.each(result.data, function(k,v) {
-			if ($('[name="'+k+'"]').length > 0) {
+		$.each(result.data, function(k, v) {
+			var $input = $('[name="' + k + '"]');
+			if ($input.length > 0) {
 				// flatten arrays and objects just in case
 				// for example, Youtube returns the title as an object indexed by 0
 				if (Object.prototype.toString.call( v ) === '[object Array]') {
 					if (v.length > 0) {
-						$('[name="'+k+'"]').val(v[0])
+						$input.val(v[0]);
 					}
 				} else if (typeof v == 'object') {
-					$('[name="'+k+'"]').val(v[0])
+					$input.val(v[0]);
 				} else {
-					$('[name="'+k+'"]').val(v)
+					$input.val(v);
 				}
 			}
 		});
 		// special handing for TinyMCE's description field
 		var description = result.data["description"];
-		if (typeof tinyMCE == "object") {
+		if (window.tinyMCE) {
 			tinyMCE.activeEditor.setContent(description);
 		}
 		// we also return the video data as a JSON string

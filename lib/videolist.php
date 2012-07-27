@@ -25,7 +25,7 @@ function videolist_get_default_platforms() {
 
 /**
  * @param string $url
- * @return array [parsed, platform]
+ * @return array [array $parsed, Videolist_PlatformInterface $platform]
  */
 function videolist_parse_url($url) {
     $params = array(

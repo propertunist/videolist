@@ -15,7 +15,7 @@ $guid = (int) get_input('guid', 0);
 $size = get_input('size', 'small');
 
 $item = get_entity($guid);
-if (!$item || $item->getSubtype() != "videolist_item") {
+if (!elgg_instanceof($item, 'object', 'videolist_item')) {
 	exit;
 }
 

@@ -1,7 +1,7 @@
 <?php
 elgg_load_library('elgg:videolist');
-$url = get_input('url');
-$url = elgg_trigger_plugin_hook('videolist:preprocess', 'url', array(),$url);
+$url = get_input('url', '', false);
+$url = elgg_trigger_plugin_hook('videolist:preprocess', 'url', array(), $url);
 if (!$url) {
 	$result = array('error'=>TRUE,'msg'=>elgg_echo('videolist:error:no_url'));
 } else {

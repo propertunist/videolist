@@ -6,6 +6,14 @@
  */
 
 $videolist_item = get_entity(get_input('guid'));
+if (!$videolist_item) {
+	register_error(elgg_echo('noaccess'));
+	$_SESSION['last_forward_from'] = current_page_url();
+	forward('');
+}
+if (!elgg_instanceof($videolist_item, 'object', 'videolist_item')) {
+	forward();
+}
 
 elgg_set_page_owner_guid($videolist_item->container_guid);
 
