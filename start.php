@@ -297,7 +297,7 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
 	}
 	
 	// tiny thumbnails are too small to be useful, so give a generic video icon
-	if ($size != 'tiny' && isset($videolist_item->thumbnail)) {
+	if ($size != 'tiny' && !empty($videolist_item->thumbnail)) {
 		return elgg_get_site_url() . "mod/videolist/thumbnail.php?guid=" . $videolist_item->guid;
 	}
 

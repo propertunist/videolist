@@ -22,14 +22,28 @@ if (!elgg_instanceof($item, 'object', 'videolist_item')) {
 $readfile = new ElggFile();
 $readfile->owner_guid = $item->owner_guid;
 $readfile->setFilename("videolist/{$item->guid}.jpg");
-$contents = $readfile->grabFile();
+if ($readfile->exists()) {
+	$contents = $readfile->grabFile();
+	$content_length = strlen($contents);
+	header("Content-type: image/jpeg");
+} else {
+	// in case icon was deleted
+	if (in_array($size, array('tiny', 'medium', 'small'))) {
+		$filename = elgg_get_plugins_path() . "videolist/graphics/videolist_icon_$size.png";
+		$contents = file_get_contents($filename);
+		$content_length = strlen($contents);
+		header("Content-type: image/jpeg");
+	} else {
+		header('Status: 404 Not Found');
+		exit;
+	}
+}
 
 // caching images for 10 days
-header("Content-type: image/jpeg");
-header('Expires: ' . date('r',time() + 864000));
+header('Expires: ' . date('r', time() + 864000));
 header("Pragma: public", true);
 header("Cache-Control: public", true);
-header("Content-Length: " . strlen($contents));
+header("Content-Length: $content_length");
 
 echo $contents;
 exit;
