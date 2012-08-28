@@ -10,8 +10,10 @@ function videolist_get_default_platforms() {
         $path = dirname(__FILE__) . '/Videolist/Platform';
         foreach (scandir($path) as $filename) {
             if (preg_match('/^(\\w+)\\.php$/', $filename, $m)) {
-                require "$path/$filename";
                 $class = 'Videolist_Platform_' . $m[1];
+                if (!class_exists($class)) {
+                    require "$path/$filename";
+                }
                 $platform = new $class();
                 if ($platform instanceof Videolist_PlatformInterface) {
                     /* @var Videolist_PlatformInterface $platform */
