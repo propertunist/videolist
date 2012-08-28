@@ -8,8 +8,8 @@
 $variables = elgg_get_config('videolist');
 $input = array();
 foreach ($variables as $name => $type) {
-    $filter_input = ($name !== 'video_url');
-	$input[$name] = get_input($name, null, $filter_input);
+    $should_filter_input = ($name !== 'video_url');
+	$input[$name] = get_input($name, null, $should_filter_input);
 	if ($name == 'title') {
 		$input[$name] = strip_tags($input[$name]);
 	}
@@ -29,56 +29,34 @@ elgg_make_sticky_form('videolist');
 
 elgg_load_library('elgg:videolist');
 
-if(!$video_guid) {
-	if (!$video_data) {
-		// If new video and for some reason the JS prefetch has failed, try again to get data from video provider
-	    $input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
-	
-	    if (!$input['video_url']) {
-			register_error(elgg_echo('videolist:error:no_url'));
-			forward(REFERER);
-		}
-	
-		$parsedPlatform = videolist_parse_url($input['video_url']);
-	
-		if (!$parsedPlatform) {
-			register_error(elgg_echo('videolist:error:invalid_url'));
-			forward(REFERER);
-		}
-	    list ($parsed, $platform) = $parsedPlatform;
-	    /* @var Videolist_PlatformInterface $platform */
-	
-		unset($input['title']);
-		unset($input['description']);
-	    $input = array_merge($parsed, $platform->getData($parsed), $input);
-	    $input['videotype'] = $platform->getType();
-	} else {
+if (!$video_guid) {
+	if ($video_data) {
 		$input['videotype'] = get_input('videotype');
 		$input['thumbnail'] = get_input('thumbnail');
-		$input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
-	
-	    if (!$input['video_url']) {
-			register_error(elgg_echo('videolist:error:no_url'));
-			forward(REFERER);
-		}
-	
-		$parsedPlatform = videolist_parse_url($input['video_url']);
-	
-		if (!$parsedPlatform) {
-			register_error(elgg_echo('videolist:error:invalid_url'));
-			forward(REFERER);
-		}
-		list ($parsed, $platform) = $parsedPlatform;
-		if ($video_data) {
-			$data_array = json_decode($video_data, true);
-			if ($data_array) {
-				$input = array_merge($parsed, $data_array, $input);
-			} else {
-				$input = array_merge($parsed, $input);
-			}
+	}
+	$input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
+
+	if (!$input['video_url']) {
+		register_error(elgg_echo('videolist:error:no_url'));
+		forward(REFERER);
+	}
+
+	$parsedPlatform = videolist_parse_url($input['video_url']);
+
+	if (!$parsedPlatform) {
+		register_error(elgg_echo('videolist:error:invalid_url'));
+		forward(REFERER);
+	}
+	list ($parsed, $platform) = $parsedPlatform;
+	/* @var Videolist_PlatformInterface $platform */
+
+	if ($video_data) {
+		$data_array = json_decode($video_data, true);
+		if ($data_array) {
+			$input = array_merge($parsed, $data_array, $input);
 		} else {
 			$input = array_merge($parsed, $input);
-		}		
+		}
 	}
 } else {
 	unset($input['video_url']);
