@@ -26,6 +26,7 @@ class Videolist_Platform_Gisstv implements Videolist_PlatformInterface
 
         return array(
             'video_id' => $video_id,
+			// @todo output a canonical URL for every video (don't trust user input)
         );
     }
 
@@ -37,11 +38,11 @@ class Videolist_Platform_Gisstv implements Videolist_PlatformInterface
         $xml = new SimpleXMLElement($buffer);
 
         $data = array();
-        foreach($xml->xpath('/rss/channel/item') as $item){
+        foreach($xml->xpath('/rss/channel/item') as $item) {
             if ($item->link === 'http://giss.tv/dmmdb//contents/'.$video_id) {
-                $data['title'] = $item->title;
+                $data['title'] = (string)$item->title;
                 $data['description'] = strip_tags($item->description);
-                $data['thumbnail'] = $item->thumbnail;
+                $data['thumbnail'] = (string)$item->thumbnail;
                 break;
             }
         }

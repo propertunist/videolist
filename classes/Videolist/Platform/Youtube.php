@@ -9,28 +9,17 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
 
     public function parseUrl($url)
     {
-        $parsed = parse_url($url);
-        $id = '';
-        if (! empty($parsed['host'])) {
-            if ($parsed['host'] === 'youtu.be') {
-                // short URLs
-                $id = substr($parsed['path'], 1);
-            } elseif ($parsed['host'] === 'www.youtube.com'
-                    && $parsed['path'] === '/watch'
-                    && ! empty($parsed['query'])) {
-                // long URLs
-                parse_str($parsed['query'], $query);
-                if (! empty($query['v'])) {
-                    $id = $query['v'];
-                }
-            }
-        }
-        if ($id) {
-            return array(
-                'video_id' => $id,
-            );
-        }
-        return false;
+        $scheme = "https?\\:";
+		$hostname = "(?:youtu\\.be|www\\.youtube\\.com)";
+		$path = "/(?:vi?/|(?:watch)?\\?vi?=)?";
+		$id = "[a-zA-Z0-9\\-_]{4,}";
+		if (preg_match("~^$scheme//$hostname{$path}($id)~", $url, $m)) {
+			return array(
+				'video_id' => $m[1],
+				'video_url' => "http://www.youtube.com/watch?v={$m[1]}",
+			);
+		}
+		return false;
     }
 
     public function getData($parsed)
@@ -41,7 +30,7 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
         $xml = new SimpleXMLElement($buffer);
 
         return array(
-            'title' => $xml->title,
+            'title' => (string)$xml->title,
             'description' => strip_tags($xml->content),
             'thumbnail' => "http://img.youtube.com/vi/$video_id/default.jpg",
         );

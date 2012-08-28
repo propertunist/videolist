@@ -9,16 +9,17 @@ class Videolist_Platform_Metacafe implements Videolist_PlatformInterface
 
     public function parseUrl($url)
     {
-        $parsed = parse_url($url);
-        $path = explode('/', $parsed['path']);
-
-        if ($parsed['host'] != 'www.metacafe.com' || $path[1] != 'watch' || !(int) $path[2]) {
-            return false;
-        }
-
-        return array(
-            'video_id' => $path[2],
-        );
+		$scheme = "https?\\:";
+		$hostname = "www\\.metacafe\\.com";
+		$path = "/(?:watch|fplayer)/";
+		$id = "[0-9]{4,}";
+		if (preg_match("~^$scheme//$hostname{$path}($id)~", $url, $m)) {
+			return array(
+				'video_id' => $m[1],
+				'video_url' => "http://www.metacafe.com/watch/{$m[1]}",
+			);
+		}
+		return false;
     }
 
     public function getData($parsed)
@@ -29,10 +30,10 @@ class Videolist_Platform_Metacafe implements Videolist_PlatformInterface
         $xml = new SimpleXMLElement($buffer);
 
         return array(
-            'title' => current($xml->xpath('/rss/channel/item/title')),
+            'title' => (string)current($xml->xpath('/rss/channel/item/title')),
             'description' => strip_tags(current($xml->xpath('/rss/channel/item/description'))),
-            'thumbnail' => current($xml->xpath('/rss/channel/item/media:thumbnail/@url')),
-            'embedurl' => current($xml->xpath('/rss/channel/item/media:content/@url')),
+            'thumbnail' => (string)current($xml->xpath('/rss/channel/item/media:thumbnail/@url')),
+            'embedurl' => (string)current($xml->xpath('/rss/channel/item/media:content/@url')),
         );
     }
 }
