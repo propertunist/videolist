@@ -15,6 +15,11 @@ function videolist_init() {
 	
 	elgg_register_library('elgg:videolist', elgg_get_plugins_path() . 'videolist/lib/videolist.php');
 
+	if (!class_exists('Videolist_PlatformInterface')) {
+		// ./classes autoloading failed (pre 1.9)
+		spl_autoload_register('videolist_load_class');
+	}
+
 	// add a site navigation item
 	$item = new ElggMenuItem('videolist', elgg_echo('videolist'), 'videolist/all');
 	elgg_register_menu_item('site', $item);
@@ -326,5 +331,15 @@ function videolist_run_upgrades() {
 	$files = elgg_get_upgrade_files($path);
 	foreach ($files as $file) {
 		include "$path{$file}";
+	}
+}
+
+/**
+ * @param string $class
+ */
+function videolist_load_class($class) {
+	if (0 === strpos($class, 'Videolist_')) {
+		$file = dirname(__FILE__) . '/classes/' . strtr($class, '_\\', '//') . '.php';
+		is_file($file) && (require $file);
 	}
 }
