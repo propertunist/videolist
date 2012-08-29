@@ -22,7 +22,6 @@ elgg.videolist.handleMetadata = function(result) {
 	if (result.error) {
 		elgg.register_error(result.msg);
 	} else {
-		$('[name="videotype"]').val(result.videotype);
 		// populate any input fields that exist with data from the video provider
 		$.each(result.data, function(k, v) {
 			var $input = $('[name="' + k + '"]');
@@ -45,9 +44,6 @@ elgg.videolist.handleMetadata = function(result) {
 		if (window.tinyMCE) {
 			tinyMCE.activeEditor.setContent(description);
 		}
-		// we also return the video data as a JSON string
-		$('[name="video_data"]').val(JSON.stringify(result.data));
-		
 		$('#videolist-metadata').show();
 		$('#videolist-continue-button').hide();
 		$('#videolist-submit-button').show();

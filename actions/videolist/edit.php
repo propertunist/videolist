@@ -22,18 +22,11 @@ foreach ($variables as $name => $type) {
 $video_guid = (int)get_input('video_guid');
 $container_guid = (int)get_input('container_guid');
 
-// get prefetched video data if any
-$video_data = get_input('video_data');
-
 elgg_make_sticky_form('videolist');
 
 elgg_load_library('elgg:videolist');
 
 if (!$video_guid) {
-	if ($video_data) {
-		$input['videotype'] = get_input('videotype');
-		$input['thumbnail'] = get_input('thumbnail');
-	}
 	$input['video_url'] = elgg_trigger_plugin_hook('videolist:preprocess', 'url', $input, $input['video_url']);
 
 	if (!$input['video_url']) {
@@ -41,23 +34,18 @@ if (!$video_guid) {
 		forward(REFERER);
 	}
 
-	$parsedPlatform = videolist_parse_url($input['video_url']);
+	$attributesPlatform = videolist_parse_url($input['video_url']);
 
-	if (!$parsedPlatform) {
+	if (!$attributesPlatform) {
 		register_error(elgg_echo('videolist:error:invalid_url'));
 		forward(REFERER);
 	}
-	list ($parsed, $platform) = $parsedPlatform;
+	list ($attributes, $platform) = $attributesPlatform;
 	/* @var Videolist_PlatformInterface $platform */
 
-	if ($video_data) {
-		$data_array = json_decode($video_data, true);
-		if ($data_array) {
-			$input = array_merge($parsed, $data_array, $input);
-		} else {
-			$input = array_merge($parsed, $input);
-		}
-	}
+	$attributes = array_merge($attributes, $platform->getData($attributes));
+
+	$input = array_merge($attributes, $input);
 } else {
 	unset($input['video_url']);
 }

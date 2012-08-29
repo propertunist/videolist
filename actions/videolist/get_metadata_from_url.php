@@ -8,19 +8,23 @@ if (!$url) {
 		'msg' => elgg_echo('videolist:error:no_url'),
 	);
 } else {
-	$parsedPlatform = videolist_parse_url($url);
+	$attributesPlatform = videolist_parse_url($url);
 
-	if (!$parsedPlatform) {
+	if (!$attributesPlatform) {
 		$result = array(
 			'error' => true,
 			'msg' => elgg_echo('videolist:error:invalid_url'),
 		);
 	} else {
-    	list ($parsed, $platform) = $parsedPlatform;
-    	$result = array(
+    	list ($attributes, $platform) = $attributesPlatform;
+		/* @var Videolist_PlatformInterface $platform */
+		$platform_data = $platform->getData($attributes);
+		$result = array(
 			'error' => false,
-			'data' => $platform->getData($parsed),
-			'videotype' => $platform->getType(),
+			'data' => array(
+				'title' => $platform_data['title'],
+				'description' => $platform_data['description'],
+			),
 		);
 	}
 }
