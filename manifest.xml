@@ -3,7 +3,6 @@
 	<name>Videolist</name>
 	<author>Prateek Choudhary, Core developers, Lorea developers</author>
 	<version>1.8-beta2</version>
-	<category>bundled</category>
 	<category>content</category>
 	<category>multimedia</category>
 	<description>This plugin allows users to create a library of videos.</description>

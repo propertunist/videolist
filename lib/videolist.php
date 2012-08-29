@@ -22,21 +22,6 @@ function videolist_get_regular_platforms(array $hook_params) {
 }
 
 /**
- * @param array $hook_params
- * @return array
- */
-function videolist_get_oembed_platforms(array $hook_params) {
-	$platforms = array();
-	$list = (require dirname(__FILE__) . '/oembed_list.php');
-	$list = elgg_trigger_plugin_hook('videolist:prepare', 'oembed_list', $hook_params, $list);
-	foreach ($list as $item) {
-		$platform = new Videolist_OembedPlatform($item[0], $item[2], new Videolist_OembedService($item[1]));
-		$platforms[$platform->getType()][] = $platform;
-	}
-	return $platforms;
-}
-
-/**
  * @param array $platforms
  * @param string $url
  * @return array|bool
