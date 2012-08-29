@@ -1,7 +1,4 @@
 <?php
 
-$video_id = $vars['entity']->video_id;
-$width = $vars['width'];
-$height = $vars['height'];
-
-echo "<iframe width=\"$width\" height=\"$height\" src=\"https://www.youtube-nocookie.com/embed/$video_id\" frameborder=\"0\" allowfullscreen></iframe>";
+$vars['src'] = "https://www.youtube-nocookie.com/embed/" . $vars['entity']->video_id;
+echo elgg_view('videolist/iframe', $vars);
