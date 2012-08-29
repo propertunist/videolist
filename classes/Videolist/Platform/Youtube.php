@@ -10,7 +10,7 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
     public function parseUrl($url)
     {
         $scheme = "https?\\:";
-		$hostname = "(?:youtu\\.be|www\\.youtube\\.com)";
+		$hostname = "(?:youtu\\.be|(?:www\\.)?youtube\\.com)";
 		$path = "/(?:vi?/|(?:watch)?\\?vi?=)?";
 		$id = "[a-zA-Z0-9\\-_]{4,}";
 		if (preg_match("~^$scheme//$hostname{$path}($id)~", $url, $m)) {
