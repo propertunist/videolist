@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Video platform based on an Oembed endpoint
+ */
 class Videolist_OembedPlatform implements Videolist_PlatformInterface
 {
 	protected $subtype;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Service for requesting data from an Oembed JSON endpoint
+ */
 class Videolist_OembedService implements Videolist_OembedInterface {
 
 	protected $endpointUrl;
@@ -34,8 +37,8 @@ class Videolist_OembedService implements Videolist_OembedInterface {
 
 	/**
 	 * @param string $url
-	 * @return Videolist_OembedService
-	 * @throws self
+	 * @return self
+	 * @throws InvalidArgumentException
 	 */
 	public function setEndpoint($url) {
 		if (!is_string($url) || !preg_match(self::URL_PATTERN, $url)) {
