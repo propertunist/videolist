@@ -61,7 +61,14 @@ if (elgg_in_context('widgets')) {
 
 if ($full && !elgg_in_context('gallery')) {
 
-    $dimensions = elgg_get_config('videolist_dimensions');
+	$dimensions = elgg_get_config('videolist_dimensions');
+	// allow altering dimensions
+	$params = array(
+		'entity' => $entity,
+		'default_dimensions' => $dimensions,
+	);
+	$dimensions = elgg_trigger_plugin_hook('videolist:filter_dimensions', $entity->videotype, $params, $dimensions);
+
 	$content = elgg_view("videolist/watch/{$entity->videotype}", array(
 		'entity' => $entity,
 		'width' => (int) $dimensions['width'],
