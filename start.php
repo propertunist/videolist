@@ -343,3 +343,32 @@ function videolist_load_class($class) {
 		is_file($file) && (require $file);
 	}
 }
+
+/**
+ * Fetch and validate XML from URL
+ * @param string $url
+ * @return SimpleXMLElement|false
+ */
+function videolist_fetch_xml($url) {
+	if (!preg_match('~^https?\\://~', $url)) {
+		return false;
+	}
+	@$buffer = file_get_contents($url);
+	if (!$buffer) {
+		return false;
+	}
+	$uie = libxml_use_internal_errors(true);
+	$el = libxml_disable_entity_loader(true);
+	try {
+		$xml = new SimpleXMLElement($buffer);
+	} catch (Exception $e) {
+		$xml = false;
+	}
+	if (libxml_get_errors()) {
+		$xml = false;
+		libxml_clear_errors();
+	}
+	libxml_use_internal_errors($uie);
+	libxml_disable_entity_loader($el);
+	return $xml;
+}

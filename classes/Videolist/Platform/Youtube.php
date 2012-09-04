@@ -9,11 +9,13 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
 
     public function parseUrl($url)
     {
-        $scheme = "https?\\:";
-		$hostname = "(?:youtu\\.be|(?:www\\.)?youtube\\.com)";
-		$path = "/(?:vi?/|(?:watch)?\\?vi?=)?";
-		$id = "[a-zA-Z0-9\\-_]{4,}";
-		if (preg_match("~^$scheme//$hostname{$path}($id)~", $url, $m)) {
+        $hostname_pattern = "(?:youtu\\.be|(?:www\\.)?youtube\\.com)";
+		if (!preg_match("~^https?\\://$hostname_pattern/(.+)~i", $url, $m)) {
+			return false;
+		}
+		$path = $m[1];
+		$id_pattern = "[a-zA-Z0-9\\-_]{4,}";
+		if (preg_match("~(?:^vi?/|\\bvi?=)($id_pattern)~", $path, $m)) {
 			return array(
 				'video_id' => $m[1],
 				'video_url' => "http://www.youtube.com/watch?v={$m[1]}",
@@ -26,8 +28,13 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
     {
         $video_id = $parsed['video_id'];
 
-        $buffer = file_get_contents('http://gdata.youtube.com/feeds/api/videos/'.$video_id);
-        $xml = new SimpleXMLElement($buffer);
+		$xml = videolist_fetch_xml('http://gdata.youtube.com/feeds/api/videos/'.$video_id);
+		if (!$xml) {
+			return array(
+				'title' => '',
+				'description' => '',
+			);
+		}
 
         return array(
             'title' => (string)$xml->title,

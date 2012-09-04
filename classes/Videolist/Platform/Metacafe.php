@@ -26,8 +26,13 @@ class Videolist_Platform_Metacafe implements Videolist_PlatformInterface
     {
         $video_id = $parsed['video_id'];
 
-        $buffer = file_get_contents("http://www.metacafe.com/api/item/$video_id");
-        $xml = new SimpleXMLElement($buffer);
+		$xml = videolist_fetch_xml("http://www.metacafe.com/api/item/$video_id");
+		if (!$xml) {
+			return array(
+				'title' => '',
+				'description' => '',
+			);
+		}
 
         return array(
             'title' => (string)current($xml->xpath('/rss/channel/item/title')),

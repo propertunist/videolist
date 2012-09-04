@@ -27,8 +27,13 @@ class Videolist_Platform_Vimeo implements Videolist_PlatformInterface
     {
         $video_id = $parsed['video_id'];
 
-        $buffer = file_get_contents("http://vimeo.com/api/v2/video/$video_id.xml");
-        $xml = new SimpleXMLElement($buffer);
+		$xml = videolist_fetch_xml("http://vimeo.com/api/v2/video/$video_id.xml");
+		if (!$xml) {
+			return array(
+				'title' => '',
+				'description' => '',
+			);
+		}
 
         $videos = $xml->children();
         $video = $videos[0];
