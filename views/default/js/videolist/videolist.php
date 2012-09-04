@@ -38,6 +38,7 @@ elgg.videolist.handleMetadata = function(result) {
 					$input.val(v);
 				}
 			}
+			$('input[name="video_url"]').prop('readonly', true);
 		});
 		// special handing for TinyMCE's description field
 		var description = result.data["description"];
@@ -47,6 +48,7 @@ elgg.videolist.handleMetadata = function(result) {
 		$('#videolist-metadata').show();
 		$('#videolist-continue-button').hide();
 		$('#videolist-submit-button').show();
+		$('input[name="title"]')[0].focus();
 	}	
 };
 
