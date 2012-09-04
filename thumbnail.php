@@ -26,8 +26,19 @@ if ($readfile->exists()) {
 	$contents = $readfile->grabFile();
 	$content_length = strlen($contents);
 	header("Content-type: image/jpeg");
+
+	// cache image for 10 days
+	header('Expires: ' . date('r', time() + 864000));
+	header("Pragma: public", true);
+	header("Cache-Control: public", true);
 } else {
-	// in case icon was deleted
+	// icon was deleted
+
+	// stop using this script to fetch thumb
+	$ignore_access = elgg_set_ignore_access(true);
+	$item->deleteMetadata('thumbnail');
+	elgg_set_ignore_access($ignore_access);
+
 	if (in_array($size, array('tiny', 'medium', 'small'))) {
 		$filename = elgg_get_plugins_path() . "videolist/graphics/videolist_icon_$size.png";
 		$contents = file_get_contents($filename);
@@ -39,11 +50,6 @@ if ($readfile->exists()) {
 	}
 }
 
-// caching images for 10 days
-header('Expires: ' . date('r', time() + 864000));
-header("Pragma: public", true);
-header("Cache-Control: public", true);
 header("Content-Length: $content_length");
-
 echo $contents;
 exit;
