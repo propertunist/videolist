@@ -45,7 +45,7 @@ elgg.videolist.handleMetadata = function(result) {
 		if (window.tinyMCE) {
 			tinyMCE.activeEditor.setContent(description);
 		}
-		$('#videolist-metadata').show();
+		$('#videolist-metadata').show().removeClass('hidden');
 		$('#videolist-continue-button').hide();
 		$('#videolist-submit-button').show();
 		$('input[name="title"]')[0].focus();
