@@ -1,5 +1,3 @@
-
-
 <?php
 $fr = array (
   'videolist' => 'Mes videos',
