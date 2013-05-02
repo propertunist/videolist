@@ -63,16 +63,14 @@ function videolist_init() {
 
 	// Register granular notification for this type
 	register_notification_object('object', 'videolist_item', elgg_echo('videolist:new'));
+	elgg_register_plugin_hook_handler('notify:entity:message','object','videolist_notify_message');
 	
 	// Register entity type for search
 	elgg_register_entity_type('object', 'videolist_item');
 
 	// add a file link to owner blocks
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
-	elgg_register_event_handler('annotate','all','videolist_object_notifications');
-
-	elgg_register_plugin_hook_handler('object:notifications','object','videolist_object_notifications_intercept');
-
+	
 	//register entity url handler
 	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
@@ -185,46 +183,30 @@ function videolist_url($videolist_item) {
 }
 
 /**
- * Event handler for videolist
- *
- * @param string $event
- * @param string $object_type
- * @param ElggObject $object
- */
-function videolist_object_notifications($event, $object_type, $object) {
-	static $was_called = false;
-
-	if (is_callable('object_notifications')) {
-		if ($object instanceof ElggObject) {
-			if ($object->getSubtype() == 'videolist_item') {
-				if (! $was_called) {
-					$was_called = true;
-					object_notifications($event, $object_type, $object);
-				}
-			}
-		}
-	}
-}
-
-/**
- * Intercepts the notification on an event of new video being created and prevents a notification from going out
- * (because one will be sent on the annotation)
+ * Modify the message send out on a new video upload
  *
  * @param string $hook
  * @param string $entity_type
  * @param array $returnvalue
  * @param array $params
- * @return bool
+ * @return string
  */
-function videolist_object_notifications_intercept($hook, $entity_type, $returnvalue, $params) {
-	if (isset($params)) {
-		if ($params['event'] == 'create' && $params['object'] instanceof ElggObject) {
-			if ($params['object']->getSubtype() == 'videolist_item') {
-				return true;
-			}
+function videolist_notify_message($hook, $entity_type, $returnvalue, $params) {
+	
+	if (!empty($params) && is_array($params)) {
+		$entity = elgg_extract("entity", $params);
+		
+		if (!empty($entity) && elgg_instanceof($entity, "object", "videolist_item")) {
+			$owner = $entity->getOwnerEntity();
+			
+			return elgg_echo("videolist:notification", array(
+				$owner->name,
+				$entity->title,
+				elgg_get_excerpt($entity->description),
+				$entity->getURL()
+			));
 		}
 	}
-	return null;
 }
 
 
