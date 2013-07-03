@@ -12,7 +12,7 @@
 elgg_register_event_handler('init', 'system', 'videolist_init');
 
 function videolist_init() {
-	
+
 	elgg_register_library('elgg:videolist', elgg_get_plugins_path() . 'videolist/lib/videolist.php');
 
 	if (!class_exists('Videolist_PlatformInterface')) {
@@ -26,19 +26,19 @@ function videolist_init() {
 
 	// Extend system CSS with our own styles
 	elgg_extend_view('css/elgg','videolist/css');
-	
+
 	// register the js
 	$js = elgg_get_simplecache_url('js', 'videolist/videolist');
 	elgg_register_simplecache_view('js/videolist/videolist');
 	elgg_register_js('elgg.videolist', $js);
-	
+
 	$js = elgg_get_simplecache_url('js', 'videolist/json2');
 	elgg_register_simplecache_view('js/videolist/json2');
 	elgg_register_js('elgg.videolist.json2', $js);
 
 	// Register a page handler, so we can have nice URLs
 	elgg_register_page_handler('videolist', 'videolist_page_handler');
-	
+
 	// Language short codes must be of the form "videolist:key"
 	// where key is the array key below
 	elgg_set_config('videolist', array(
@@ -48,7 +48,7 @@ function videolist_init() {
 		'tags' => 'tags',
 		'access_id' => 'access',
 	));
-	
+
 	elgg_set_config('videolist_dimensions', array(
 		'width'  => 600,
 		'height' => 400,
@@ -57,20 +57,20 @@ function videolist_init() {
 	// add to groups
 	add_group_tool_option('videolist', elgg_echo('groups:enablevideolist'), true);
 	elgg_extend_view('groups/tool_latest', 'videolist/group_module');
-	
+
 	//add a widget
 	elgg_register_widget_type('videolist', elgg_echo('videolist'), elgg_echo('videolist:widget:description'));
 
 	// Register granular notification for this type
-	register_notification_object('object', 'videolist_item', elgg_echo('videolist:new'));
+	register_notification_object('object', 'videolist_item', elgg_echo('videolist:notification:subject'));
 	elgg_register_plugin_hook_handler('notify:entity:message','object','videolist_notify_message');
-	
+
 	// Register entity type for search
 	elgg_register_entity_type('object', 'videolist_item');
 
 	// add a file link to owner blocks
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
-	
+
 	//register entity url handler
 	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
@@ -81,14 +81,14 @@ function videolist_init() {
 
     // handle URLs without scheme
     elgg_register_plugin_hook_handler('videolist:preprocess', 'url', 'videolist_preprocess_url');
-	
+
 	// Register actions
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
 	elgg_register_action("videolist/add", "$actions_path/add.php");
 	elgg_register_action("videolist/edit", "$actions_path/edit.php");
 	elgg_register_action("videolist/delete", "$actions_path/delete.php");
 	elgg_register_action("videolist/get_metadata_from_url", "$actions_path/get_metadata_from_url.php");
-	
+
 	elgg_register_event_handler('upgrade', 'system', 'videolist_run_upgrades');
 }
 
@@ -110,7 +110,7 @@ function videolist_init() {
  * @return NULL
  */
 function videolist_page_handler($page) {
-	
+
 	if (!isset($page[0])) {
 		$page[0] = 'all';
 	}
@@ -192,13 +192,13 @@ function videolist_url($videolist_item) {
  * @return string
  */
 function videolist_notify_message($hook, $entity_type, $returnvalue, $params) {
-	
+
 	if (!empty($params) && is_array($params)) {
 		$entity = elgg_extract("entity", $params);
-		
+
 		if (!empty($entity) && elgg_instanceof($entity, "object", "videolist_item")) {
 			$owner = $entity->getOwnerEntity();
-			
+
 			return elgg_echo("videolist:notification", array(
 				$owner->name,
 				$entity->title,
@@ -277,7 +277,7 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
     if ($videolist_item->getSubtype() != 'videolist_item') {
 		return $returnvalue;
 	}
-	
+
 	// tiny thumbnails are too small to be useful, so give a generic video icon
 	if ($size != 'tiny' && !empty($videolist_item->thumbnail)) {
 		return elgg_get_site_url() . "mod/videolist/thumbnail.php?guid=" . $videolist_item->guid;

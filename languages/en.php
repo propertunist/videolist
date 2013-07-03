@@ -4,7 +4,7 @@
  *
  * @package ElggVideolist
  */
- 
+
 $english = array(
 
 	/**
@@ -24,6 +24,7 @@ $english = array(
 	'videolist:delete' => "Delete this video",
 
 	'videolist:new' => "A new video",
+	'videolist:notification:subject' => "New video added",
 	'videolist:notification' =>
 '%s added a new video:
 
@@ -64,7 +65,7 @@ View and comment on the new video:
 	'videolist:saved' => 'Your video has been saved successfully!',
 	'videolist:deleted' => 'Your video was removed successfully!',
 	'videolist:deletefailed' => 'Unfortunately, this video could not be removed now. Please try again later',
-	
+
 
 	/**
 	 * Widget
@@ -73,7 +74,7 @@ View and comment on the new video:
 	'videolist:num_videos' => 'Number of videos to display',
 	'videolist:widget:description' => 'Your personal video playlist.',
 	'videolist:continue' => "Continue",
-	
+
 );
 
 add_translation("en", $english);
