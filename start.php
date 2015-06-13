@@ -62,8 +62,9 @@ function videolist_init() {
 	elgg_register_widget_type('videolist', elgg_echo('videolist'), elgg_echo('videolist:widget:description'));
 
 	// Register granular notification for this type
-	register_notification_object('object', 'videolist_item', elgg_echo('videolist:notification:subject'));
-	elgg_register_plugin_hook_handler('notify:entity:message','object','videolist_notify_message');
+        
+	elgg_register_notification_event('object', 'videolist', array('create'));
+        elgg_register_plugin_hook_handler('prepare', 'notification:publish:object:videolist_item', 'videolist_prepare_notification');
 
 	// Register entity type for search
 	elgg_register_entity_type('object', 'videolist_item');
@@ -72,7 +73,7 @@ function videolist_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
 
 	//register entity url handler
-	elgg_register_entity_url_handler('object', 'videolist_item', 'videolist_url');
+        elgg_register_plugin_hook_handler('entity:url', 'object', 'videolist_url_handler');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
 	// register for embed
@@ -173,42 +174,60 @@ function videolist_owner_block_menu($hook, $type, $return, $params) {
 }
 
 /**
- * @param ElggObject $videolist_item
+ * Returns the URL from a videolist entity
+ *
+ * @param string $hook   'entity:url'
+ * @param string $type   'object'
+ * @param string $url    The current URL
+ * @param array  $params Hook parameters
  * @return string
  */
-function videolist_url($videolist_item) {
-	$guid = $videolist_item->guid;
-	$title = elgg_get_friendly_title($videolist_item->title);
-	return elgg_get_site_url() . "videolist/watch/$guid/$title";
+function videolist_url_handler($hook, $type, $url, $params) {
+    $entity = $params['entity'];
+
+    // Check that the entity is a videolist_item object
+    if ($entity->getSubtype() !== 'videolist_item') {
+        // This is not a videolist_item object, so there's no need to go further
+        return;
+    }
+    $guid = $entity->guid;
+    $title = elgg_get_friendly_title($entity->title);
+    return elgg_get_site_url() . "videolist/watch/$guid/$title";
 }
 
 /**
- * Modify the message send out on a new video upload
+ * Prepare a notification message about a new videolist_item
  *
- * @param string $hook
- * @param string $entity_type
- * @param array $returnvalue
- * @param array $params
- * @return string
+ * @param string                          $hook         Hook name
+ * @param string                          $type         Hook type
+ * @param Elgg_Notifications_Notification $notification The notification to prepare
+ * @param array                           $params       Hook parameters
+ * @return Elgg_Notifications_Notification
  */
-function videolist_notify_message($hook, $entity_type, $returnvalue, $params) {
+function videolist_prepare_notification($hook, $type, $notification, $params) {
 
-	if (!empty($params) && is_array($params)) {
-		$entity = elgg_extract("entity", $params);
+    $entity = $params['event']->getObject();
+    $owner = $params['event']->getActor();
+    $recipient = $params['recipient'];
+    $language = $params['language'];
+    $method = $params['method'];
 
-		if (!empty($entity) && elgg_instanceof($entity, "object", "videolist_item")) {
-			$owner = $entity->getOwnerEntity();
+    // Title for the notification
+    $notification->subject = elgg_echo('videolist:notification:subject', array($entity->title), $language);
 
-			return elgg_echo("videolist:notification", array(
-				$owner->name,
-				$entity->title,
-				elgg_get_excerpt($entity->description),
-				$entity->getURL()
-			));
-		}
-	}
+    // Message body for the notification
+    $notification->body = elgg_echo('videolist:notification:body', array(
+        $owner->name,
+        $entity->title,
+        $entity->getExcerpt(),
+        $entity->getURL()
+    ), $language);
+
+    // The summary text is used e.g. by the site_notifications plugin
+    $notification->summary = elgg_echo('videolist:notification:summary', array($entity->title), $language);
+
+    return $notification;
 }
-
 
 /**
  * Register videolist as an embed type.
