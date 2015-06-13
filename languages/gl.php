@@ -1,5 +1,5 @@
 <?php
-$gl = array (
+return array (
   'videolist' => 'Os meus vídeos',
   'videolist:home' => 'Vídeos de %s',
   'videolist:new' => 'Engadir vídeos',
@@ -24,6 +24,3 @@ $gl = array (
   'videolist:none' => 'O non hai vídeos subidos.',
   'videolist:edit' => 'Editar vídeo %s',
 );
-
-add_translation("gl", $gl);
-

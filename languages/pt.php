@@ -1,5 +1,5 @@
 <?php
-$pt = array (
+return array (
   'videolist' => 'Meus vídeos',
   'videolist:home' => 'Vídeos de %s',
   'videolist:new' => 'Adicionar vídeo',
@@ -45,6 +45,3 @@ $pt = array (
   'river:comment:object:videolist_item' => '%s comentou em %s',
   'videolist:delete:confirm' => 'Você tem certeza que deseja apagar este vídeo?',
 );
-
-add_translation("pt", $pt);
-

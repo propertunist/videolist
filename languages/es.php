@@ -1,6 +1,6 @@
 <?php
 
-$spanish = array (
+return array (
 	'videolist' => 'Vídeos',
 	'videolist:owner' => 'Vídeos de %s',
 	'videolist:all' => 'Todos los vídeos',
@@ -38,5 +38,3 @@ Puedes verlo y comentar aquí:
 	'videolist:num_videos' => 'N&uacute;mero de v&iacute;deos a mostrar',
 	'videolist:none' => 'El grupo no tiene v&iacute;deos subidos, o no tienes permiso para ver el contenido',
 );
-
-add_translation("es", $spanish);

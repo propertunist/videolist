@@ -1,5 +1,5 @@
 <?php
-$fr = array (
+return array (
   'videolist' => 'Mes videos',
   'videolist:home' => '%s \'s Videos',
   'videolist:new' => 'ajouter une video',
@@ -23,6 +23,3 @@ $fr = array (
   'videolist:groupall' => 'toutes les vidoes du groupe',
   'videolist:none' => 'ce groupe n\'as pas encore de videos',
 );
-
-add_translation("fr", $fr);
-
