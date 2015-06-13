@@ -93,7 +93,11 @@ if ($video->save()) {
 	system_message(elgg_echo('videolist:saved'));
 
 	if ($new_video) {
-		add_to_river('river/object/videolist_item/create', 'create', elgg_get_logged_in_user_guid(), $video->guid);
+            elgg_create_river_item(array(
+                'view' => 'river/object/videolist_item/create', 
+                'action_type' => 'create', 
+                'subject_guid' => elgg_get_logged_in_user_guid(), 
+                'object_guid' => $video->guid));
 	}
 
 	forward($video->getURL());
