@@ -6,7 +6,7 @@
 */
 
 $guid = (int) get_input('guid');
-
+elgg_load_library('elgg:videolist');
 $videolist_item = get_entity($guid);
 if (!$videolist_item->guid) {
 	register_error(elgg_echo("videolist:deletefailed"));
@@ -21,9 +21,13 @@ if (!$videolist_item->canEdit()) {
 $container = $videolist_item->getContainerEntity();
 $url = $videolist_item->getURL();
 
+$thumbnail = "videolist/" . $videolist_item->guid . '.jpg';
+$video_owner_guid = $videolist_item->getOwnerGUID();
+
 if (!$videolist_item->delete()) {
 	register_error(elgg_echo("videolist:deletefailed"));
 } else {
+        $result = videolist_remove_thumbnails($thumbnail, $video_owner_guid);
 	system_message(elgg_echo("videolist:deleted"));
 }
 

@@ -24,22 +24,28 @@ class Videolist_Platform_Youtube implements Videolist_PlatformInterface
 		return false;
     }
 
-    public function getData($parsed)
+  public function getData($parsed)
     {
+        $API_key = elgg_get_plugin_setting('google_API_key', 'videolist');
         $video_id = $parsed['video_id'];
 
-		$xml = videolist_fetch_xml('http://gdata.youtube.com/feeds/api/videos/'.$video_id);
-		if (!$xml) {
-			return array(
-				'title' => '',
-				'description' => '',
-			);
-		}
+        $buffer = file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=snippet&id='.$video_id . '&key=' . $API_key);
+    
+        $decoded_buffer =json_decode($buffer, true);
 
+       if ($decoded_buffer['items'][0])
+        {
         return array(
-            'title' => (string)$xml->title,
-            'description' => strip_tags($xml->content),
-            'thumbnail' => "http://img.youtube.com/vi/$video_id/default.jpg",
+            'title' => $decoded_buffer['items'][0]['snippet']['title'],
+            'description' => strip_tags($decoded_buffer['items'][0]['snippet']['description']),
+            'thumbnail' => "https://img.youtube.com/vi/$video_id/0.jpg",
         );
+        }
+        else
+            {
+                register_error(elgg_echo('videolist:error:empty_provider_data'));
+                error_log('youtube video does not exist: ' . $video_id);
+                return false;
+            }
     }
 }

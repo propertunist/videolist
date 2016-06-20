@@ -19,6 +19,7 @@ elgg.videolist.getMetadata = function(e) {
 };
 
 elgg.videolist.handleMetadata = function(result) {
+    
 	if (result.error) {
 		elgg.register_error(result.msg);
 	} else {

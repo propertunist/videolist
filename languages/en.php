@@ -24,8 +24,9 @@ return array(
 	'videolist:delete' => "Delete this video",
 
 	'videolist:new' => "A new video",
-	'videolist:notification:subject' => "New video added",
-	'videolist:notification' =>
+	'videolist:notification:subject' => "New video added: %s",
+        'videolist:notification:summary' => "New video called %s",
+	'videolist:notification:body' =>
 '%s added a new video:
 
 %s
@@ -65,6 +66,9 @@ View and comment on the new video:
 	'videolist:saved' => 'Your video has been saved successfully!',
 	'videolist:deleted' => 'Your video was removed successfully!',
 	'videolist:deletefailed' => 'Unfortunately, this video could not be removed now. Please try again later',
+        'videolist:error:no_url' => 'No URL was supplied',
+        'videolist:error:invalid_url' => 'That URL is not for a supported video site',
+        'videolist:error:empty_provider_data' => 'No data could be retrieved for this video',
 
 
 	/**
@@ -75,4 +79,12 @@ View and comment on the new video:
 	'videolist:widget:description' => 'Your personal video playlist.',
 	'videolist:continue' => "Continue",
 
+    
+        /**
+         * Admin
+         */
+    
+        'videolist:admin:title' => 'Configuration options for videolist',
+        'videolist:admin:title:api' => 'API configuration',
+        'videolist:admin:youtube_api' => 'Google / Youtube',
 );

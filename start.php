@@ -62,9 +62,9 @@ function videolist_init() {
 	elgg_register_widget_type('videolist', elgg_echo('videolist'), elgg_echo('videolist:widget:description'));
 
 	// Register granular notification for this type
-        
-	elgg_register_notification_event('object', 'videolist', array('create'));
-        elgg_register_plugin_hook_handler('prepare', 'notification:publish:object:videolist_item', 'videolist_prepare_notification');
+
+	elgg_register_notification_event('object', 'videolist_item', array('create'));
+  elgg_register_plugin_hook_handler('prepare', 'notification:create:object:videolist_item', 'videolist_prepare_notification');
 
 	// Register entity type for search
 	elgg_register_entity_type('object', 'videolist_item');
@@ -73,7 +73,7 @@ function videolist_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'videolist_owner_block_menu');
 
 	//register entity url handler
-        elgg_register_plugin_hook_handler('entity:url', 'object', 'videolist_url_handler');
+  elgg_register_plugin_hook_handler('entity:url', 'object', 'videolist_url_handler');
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
 	// register for embed
@@ -81,7 +81,10 @@ function videolist_init() {
 	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
 
     // handle URLs without scheme
-    elgg_register_plugin_hook_handler('videolist:preprocess', 'url', 'videolist_preprocess_url');
+  elgg_register_plugin_hook_handler('videolist:preprocess', 'url', 'videolist_preprocess_url');
+
+	// allow to be liked
+	elgg_register_plugin_hook_handler('likes:is_likable', 'object:videolist_item', 'Elgg\Values::getTrue');
 
 	// Register actions
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
@@ -205,7 +208,6 @@ function videolist_url_handler($hook, $type, $url, $params) {
  * @return Elgg_Notifications_Notification
  */
 function videolist_prepare_notification($hook, $type, $notification, $params) {
-
     $entity = $params['event']->getObject();
     $owner = $params['event']->getActor();
     $recipient = $params['recipient'];
@@ -219,7 +221,7 @@ function videolist_prepare_notification($hook, $type, $notification, $params) {
     $notification->body = elgg_echo('videolist:notification:body', array(
         $owner->name,
         $entity->title,
-        $entity->getExcerpt(),
+        $entity->description,
         $entity->getURL()
     ), $language);
 
@@ -296,7 +298,7 @@ function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
     if ($videolist_item->getSubtype() != 'videolist_item') {
 		return $returnvalue;
 	}
-
+          //  error_log('thumbnail: ' . $videolist_item->guid . '; thumbnail = '.$videolist_item->thumbnail);
 	// tiny thumbnails are too small to be useful, so give a generic video icon
 	if ($size != 'tiny' && !empty($videolist_item->thumbnail)) {
 		return elgg_get_site_url() . "mod/videolist/thumbnail.php?guid=" . $videolist_item->guid;

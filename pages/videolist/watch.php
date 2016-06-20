@@ -1,4 +1,4 @@
-<?php
+    <?php
 /**
  * View a file
  *
@@ -46,5 +46,4 @@ $body = elgg_view_layout('content', array(
 	'filter' => '',
 	'sidebar' => $sidebar,
 ));
-
 echo elgg_view_page($title, $body);

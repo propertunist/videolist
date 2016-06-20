@@ -19,7 +19,7 @@ if (!$items) {
 
 // if all five of the items have empty thumbnails, we need to upgrade
 foreach ($items as $item) {
-	if ($item->thumbnail === true) {
+	if ($item->thumbnail == "1") {
 		return;
 	}
 }
@@ -34,11 +34,11 @@ foreach ($items as $item) {
 function videolist_2012022501($item) {
 
 	// do not upgrade videos that have already been upgraded
-	if ($item->thumbnail === true) {
+	if ($item->thumbnail == "1") {
 		return true;
 	}
 
-	$thumbnail = file_get_contents($item->thumbnail);
+	$thumbnail = @file_get_contents($item->thumbnail);
 	if (!$thumbnail) {
 		return false;
 	}
@@ -51,7 +51,7 @@ function videolist_2012022501($item) {
 	$filehandler->write($thumbnail);
 	$filehandler->close();
 	
-	$item->thumbnail = true;
+	$item->thumbnail = "1";
 	return true;
 }
 

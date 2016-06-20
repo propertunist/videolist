@@ -68,3 +68,16 @@ function videolist_parse_url($url) {
 	}
 	return false;
 }
+
+function videolist_remove_thumbnails($thumbnail, $entity_owner_guid) 
+{
+    //delete standard thumbnail image
+    if ($thumbnail) 
+    {
+        $delfile = new ElggFile();
+        $delfile->owner_guid = $entity_owner_guid;
+        $delfile->setFilename($thumbnail);
+        $delfile->delete();
+    }
+    return true;
+}

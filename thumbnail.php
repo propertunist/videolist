@@ -5,8 +5,8 @@
  * @package ElggFile
  */
 
-// Get engine
-require_once(dirname(dirname(dirname(__FILE__))) . "/engine/start.php");
+ require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+ \Elgg\Application::start();
 
 // Get videolist item GUID
 $guid = (int) get_input('guid', 0);
@@ -15,6 +15,7 @@ $guid = (int) get_input('guid', 0);
 $size = get_input('size', 'small');
 
 $item = get_entity($guid);
+
 if (!elgg_instanceof($item, 'object', 'videolist_item')) {
 	exit;
 }
@@ -22,6 +23,7 @@ if (!elgg_instanceof($item, 'object', 'videolist_item')) {
 $readfile = new ElggFile();
 $readfile->owner_guid = $item->owner_guid;
 $readfile->setFilename("videolist/{$item->guid}.jpg");
+
 if ($readfile->exists()) {
 	$contents = $readfile->grabFile();
 	$content_length = strlen($contents);
