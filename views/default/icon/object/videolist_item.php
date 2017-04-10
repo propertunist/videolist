@@ -14,7 +14,8 @@ $entity = $vars['entity'];
 /* @var ElggObject $entity */
 
 $sizes = array('small', 'medium', 'large', 'tiny', 'master', 'topbar');
-$img_width = array('tiny' => 25, 'small' => 40, 'medium' => 100, 'large' => 200);
+
+$img_width = array_keys(elgg_get_icon_sizes($entity->getType(), $entity->getSubtype()));
 
 // Get size
 if (!in_array($vars['size'], $sizes)) {
