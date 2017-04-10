@@ -88,9 +88,8 @@ if ($video->save()) {
             $filehandler->setFilename($prefix . ".jpg");
             $filehandler->open("write");
             $filehandler->write($thumbnail);
+            $video->saveIconFromLocalFile($filehandler->getFilenameOnFilestore(),'icon');
             $filehandler->close();
-
-            $video->saveIconFromLocalFile($filehandler->getFilenameOnFilestore,'icon');
         }
     }
 
