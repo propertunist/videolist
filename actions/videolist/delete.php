@@ -41,6 +41,3 @@ if (elgg_instanceof($container, 'group')) {
 } else {
 	forward("videolist/owner/$container->username");
 }
-
-	forward("videolist/owner/$container->username");
-}

@@ -24,10 +24,9 @@ return array(
 	'videolist:delete' => "Delete this video",
 
 	'videolist:new' => "A new video",
-	'videolist:notification:subject' => "New video added: %s",
-        'videolist:notification:summary' => "New video called %s",
-	'videolist:notification:body' =>
-'%s added a new video:
+	'notification:summary:subject:object:videolist_item' => "New video added: %s",
+  'notification:summary:create:object:videolist_item' => "New video called %s",
+	'videolist:notification:body' => '%s added a new video:
 
 %s
 %s
@@ -79,12 +78,14 @@ View and comment on the new video:
 	'videolist:widget:description' => 'Your personal video playlist.',
 	'videolist:continue' => "Continue",
 
-    
+
         /**
          * Admin
          */
-    
+
         'videolist:admin:title' => 'Configuration options for videolist',
         'videolist:admin:title:api' => 'API configuration',
         'videolist:admin:youtube_api' => 'Google / Youtube',
+				'admin:upgrades:videolist_move_icons:description' => 'Convert Videolist icons to the Elgg 2.2+ icon format.',
+				'admin:upgrades:videolist_move_icons' => 'Videolist Icon Upgrade',
 );

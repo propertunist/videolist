@@ -15,3 +15,7 @@ CHANGELOG
 
 v2.1.:
 compatibility for elgg version 2.1
+
+v2.3:
+compatibility for elgg version 2.3
+added: thumbnails now have multiple sizes and use standard elgg processes including access

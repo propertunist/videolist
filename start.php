@@ -5,8 +5,8 @@
  *
  * @package Elgg
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public License version 2
- * @author Prateek Choudhary <synapticfield@gmail.com>
- * @copyright Prateek Choudhary
+ * @author Prateek Choudhary <synapticfield@gmail.com> / ura soul <ura@ureka.org>
+ * @copyright Prateek Choudhary / ura soul
  */
 
 elgg_register_event_handler('init', 'system', 'videolist_init');
@@ -74,13 +74,12 @@ function videolist_init() {
 
 	//register entity url handler
   elgg_register_plugin_hook_handler('entity:url', 'object', 'videolist_url_handler');
-	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'videolist_icon_url_override');
 
 	// register for embed
 	elgg_register_plugin_hook_handler('embed_get_sections', 'all', 'videolist_embed_get_sections');
 	elgg_register_plugin_hook_handler('embed_get_items', 'videolist', 'videolist_embed_get_items');
 
-    // handle URLs without scheme
+  // handle URLs without scheme
   elgg_register_plugin_hook_handler('videolist:preprocess', 'url', 'videolist_preprocess_url');
 
 	// allow to be liked
@@ -88,12 +87,12 @@ function videolist_init() {
 
 	// Register actions
 	$actions_path = elgg_get_plugins_path() . "videolist/actions/videolist";
-	elgg_register_action("videolist/add", "$actions_path/add.php");
 	elgg_register_action("videolist/edit", "$actions_path/edit.php");
 	elgg_register_action("videolist/delete", "$actions_path/delete.php");
 	elgg_register_action("videolist/get_metadata_from_url", "$actions_path/get_metadata_from_url.php");
+	elgg_register_action('videolist/upgrades/move_icons', dirname(__FILE__) . '/actions/upgrades/move_icons.php', 'admin');
 
-	elgg_register_event_handler('upgrade', 'system', 'videolist_run_upgrades');
+	elgg_register_event_handler('upgrade', 'system', 'videolist_run_move_icon_upgrade');
 }
 
 /**
@@ -281,35 +280,6 @@ function videolist_embed_get_items($hook, $type, $value, $params) {
 }
 
 /**
- * Override the default entity icon for videoslist items
- *
- * @param string $hook
- * @param string $type
- * @param string $returnvalue
- * @param array $params
- * @return string Relative URL
- */
-function videolist_icon_url_override($hook, $type, $returnvalue, $params) {
-	$videolist_item = $params['entity'];
-    /* @var ElggObject $videolist_item */
-
-    $size = $params['size'];
-
-    if ($videolist_item->getSubtype() != 'videolist_item') {
-		return $returnvalue;
-	}
-          //  error_log('thumbnail: ' . $videolist_item->guid . '; thumbnail = '.$videolist_item->thumbnail);
-	// tiny thumbnails are too small to be useful, so give a generic video icon
-	if ($size != 'tiny' && !empty($videolist_item->thumbnail)) {
-		return elgg_get_site_url() . "mod/videolist/thumbnail.php?guid=" . $videolist_item->guid;
-	}
-
-	if (in_array($size, array('tiny', 'small', 'medium'))) {
-		return "mod/videolist/graphics/videolist_icon_{$size}.png";
-	}
-}
-
-/**
  * Prepend HTTP scheme if missing
  * @param string $hook
  * @param string $type
@@ -327,14 +297,26 @@ function videolist_preprocess_url($hook, $type, $returnvalue, $params) {
 }
 
 /**
- * Process upgrades for the videolist plugin
+ * Process icon moving upgrade for the videolist plugin
  */
-function videolist_run_upgrades() {
-	$path = elgg_get_plugins_path() . 'videolist/upgrades/';
-	$files = elgg_get_upgrade_files($path);
-	foreach ($files as $file) {
-		include "$path{$file}";
+
+function videolist_run_move_icon_upgrade() {
+
+	$ia = elgg_set_ignore_access(true);
+
+	$path = 'admin/upgrades/videolist_move_icons';
+
+	$upgrade = new \ElggUpgrade();
+	if (!$upgrade->getUpgradeFromPath($path)) {
+		$upgrade->setPath($path);
+		$upgrade->title = elgg_echo('admin:upgrades:videolist_move_icons');
+		$upgrade->description = elgg_echo('admin:upgrades:videolist_move_icons:description');
+
+		$upgrade->save();
 	}
+
+	// restore access
+	elgg_set_ignore_access($ia);
 }
 
 /**
