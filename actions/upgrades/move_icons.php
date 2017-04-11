@@ -26,7 +26,7 @@ $start_offset = (int) $session->get('videolist_move_icon_offset', 0);
 $offset = $error_offset + $start_offset;
 
 // get icon sizes for blogs
-$icon_sizes = elgg_get_icon_sizes('object', 'blog');
+$icon_sizes = elgg_get_icon_sizes('object', 'videolist_item');
 
 $result = [
 	'numSuccess' => 0,
